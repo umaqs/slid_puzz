@@ -1,0 +1,36 @@
+import 'package:flutter/material.dart';
+import 'package:slide_puzzle/app/app.dart';
+import 'package:slide_puzzle/screens/_base/infrastructure.dart';
+import 'package:slide_puzzle/screens/_shared/shared.dart';
+import 'package:slide_puzzle/themes/theme.layout.dart';
+import 'package:slide_puzzle/themes/theme.notifier.dart';
+
+class ThemeScreen extends StatelessWidget {
+  const ThemeScreen._({
+    Key? key,
+    required this.notifier,
+  }) : super(key: key);
+
+  final ThemeNotifier notifier;
+
+  static ScaleTransitionPage buildPage(BuildContext context) {
+    return ScaleTransitionPage(
+      key: ValueKey(RouteNames.themes),
+      child: Watch<ThemeNotifier>(
+        builder: (context, notifier) => ThemeScreen._(notifier: notifier),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final themeColor = notifier.currentColor;
+    return AnimatedTheme(
+      duration: kThemeChangeDuration,
+      data: themeColor.theme,
+      child: ThemeAwareScaffold(
+        pageLayoutDelegate: ThemeLayout(notifier),
+      ),
+    );
+  }
+}

@@ -1,0 +1,114 @@
+import 'package:flutter/material.dart';
+import 'package:slide_puzzle/game/_shared/shared.dart';
+import 'package:slide_puzzle/game/square/puzzle.dart';
+import 'package:slide_puzzle/layout/layout.dart';
+import 'package:slide_puzzle/screens/pictures/puzzle/puzzle.dart';
+import 'package:slide_puzzle/themes/themes.dart';
+import 'package:slide_puzzle/widgets/widgets.dart';
+
+class PicturePuzzleLayout implements PageLayoutDelegate<PicturesPuzzleNotifier> {
+  const PicturePuzzleLayout(this.notifier);
+
+  final PicturesPuzzleNotifier notifier;
+
+  @override
+  Widget startSection(BuildContext context, BoxConstraints constraints) {
+    return PuzzleHeader(notifier: notifier);
+  }
+
+  @override
+  Widget body(context, constraints) {
+    return SquarePuzzleBoard(
+      gridSize: notifier.gridSize,
+      tiles: [
+        for (var i = 0; i < notifier.puzzle.tiles.length; i++) gridItem(context, i),
+      ],
+    );
+  }
+
+  @override
+  Widget endSection(context, constraints) {
+    final gameState = notifier.gameState;
+
+    return PuzzleFooter(
+      gameState: gameState,
+      showValueCheckbox: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text('Show solution'),
+          CheckboxTheme(
+            data: CheckboxThemeData(
+              fillColor: MaterialStateProperty.all(context.colors.primary),
+            ),
+            child: Checkbox(
+              value: notifier.showSolution,
+              fillColor: MaterialStateProperty.all(context.colors.primary),
+              onChanged: (value) => notifier.showSolution = value,
+            ),
+          ),
+        ],
+      ),
+      gridSizePicker: GridSizePicker(
+        initialValue: notifier.gridSize,
+        min: notifier.minSize,
+        max: notifier.maxSize,
+        onChanged: gameState.canInteract ? (value) => notifier.gridSize = value : null,
+      ),
+      primaryButton: PrimaryButton(
+        text: _primaryButtonTitle(gameState),
+        onPressed: gameState.canInteract ? notifier.nextState : null,
+      ),
+    );
+  }
+
+  String _primaryButtonTitle(GameState gameState) {
+    switch (gameState) {
+      case GameState.gettingReady:
+      case GameState.ready:
+        return 'Start';
+      case GameState.inProgress:
+        return 'Pause';
+      case GameState.paused:
+        return 'Resume';
+      case GameState.completed:
+        return 'Restart';
+    }
+  }
+
+  @override
+  Widget gridItem(BuildContext context, int index) {
+    final tile = notifier.puzzle.tiles[index];
+    return SquarePuzzleTile(
+      key: Key('square_puzzle_tile_${tile.value}'),
+      tile: tile,
+      gridSize: notifier.gridSize,
+      useCorrectPosition: notifier.showSolution,
+      childBuilder: (context, layoutSize) => tile.isWhitespace
+          ? const SizedBox.shrink()
+          : _buildPictureSquareTile(
+              context,
+              tile,
+              layoutSize,
+            ),
+    );
+  }
+
+  Widget _buildPictureSquareTile(
+    BuildContext context,
+    SquareTile tile,
+    ResponsiveLayoutSize layoutSize,
+  ) {
+    final isLoading = notifier.isLoading || notifier.puzzle.tiles.length != notifier.imageParts.length;
+
+    return SquareButton(
+      color: Colors.transparent,
+      borderRadius: 8,
+      onTap: isLoading ? null : () => notifier.moveTile(tile),
+      child: isLoading
+          ? null
+          : Image.memory(
+              notifier.imageParts[tile.value],
+            ),
+    );
+  }
+}

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/android.iml" filepath="$PROJECT_DIR$/.idea/modules/android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/android.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/android.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/672232496/android.audio_session.iml" filepath="$PROJECT_DIR$/.idea/modules/672232496/android.audio_session.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1561884896/android.flutter_isolate.iml" filepath="$PROJECT_DIR$/.idea/modules/1561884896/android.flutter_isolate.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1762120400/android.flutter_plugin_android_lifecycle.iml" filepath="$PROJECT_DIR$/.idea/modules/-1762120400/android.flutter_plugin_android_lifecycle.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1539304831/android.image_picker.iml" filepath="$PROJECT_DIR$/.idea/modules/-1539304831/android.image_picker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1830374924/android.just_audio.iml" filepath="$PROJECT_DIR$/.idea/modules/-1830374924/android.just_audio.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1884134813/android.path_provider_android.iml" filepath="$PROJECT_DIR$/.idea/modules/1884134813/android.path_provider_android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-176750105/android.shared_preferences_android.iml" filepath="$PROJECT_DIR$/.idea/modules/-176750105/android.shared_preferences_android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1237662640/android.sqflite.iml" filepath="$PROJECT_DIR$/.idea/modules/-1237662640/android.sqflite.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1110286059/android.url_launcher_android.iml" filepath="$PROJECT_DIR$/.idea/modules/-1110286059/android.url_launcher_android.iml" />
+    </modules>
+  </component>
+</project>
