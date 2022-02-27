@@ -5,8 +5,10 @@
 [X] Add word puzzle implementation
 [X] Main menu (Hex)
 [X] Theme picker (light/dark)
-[ ] Help screen / Leaderboard screen
-[ ] Add sound
+[ ] L10n
+[ ] Instructions pop-up for first time
+[ ] Info/Licenses pop-up
+[X] Add sound
 [ ] screenshot/share dialog
 [ ] Firebase leaderboard ?
 
@@ -15,8 +17,8 @@
 [X] Pictures menu loader images
 [X] Shape aware footer buttons 
 [X] Add a standalone countdown notifier
-[ ] Home button on all the screens
-[ ] Copy refinement
+[X] Back button on all the screens
+[X] Copy refinement
 [X] Moves / correct tiles UI
 [X] Fix pictures menu loading state issue 
 [ ] Web service workers

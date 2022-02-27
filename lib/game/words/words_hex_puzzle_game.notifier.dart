@@ -6,9 +6,15 @@ import 'package:slide_puzzle/game/hex/puzzle.dart';
 import 'package:slide_puzzle/game/words/data/_data.dart';
 
 class WordsHexPuzzleNotifier extends HexPuzzleNotifier {
-  WordsHexPuzzleNotifier()
-      : _letters = [],
-        super(initialDepth: _depth);
+  WordsHexPuzzleNotifier(
+    CountdownNotifier countdown,
+    GameTimerNotifier timer,
+  )   : _letters = [],
+        super(
+          countdown,
+          timer,
+          initialDepth: _depth,
+        );
 
   static const _depth = 2;
 
@@ -43,7 +49,7 @@ class WordsHexPuzzleNotifier extends HexPuzzleNotifier {
       case GameState.gettingReady:
         break;
       case GameState.ready:
-        _shuffle(startGame: true, shuffleIterations: 3, addDelay: true);
+        _shuffle(startGame: true);
         break;
       case GameState.inProgress:
         pause();
@@ -52,28 +58,19 @@ class WordsHexPuzzleNotifier extends HexPuzzleNotifier {
         start();
         break;
       case GameState.completed:
-        generatePuzzle(startGame: true, shuffleIterations: 3, addDelay: true);
+        generatePuzzle(startGame: true, shuffle: true);
         break;
     }
   }
 
-  Future<void> _shuffle({
-    bool startGame = false,
-    int shuffleIterations = 0,
-    bool addDelay = false,
-  }) async {
-    super.generatePuzzle(
-      startGame: startGame,
-      shuffleIterations: shuffleIterations,
-      addDelay: addDelay,
-    );
+  Future<void> _shuffle({bool startGame = false}) async {
+    return super.generatePuzzle(startGame: startGame, shuffle: true);
   }
 
   @override
   Future<void> generatePuzzle({
     bool startGame = false,
-    int shuffleIterations = 0,
-    bool addDelay = false,
+    bool shuffle = false,
   }) async {
     final solution3 = solutions[3]!.keys;
     final solution4 = solutions[4]!.keys;
@@ -89,17 +86,12 @@ class WordsHexPuzzleNotifier extends HexPuzzleNotifier {
     ];
     super.generatePuzzle(
       startGame: startGame,
-      shuffleIterations: shuffleIterations,
-      addDelay: addDelay,
+      shuffle: shuffle,
     );
   }
 
   bool _hasMatchingWords() {
     final tiles = puzzle.tiles;
-
-    if (!tiles.last.isWhitespace) {
-      return false;
-    }
 
     final words = [
       tiles.take(3).map((tile) => _letters[tile.value]).join(''),
@@ -113,11 +105,6 @@ class WordsHexPuzzleNotifier extends HexPuzzleNotifier {
       for (final word in words) dictionaries[word.length]!.containsKey(word),
     ];
 
-    print('Actual Answers: $actualAnswers');
-    final complete = solutions.every((solution) => solution);
-    if (complete) {
-      print('Your Answers: $words');
-    }
-    return complete;
+    return solutions.every((solution) => solution);
   }
 }

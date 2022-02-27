@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hexagon/hexagon.dart';
@@ -112,10 +111,6 @@ class HomeNotifier extends BaseNotifier {
   }
 
   void _navigateTo(BuildContext context, String name) {
-    if (kIsWeb) {
-      context.goNamed(name);
-    } else {
-      context.pushNamed(name);
-    }
+    context.pushNamed(name);
   }
 }

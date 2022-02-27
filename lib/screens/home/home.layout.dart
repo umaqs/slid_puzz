@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hexagon/hexagon.dart';
+import 'package:slide_puzzle/audio/audio.dart';
 import 'package:slide_puzzle/layout/layout.dart';
 import 'package:slide_puzzle/screens/home/home.notifier.dart';
 import 'package:slide_puzzle/themes/themes.dart';
@@ -13,9 +14,7 @@ class HomeLayout implements PageLayoutDelegate<HomeNotifier> {
 
   @override
   Widget startSection(BuildContext context, BoxConstraints constraints) {
-    return MenuHeader(
-      title: PuzzleTitle(title: 'Slide Puzzle'),
-    );
+    return MenuHeader(title: 'Slide Puzzle');
   }
 
   @override
@@ -39,7 +38,19 @@ class HomeLayout implements PageLayoutDelegate<HomeNotifier> {
 
   @override
   Widget endSection(context, constraints) {
-    return Container();
+    return MenuFooter(
+      children: [
+        const ResponsiveGap(
+          small: 8,
+          medium: 8,
+        ),
+        AudioControl(),
+        const ResponsiveGap(
+          small: 8,
+          medium: 16,
+        ),
+      ],
+    );
   }
 
   @override

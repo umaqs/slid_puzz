@@ -1,23 +1,26 @@
 import 'dart:async';
-import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:hexagon/src/grid/coordinates.dart';
 import 'package:slide_puzzle/game/_shared/shared.dart';
 import 'package:slide_puzzle/game/hex/puzzle.dart';
+import 'package:slide_puzzle/screens/_base/base.notifier.dart';
 
-class HexPuzzleNotifier extends GameTimerNotifier implements PuzzleGameNotifier<HexTile> {
-  HexPuzzleNotifier({
+class HexPuzzleNotifier extends BaseNotifier implements PuzzleGameNotifier<HexTile> {
+  HexPuzzleNotifier(
+    this._countdown,
+    this._timer, {
     int initialDepth = 2,
   })  : assert(
           initialDepth >= _minDepth && initialDepth <= _maxDepth,
           'Depth should range from $_minDepth to $_maxDepth',
         ),
         _gridDepth = initialDepth,
-        _gameState = GameState.gettingReady,
-        super(const Ticker()) {
+        _gameState = GameState.gettingReady {
     generatePuzzle();
   }
+
+  final CountdownNotifier _countdown;
+  final GameTimerNotifier _timer;
 
   static const _minDepth = 2;
   static const _maxDepth = 4;
@@ -34,9 +37,6 @@ class HexPuzzleNotifier extends GameTimerNotifier implements PuzzleGameNotifier<
   int get moveCount => _moveCount;
   int _moveCount = 0;
 
-  int get secondsToBegin => _secondsToBegin;
-  int _secondsToBegin = 0;
-
   GameState get gameState => _gameState;
   GameState _gameState;
 
@@ -49,11 +49,19 @@ class HexPuzzleNotifier extends GameTimerNotifier implements PuzzleGameNotifier<
     }
     if (value >= minSize && value <= maxSize) {
       _gridDepth = value;
+      notifyListeners();
       generatePuzzle();
     }
   }
 
   bool get isCompleted => _puzzle.isComplete;
+
+  int getTileIndexAtCoordinates(Coordinates coordinates) {
+    return _puzzle.tiles.indexWhere((tile) {
+      final currentPosition = tile.currentPosition;
+      return currentPosition.q == coordinates.q && currentPosition.r == coordinates.r;
+    });
+  }
 
   @override
   bool showCorrectTileIndicator(HexTile tile) {
@@ -69,46 +77,86 @@ class HexPuzzleNotifier extends GameTimerNotifier implements PuzzleGameNotifier<
   @override
   Future<void> generatePuzzle({
     bool startGame = false,
-    int shuffleIterations = 0,
-    bool addDelay = false,
+    bool shuffle = false,
   }) async {
-    stop();
-    _gameState = GameState.gettingReady;
-    notifyListeners();
-
-    if (shuffleIterations > 0) {
-      startCountdown(countdownSeconds: shuffleIterations);
-    }
+    _getRead();
 
     final correctPositions = _generatePositions();
     final currentPositions = [...correctPositions];
 
-    final tiles = _generateTileListFromPositions(correctPositions, currentPositions);
+    var tiles = _generateTileListFromPositions(correctPositions, currentPositions);
+    _puzzle = HexGridPuzzle(tiles: tiles);
 
-    if (shuffleIterations == 0) {
-      _puzzle = HexGridPuzzle(tiles: tiles);
-    } else {
-      _secondsToBegin = shuffleIterations;
-      notifyListeners();
-      for (var i = 0; i < shuffleIterations; i++) {
-        _shuffleTilesAndCreatePuzzle(tiles, tileShuffleIterations: _gridDepth * 100);
-        notifyListeners();
-        if (addDelay) {
-          await Future<void>.delayed(const Duration(seconds: 1));
-        }
-        _secondsToBegin--;
-        notifyListeners();
+    if (shuffle) {
+      while (puzzle.numberOfCorrectTiles != 0) {
+        currentPositions.shuffle();
+        tiles = _generateTileListFromPositions(
+          correctPositions,
+          currentPositions,
+        );
+        _puzzle = HexGridPuzzle(tiles: tiles).sort();
       }
     }
 
     if (startGame) {
-      start();
+      _countdown.start(onComplete: start);
     } else {
       _gameState = GameState.ready;
       notifyListeners();
     }
   }
 
+  void moveTile(HexTile tile) {
+    if (_gameState.inProgress) {
+      if (_puzzle.isTileMovable(tile)) {
+        final mutablePuzzle = HexGridPuzzle(tiles: [..._puzzle.tiles]);
+        _puzzle = mutablePuzzle.moveTiles(tile, []).sort();
+        if (isCompleted) {
+          _gameState = GameState.completed;
+        }
+        _moveCount++;
+        notifyListeners();
+      }
+    }
+  }
+
+  void nextState() {
+    switch (_gameState) {
+      case GameState.gettingReady:
+        break;
+      case GameState.ready:
+      case GameState.completed:
+        generatePuzzle(startGame: true, shuffle: true);
+        break;
+      case GameState.inProgress:
+        pause();
+        break;
+      case GameState.paused:
+        start();
+        break;
+    }
+  }
+
+  void pause() {
+    _gameState = GameState.paused;
+    _timer.pause();
+    notifyListeners();
+  }
+
+  void start() {
+    _gameState = GameState.inProgress;
+    _timer.start();
+    notifyListeners();
+  }
+
+  void _getRead() {
+    _moveCount = 0;
+    _gameState = GameState.gettingReady;
+    _timer.stop();
+    notifyListeners();
+  }
+
+  /// Create all possible board positions.
   List<HexPosition> _generatePositions() {
     final positions = <HexPosition>[];
 
@@ -145,75 +193,5 @@ class HexPuzzleNotifier extends GameTimerNotifier implements PuzzleGameNotifier<
         isWhitespace: i == correctPositions.length - 1,
       ),
     );
-  }
-
-  void _shuffleTilesAndCreatePuzzle(List<HexTile> tiles, {int tileShuffleIterations = 200}) {
-    final random = Random();
-    var puzzle = HexGridPuzzle(tiles: [...tiles]);
-    while (tileShuffleIterations > 0) {
-      final moveIndex = random.nextInt(puzzle.tiles.length);
-      final tileToMove = puzzle.tiles[moveIndex];
-      if (puzzle.isTileMovable(tileToMove)) {
-        puzzle = HexGridPuzzle(
-          tiles: puzzle.moveTiles(tileToMove, []).sort(),
-        );
-        tileShuffleIterations--;
-      }
-    }
-
-    _puzzle = puzzle;
-  }
-
-  int getTileIndexAtCoordinates(Coordinates coordinates) {
-    return _puzzle.tiles.indexWhere((tile) {
-      final currentPosition = tile.currentPosition;
-      return currentPosition.q == coordinates.q && currentPosition.r == coordinates.r;
-    });
-  }
-
-  void moveTile(HexTile tile) {
-    if (_gameState.inProgress) {
-      if (_puzzle.isTileMovable(tile)) {
-        final mutablePuzzle = HexGridPuzzle(tiles: [..._puzzle.tiles]);
-        final puzzle = mutablePuzzle.moveTiles(tile, []);
-        _puzzle = HexGridPuzzle(tiles: puzzle.sort());
-        if (isCompleted) {
-          _gameState = GameState.completed;
-        }
-        _moveCount++;
-        notifyListeners();
-      }
-    }
-  }
-
-  void nextState() {
-    switch (_gameState) {
-      case GameState.gettingReady:
-        break;
-      case GameState.ready:
-      case GameState.completed:
-        generatePuzzle(startGame: true, shuffleIterations: 3, addDelay: true);
-        break;
-      case GameState.inProgress:
-        pause();
-        break;
-      case GameState.paused:
-        start();
-        break;
-    }
-  }
-
-  @override
-  @protected
-  void start() {
-    _gameState = GameState.inProgress;
-    super.start();
-  }
-
-  @override
-  @protected
-  void pause() {
-    _gameState = GameState.paused;
-    super.pause();
   }
 }

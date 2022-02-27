@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:slide_puzzle/audio/audio.dart';
 import 'package:slide_puzzle/game/_shared/shared.dart';
 import 'package:slide_puzzle/game/square/puzzle.dart';
 import 'package:slide_puzzle/layout/layout.dart';
@@ -103,7 +105,12 @@ class PicturePuzzleLayout implements PageLayoutDelegate<PicturesPuzzleNotifier> 
     return SquareButton(
       color: Colors.transparent,
       borderRadius: 8,
-      onTap: isLoading ? null : () => notifier.moveTile(tile),
+      onTap: isLoading
+          ? null
+          : () {
+              context.read<AudioNotifier>().play(AudioAssets.tileMove);
+              notifier.moveTile(tile);
+            },
       child: isLoading
           ? null
           : Image.memory(

@@ -37,41 +37,37 @@ class GridSizePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButton<int>(
-      isExpanded: true,
-      value: initialValue,
-      borderRadius: kBorderRadius12,
-      underline: Container(
-        height: 2,
-        color: context.colors.primary,
+    final colors = context.colors;
+
+    buildText(int index) => Text(_difficultyText(index));
+
+    return Material(
+      color: colors.secondaryContainer,
+      borderRadius: BorderRadius.circular(8),
+      child: Padding(
+        padding: kEdgePadding8.add(kPadding4),
+        child: DropdownButton<int>(
+          isExpanded: true,
+          value: initialValue,
+          borderRadius: kBorderRadius12,
+          underline: const SizedBox.shrink(),
+          focusColor: Colors.transparent,
+          onChanged: (value) => onChanged?.call(value ?? initialValue),
+          selectedItemBuilder: (context) {
+            return [
+              for (var i = min; i <= max; i++) Align(alignment: Alignment.centerLeft, child: buildText(i)),
+            ];
+          },
+          items: [
+            for (var i = min; i <= max; i++)
+              DropdownMenuItem<int>(
+                value: i,
+                alignment: Alignment.centerLeft,
+                child: buildText(i),
+              ),
+          ],
+        ),
       ),
-      focusColor: Colors.transparent,
-      onChanged: (value) => onChanged?.call(value ?? initialValue),
-      selectedItemBuilder: (context) {
-        return [
-          for (var i = min; i <= max; i++)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Text('Level'),
-                Text(_difficultyText(i)),
-              ],
-            ),
-        ];
-      },
-      items: [
-        for (var i = min; i <= max; i++)
-          DropdownMenuItem<int>(
-            value: i,
-            alignment: Alignment.center,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(_difficultyText(i)),
-              ],
-            ),
-          ),
-      ],
     );
   }
 }

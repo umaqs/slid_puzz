@@ -80,7 +80,6 @@ const solution4 = <String, int>{
   'deny': 1,
   'desk': 1,
   'dial': 1,
-  'dick': 1,
   'diet': 1,
   'disc': 1,
   'disk': 1,

@@ -33,7 +33,7 @@ class SquarePuzzleTile extends StatelessWidget {
     final gridScaleFactor = 4 / gridSize;
 
     return AnimatedAlign(
-      curve: Curves.easeInOut,
+      curve: Curves.easeIn,
       duration: const Duration(milliseconds: 300),
       alignment: FractionalOffset.fromOffsetAndSize(
         (useCorrectPosition ? tile.correctPosition : tile.currentPosition).toOffset,

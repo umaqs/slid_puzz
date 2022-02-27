@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:slide_puzzle/app/app.dart';
+import 'package:slide_puzzle/game/_shared/shared.dart';
 import 'package:slide_puzzle/game/square/puzzle.dart';
 import 'package:slide_puzzle/screens/_base/infrastructure.dart';
 import 'package:slide_puzzle/screens/_shared/shared.dart';
@@ -16,10 +18,19 @@ class NumbersSquareScreen extends StatelessWidget {
   static ScaleTransitionPage buildPage(BuildContext context) {
     return ScaleTransitionPage(
       key: ValueKey(RouteNames.numbersSquare),
-      child: ProvideNotifier<SquarePuzzleNotifier>(
-        watch: true,
-        create: (context) => SquarePuzzleNotifier(),
-        builder: (_, notifier) => NumbersSquareScreen._(notifier: notifier),
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider<GameTimerNotifier>(create: (_) => GameTimerNotifier(const Ticker())),
+          ChangeNotifierProvider<CountdownNotifier>(create: (_) => CountdownNotifier(const Ticker())),
+        ],
+        builder: (_, __) => ProvideNotifier<SquarePuzzleNotifier>(
+          watch: true,
+          create: (context) => SquarePuzzleNotifier(
+            context.read<CountdownNotifier>(),
+            context.read<GameTimerNotifier>(),
+          ),
+          builder: (_, notifier) => NumbersSquareScreen._(notifier: notifier),
+        ),
       ),
     );
   }

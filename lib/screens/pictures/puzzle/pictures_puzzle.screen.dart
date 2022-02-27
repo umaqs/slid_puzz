@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:slide_puzzle/app/app.dart';
+import 'package:slide_puzzle/game/_shared/shared.dart';
 import 'package:slide_puzzle/screens/_base/infrastructure.dart';
 import 'package:slide_puzzle/screens/_shared/shared.dart';
 import 'package:slide_puzzle/screens/pictures/puzzle/puzzle.dart';
@@ -19,13 +20,21 @@ class PicturesPuzzleScreen extends StatelessWidget {
   static ScaleTransitionPage buildPage(BuildContext context, Uint8List imageData) {
     return ScaleTransitionPage(
       key: ValueKey(RouteNames.picturesPuzzle),
-      child: ProvideNotifier<PicturesPuzzleNotifier>(
-        watch: true,
-        create: (context) => PicturesPuzzleNotifier(
-          context.read<ImageService>(),
-          imageData: imageData,
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider<GameTimerNotifier>(create: (_) => GameTimerNotifier(const Ticker())),
+          ChangeNotifierProvider<CountdownNotifier>(create: (_) => CountdownNotifier(const Ticker())),
+        ],
+        builder: (_, __) => ProvideNotifier<PicturesPuzzleNotifier>(
+          watch: true,
+          create: (context) => PicturesPuzzleNotifier(
+            context.read<CountdownNotifier>(),
+            context.read<GameTimerNotifier>(),
+            context.read<ImageService>(),
+            imageData: imageData,
+          ),
+          builder: (_, notifier) => PicturesPuzzleScreen._(notifier: notifier),
         ),
-        builder: (context, notifier) => PicturesPuzzleScreen._(notifier: notifier),
       ),
     );
   }

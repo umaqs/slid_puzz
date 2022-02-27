@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:slide_puzzle/game/_shared/game_timer.notifier.dart';
 import 'package:slide_puzzle/layout/layout.dart';
 import 'package:slide_puzzle/themes/themes.dart';
 import 'package:slide_puzzle/typography/typography.dart';
@@ -6,14 +8,12 @@ import 'package:slide_puzzle/typography/typography.dart';
 class PuzzleTimer extends StatelessWidget {
   const PuzzleTimer({
     Key? key,
-    required this.duration,
     this.textStyle,
     this.iconSize,
     this.iconPadding,
     this.mainAxisAlignment,
   }) : super(key: key);
 
-  final Duration duration;
   final TextStyle? textStyle;
   final double? iconSize;
   final double? iconPadding;
@@ -32,6 +32,9 @@ class PuzzleTimer extends StatelessWidget {
         child: child!,
       ),
       child: (layoutSize, _) {
+        final notifier = context.watch<GameTimerNotifier>();
+        final duration = Duration(seconds: notifier.secondsToBegin);
+
         final currentTextStyle = textStyle ?? layoutSize.defaultTextStyle;
 
         return Row(

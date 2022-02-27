@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:slide_puzzle/audio/audio.dart';
 import 'package:slide_puzzle/game/_shared/shared.dart';
 import 'package:slide_puzzle/game/square/puzzle.dart';
 import 'package:slide_puzzle/layout/layout.dart';
@@ -44,8 +46,8 @@ class NumbersSquareLayout implements PageLayoutDelegate<SquarePuzzleNotifier> {
       ),
       secondaryButton: gameState.inProgress
           ? PrimaryButton(
-              text: 'SHUFFLE',
-              onPressed: gameState.canInteract ? () => notifier.generatePuzzle(shuffleIterations: 1) : null,
+              text: 'RESTART',
+              onPressed: gameState.canInteract ? () => notifier.generatePuzzle(startGame: true, shuffle: true) : null,
             )
           : null,
     );
@@ -95,7 +97,16 @@ class NumbersSquareLayout implements PageLayoutDelegate<SquarePuzzleNotifier> {
       borderRadius: 8,
       elevation: showCorrectTileIndicator ? 0 : 16,
       borderColor: showCorrectTileIndicator ? colors.primary : null,
-      onTap: () => notifier.moveTile(tile),
+      onTap: () {
+        final audio = context.read<AudioNotifier>();
+        final canMove = notifier.puzzle.isTileMovable(tile);
+        if (gameState.inProgress && canMove) {
+          audio.play(AudioAssets.tileMove);
+        } else {
+          audio.play(AudioAssets.dumbbell);
+        }
+        notifier.moveTile(tile);
+      },
       child: Center(
         child: Text(
           (tile.value + 1).toString(),

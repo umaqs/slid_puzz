@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:slide_puzzle/audio/audio.dart';
 import 'package:slide_puzzle/game/_shared/shared.dart';
 import 'package:slide_puzzle/game/hex/puzzle.dart';
 import 'package:slide_puzzle/layout/layout.dart';
@@ -52,8 +54,8 @@ class NumbersHexLayout implements PageLayoutDelegate<HexPuzzleNotifier> {
       ),
       secondaryButton: gameState.inProgress
           ? PrimaryButton(
-              text: 'SHUFFLE',
-              onPressed: gameState.canInteract ? () => notifier.generatePuzzle(shuffleIterations: 1) : null,
+              text: 'RESTART',
+              onPressed: gameState.canInteract ? () => notifier.generatePuzzle(startGame: true, shuffle: true) : null,
             )
           : null,
     );
@@ -100,7 +102,10 @@ class NumbersHexLayout implements PageLayoutDelegate<HexPuzzleNotifier> {
 
     return SizedBox.expand(
       child: GestureDetector(
-        onTap: () => notifier.moveTile(tile),
+        onTap: () {
+          context.read<AudioNotifier>().play(AudioAssets.tileMove);
+          notifier.moveTile(tile);
+        },
         child: Stack(
           children: [
             Positioned.fill(

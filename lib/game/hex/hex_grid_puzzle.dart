@@ -90,10 +90,12 @@ class HexGridPuzzle extends GridPuzzle<HexTile> {
   }
 
   /// Sorts puzzle tiles so they are in order of their current position.
-  List<HexTile> sort() {
-    return [...tiles]..sort((tileA, tileB) {
+  HexGridPuzzle sort() {
+    final sortedTiles = [...tiles]..sort((tileA, tileB) {
         return tileA.currentPosition.compareTo(tileB.currentPosition);
       });
+
+    return HexGridPuzzle(tiles: sortedTiles);
   }
 
   @override

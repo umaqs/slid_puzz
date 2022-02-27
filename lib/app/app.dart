@@ -9,8 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:slide_puzzle/game/_shared/countdown.notifier.dart';
-import 'package:slide_puzzle/game/_shared/shared.dart';
+import 'package:slide_puzzle/audio/audio.dart';
 import 'package:slide_puzzle/screens/home/home.screen.dart';
 import 'package:slide_puzzle/screens/numbers/numbers.hex.screen.dart';
 import 'package:slide_puzzle/screens/numbers/numbers.square.screen.dart';
@@ -25,9 +24,7 @@ import 'package:slide_puzzle/themes/theme.notifier.dart';
 import 'package:slide_puzzle/themes/theme.screen.dart';
 
 part 'app.bootstrap.dart';
-part 'app.extensions.dart';
 part 'app.lifecycle_observer.dart';
-part 'app.navigator.dart';
 part 'app.router.dart';
 
 class _PuzzleApp extends StatelessWidget {

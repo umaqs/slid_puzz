@@ -3,6 +3,7 @@ export 'app_dialog.dart';
 export 'buttons.dart';
 export 'grid_size_picker.dart';
 export 'hex/widget.dart';
+export 'menu_footer.dart';
 export 'menu_header.dart';
 export 'puzzle_footer.dart';
 export 'puzzle_gameplay_info.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:slide_puzzle/app/app.dart';
-import 'package:slide_puzzle/screens/_base/infrastructure.dart';
 import 'package:slide_puzzle/screens/_shared/shared.dart';
 import 'package:slide_puzzle/themes/theme.layout.dart';
 import 'package:slide_puzzle/themes/theme.notifier.dart';
@@ -16,8 +16,8 @@ class ThemeScreen extends StatelessWidget {
   static ScaleTransitionPage buildPage(BuildContext context) {
     return ScaleTransitionPage(
       key: ValueKey(RouteNames.themes),
-      child: Watch<ThemeNotifier>(
-        builder: (context, notifier) => ThemeScreen._(notifier: notifier),
+      child: Consumer<ThemeNotifier>(
+        builder: (_, notifier, __) => ThemeScreen._(notifier: notifier),
       ),
     );
   }

@@ -12,4 +12,12 @@ class SharedPrefsService {
   Future<bool> setInt(String key, int value) {
     return _prefs.setInt(key, value);
   }
+
+  bool? getBool(String key) {
+    return _prefs.getBool(key);
+  }
+
+  Future<bool> setBool(String key, bool value) {
+    return _prefs.setBool(key, value);
+  }
 }

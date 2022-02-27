@@ -6,10 +6,16 @@ import 'package:slide_puzzle/game/square/puzzle.dart';
 import 'package:slide_puzzle/game/words/data/_data.dart';
 
 class WordsSquarePuzzleNotifier extends SquarePuzzleNotifier {
-  WordsSquarePuzzleNotifier({
+  WordsSquarePuzzleNotifier(
+    CountdownNotifier countdown,
+    GameTimerNotifier timer, {
     int initialGridSize = 4,
   })  : _letters = [],
-        super(initialGridSize: initialGridSize);
+        super(
+          countdown,
+          timer,
+          initialGridSize: initialGridSize,
+        );
 
   @override
   int get minSize => 3;
@@ -42,7 +48,7 @@ class WordsSquarePuzzleNotifier extends SquarePuzzleNotifier {
       case GameState.gettingReady:
         break;
       case GameState.ready:
-        _shuffle(startGame: true, shuffleIterations: 3, addDelay: true);
+        _shuffle(startGame: true);
         break;
       case GameState.inProgress:
         pause();
@@ -51,28 +57,19 @@ class WordsSquarePuzzleNotifier extends SquarePuzzleNotifier {
         start();
         break;
       case GameState.completed:
-        generatePuzzle(startGame: true, shuffleIterations: 3, addDelay: true);
+        generatePuzzle(startGame: true, shuffle: true);
         break;
     }
   }
 
-  Future<void> _shuffle({
-    bool startGame = false,
-    int shuffleIterations = 0,
-    bool addDelay = false,
-  }) async {
-    super.generatePuzzle(
-      startGame: startGame,
-      shuffleIterations: shuffleIterations,
-      addDelay: addDelay,
-    );
+  Future<void> _shuffle({bool startGame = false}) async {
+    return super.generatePuzzle(startGame: startGame, shuffle: true);
   }
 
   @override
   Future<void> generatePuzzle({
     bool startGame = false,
-    int shuffleIterations = 0,
-    bool addDelay = false,
+    bool shuffle = false,
   }) async {
     final solutionGrid = solutions[gridSize]!.keys;
 
@@ -84,17 +81,12 @@ class WordsSquarePuzzleNotifier extends SquarePuzzleNotifier {
     ];
     super.generatePuzzle(
       startGame: startGame,
-      shuffleIterations: shuffleIterations,
-      addDelay: addDelay,
+      shuffle: shuffle,
     );
   }
 
   bool _hasMatchingWords() {
     final tiles = puzzle.tiles;
-
-    if (!tiles.last.isWhitespace) {
-      return false;
-    }
 
     final words = [
       for (var i = 0; i < gridSize; i++) ...[

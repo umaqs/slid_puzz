@@ -44,12 +44,7 @@ abstract class GridPuzzle<T extends Tile> extends Equatable {
   }
 
   /// Sorts puzzle tiles so they are in order of their current position.
-  List<T> sort() {
-    final sortedTiles = [...tiles]..sort((tileA, tileB) {
-        return tileA.currentPosition.compareTo(tileB.currentPosition);
-      });
-    return sortedTiles;
-  }
+  GridPuzzle<T> sort();
 
   @override
   List<Object> get props => [tiles];

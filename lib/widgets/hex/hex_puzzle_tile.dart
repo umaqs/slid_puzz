@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:slide_puzzle/layout/layout.dart';
@@ -14,18 +13,10 @@ class HexPuzzleTile extends StatelessWidget {
     this.showWhitespaceTile = false,
   }) : super(key: key);
 
-  /// The tile to be displayed.
   final Offset offset;
-
-  /// Size of the board grid
   final int gridDepth;
-
-  /// Background color of the tile
   final Color color;
-
   final bool showWhitespaceTile;
-
-  /// Use to build custom tile for the game mode
   final Widget Function(BuildContext context, ResponsiveLayoutSize layoutSize) childBuilder;
 
   @override
@@ -72,30 +63,6 @@ class HexPuzzleTile extends StatelessWidget {
         );
       },
     );
-  }
-}
-
-extension _ResponsiveLayoutSizeExtension on ResponsiveLayoutSize {
-  double get hexTileWidth {
-    switch (this) {
-      case ResponsiveLayoutSize.small:
-        return kIsWeb ? 88.0 : 80;
-      case ResponsiveLayoutSize.medium:
-        return 100.0;
-      case ResponsiveLayoutSize.large:
-        return 125.0;
-    }
-  }
-
-  double get hexTileCornerRadius {
-    switch (this) {
-      case ResponsiveLayoutSize.small:
-        return 6;
-      case ResponsiveLayoutSize.medium:
-        return 8;
-      case ResponsiveLayoutSize.large:
-        return 12;
-    }
   }
 }
 

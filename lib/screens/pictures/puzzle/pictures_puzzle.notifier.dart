@@ -1,23 +1,32 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:slide_puzzle/game/_shared/shared.dart';
 import 'package:slide_puzzle/game/square/puzzle.dart';
 import 'package:slide_puzzle/services/image.service.dart';
 
 class PicturesPuzzleNotifier extends SquarePuzzleNotifier {
   PicturesPuzzleNotifier(
+    CountdownNotifier countdown,
+    GameTimerNotifier timer,
     this._imageService, {
     int initialGridSize = 4,
     required Uint8List imageData,
   })  : _imageData = imageData,
         _isLoading = true,
         _imageParts = {},
-        super(initialGridSize: initialGridSize) {
+        super(
+          countdown,
+          timer,
+          initialGridSize: initialGridSize,
+        ) {
     _generateImageParts(initialGridSize);
   }
 
   final Uint8List _imageData;
   final ImageService _imageService;
+
+  Uint8List get imageData => _imageData;
 
   List<Uint8List> get imageParts => List.unmodifiable(_imageParts[gridSize] ?? []);
   Map<int, List<Uint8List>> _imageParts;
@@ -61,23 +70,5 @@ class PicturesPuzzleNotifier extends SquarePuzzleNotifier {
 
     _isLoading = false;
     notifyListeners();
-
-    // final parts = await Future.wait(
-    //   [
-    //     for (var iSize = minSize; iSize <= maxSize; iSize++)
-    //       _imageService.splitImageIntoGrid(
-    //         data: _imageData,
-    //         gridSize: iSize,
-    //       ),
-    //   ],
-    // );
-    //
-    // if (parts.any((part) => part == null)) {
-    //   _error = 'Unable to load this image, Please try a different one';
-    // } else {
-    //   _imageParts = {
-    //     for (var iSize = minSize; iSize <= maxSize; iSize++) iSize: parts[iSize - minSize]!,
-    //   };
-    // }
   }
 }

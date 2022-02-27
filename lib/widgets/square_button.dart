@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:slide_puzzle/layout/layout.dart';
 import 'package:slide_puzzle/themes/themes.dart';
-import 'package:slide_puzzle/widgets/animations/animated_hover_interaction.dart';
+import 'package:slide_puzzle/widgets/widgets.dart';
 
-/// {@template square_button}
-/// Menu button component
-/// {@endtemplate}
 class SquareButton extends StatelessWidget {
-  /// {@macro square_button}
   const SquareButton({
     Key? key,
     this.color,
@@ -34,60 +30,53 @@ class SquareButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayoutBuilder(
-      small: (_, child) => child!,
-      medium: (_, child) => child!,
-      large: (_, child) => child!,
-      child: (layoutSize, _) {
-        final shadowOffset = 2.0;
-        return AnimatedHoverInteraction(
-          enabled: onTap != null,
-          tilt: tilt,
-          scale: false,
-          child: AnimatedContainer(
-            width: layoutSize.squareTileSize,
-            height: layoutSize.squareTileSize,
-            duration: const Duration(milliseconds: 300),
-            clipBehavior: Clip.hardEdge,
-            decoration: BoxDecoration(
-              color: color ?? context.colors.surface,
-              gradient: gradient,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.white.withOpacity(0.08),
-                  blurRadius: elevation,
-                  offset: Offset(-shadowOffset, -shadowOffset),
-                ),
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.08),
-                  blurRadius: elevation,
-                  offset: Offset(shadowOffset, shadowOffset),
-                ),
-              ],
-              borderRadius: borderRadius != null ? BorderRadius.circular(borderRadius!) : null,
-              border: Border.fromBorderSide(
-                borderColor != null
-                    ? BorderSide(
-                        width: borderWidth ?? 4,
-                        color: borderColor!,
-                      )
-                    : BorderSide.none,
-              ),
-            ),
-            child: Material(
-              elevation: elevation,
-              type: MaterialType.transparency,
+    return GestureDetector(
+      onTap: onTap,
+      child: ResponsiveLayoutBuilder(
+        small: (_, child) => child!,
+        medium: (_, child) => child!,
+        large: (_, child) => child!,
+        child: (layoutSize, _) {
+          final shadowOffset = 2.0;
+          return AnimatedHoverInteraction(
+            enabled: onTap != null,
+            tilt: tilt,
+            scale: false,
+            child: AnimatedContainer(
+              width: layoutSize.squareTileSize,
+              height: layoutSize.squareTileSize,
+              duration: const Duration(milliseconds: 300),
               clipBehavior: Clip.hardEdge,
-              child: InkWell(
-                focusColor: Colors.transparent,
-                hoverColor: Colors.transparent,
-                onTap: onTap,
-                child: child,
+              decoration: BoxDecoration(
+                color: color ?? context.colors.surface,
+                gradient: gradient,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.white.withOpacity(0.08),
+                    blurRadius: elevation,
+                    offset: Offset(-shadowOffset, -shadowOffset),
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.08),
+                    blurRadius: elevation,
+                    offset: Offset(shadowOffset, shadowOffset),
+                  ),
+                ],
+                borderRadius: borderRadius != null ? BorderRadius.circular(borderRadius!) : null,
+                border: Border.fromBorderSide(
+                  borderColor != null
+                      ? BorderSide(
+                          width: borderWidth ?? 4,
+                          color: borderColor!,
+                        )
+                      : BorderSide.none,
+                ),
               ),
+              child: child,
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:slide_puzzle/audio/audio.dart';
 import 'package:slide_puzzle/game/_shared/shared.dart';
 import 'package:slide_puzzle/game/square/puzzle.dart';
 import 'package:slide_puzzle/game/words/words.dart';
@@ -92,7 +94,12 @@ class WordsSquareLayout implements PageLayoutDelegate<WordsSquarePuzzleNotifier>
         key: Key('tile_button_${tile.value}'),
         borderRadius: 8,
         elevation: 16,
-        onTap: tile.isWhitespace ? null : () => notifier.moveTile(tile),
+        onTap: tile.isWhitespace
+            ? null
+            : () {
+                context.read<AudioNotifier>().play(AudioAssets.tileMove);
+                notifier.moveTile(tile);
+              },
         child: Center(
           child: Text(
             notifier.letters[tile.value].toUpperCase(),

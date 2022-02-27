@@ -1,7 +1,9 @@
+import 'package:slide_puzzle/screens/_base/base.notifier.dart';
+
 import 'shared.dart';
 
-abstract class PuzzleGameNotifier<T extends Tile> extends GameTimerNotifier {
-  PuzzleGameNotifier(Ticker ticker) : super(ticker);
+abstract class PuzzleGameNotifier<T extends Tile> extends BaseNotifier {
+  PuzzleGameNotifier();
 
   int get minSize;
 
@@ -13,15 +15,13 @@ abstract class PuzzleGameNotifier<T extends Tile> extends GameTimerNotifier {
 
   int get moveCount;
 
-  int get secondsToBegin;
-
   GameState get gameState;
 
   GridPuzzle<T> get puzzle;
 
   bool get isCompleted;
 
-  Future<void> generatePuzzle({bool startGame = false, int shuffleIterations = 0, bool addDelay = false});
+  Future<void> generatePuzzle({bool startGame = false, bool shuffle = false});
 
   void moveTile(T tile);
 

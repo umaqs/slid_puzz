@@ -29,21 +29,6 @@ class ProvideNotifier<T extends ChangeNotifier> extends StatelessWidget {
   }
 }
 
-class Watch<T extends ChangeNotifier> extends StatelessWidget {
-  const Watch({
-    Key? key,
-    required this.builder,
-  }) : super(key: key);
-
-  final NotifierChildBuilder<T> builder;
-
-  @override
-  Widget build(BuildContext context) {
-    final notifier = context.watch<T>();
-    return builder(context, notifier);
-  }
-}
-
 class Listen<T extends Listenable> extends StatefulWidget {
   const Listen({
     Key? key,

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// Represents the layout size passed to [ResponsiveLayoutBuilder.child].
@@ -89,6 +90,28 @@ extension ResponsiveLayoutSizeExtension on ResponsiveLayoutSize {
         return 24;
       case ResponsiveLayoutSize.large:
         return 32;
+    }
+  }
+
+  double get hexTileWidth {
+    switch (this) {
+      case ResponsiveLayoutSize.small:
+        return kIsWeb ? 88.0 : 80;
+      case ResponsiveLayoutSize.medium:
+        return 100.0;
+      case ResponsiveLayoutSize.large:
+        return 125.0;
+    }
+  }
+
+  double get hexTileCornerRadius {
+    switch (this) {
+      case ResponsiveLayoutSize.small:
+        return 6;
+      case ResponsiveLayoutSize.medium:
+        return 8;
+      case ResponsiveLayoutSize.large:
+        return 12;
     }
   }
 }

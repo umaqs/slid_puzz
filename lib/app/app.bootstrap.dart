@@ -26,11 +26,15 @@ Future<void> bootstrapAndRunApp() async {
         platformBrightness ?? Brightness.light,
       );
 
+      final audioNotifier = AudioNotifier(sharedPrefsService);
+      await audioNotifier.loadAssets();
+
       final providers = [
+        ChangeNotifierProvider<AudioNotifier>(create: (_) => audioNotifier),
         Provider<ImageService>(create: (_) => ImageService()),
+        Provider<SharedPrefsService>(create: (_) => sharedPrefsService),
         ChangeNotifierProvider<ThemeNotifier>(create: (_) => themeNotifier),
         Provider<UrlLauncherService>(create: (_) => UrlLauncherService()),
-        Provider<SharedPrefsService>(create: (_) => sharedPrefsService),
       ];
 
       runApp(
@@ -41,7 +45,7 @@ Future<void> bootstrapAndRunApp() async {
       );
     },
     (error, stack) {
-      log('Error:', error: error, stackTrace: stack);
+      log('Error: $error', error: error, stackTrace: stack);
     },
   );
 }

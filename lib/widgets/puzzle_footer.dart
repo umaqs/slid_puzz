@@ -41,7 +41,7 @@ class PuzzleFooter extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                if (showValueCheckbox != null) ...[
+                if (showValueCheckbox != null && gameState.inProgress) ...[
                   showValueCheckbox!,
                   ResponsiveGap(
                     small: 4,
@@ -52,7 +52,7 @@ class PuzzleFooter extends StatelessWidget {
                 if (gridSizePicker != null) ...[
                   gridSizePicker!,
                   ResponsiveGap(
-                    small: 8,
+                    small: 12,
                     medium: 16,
                     large: 24,
                   ),

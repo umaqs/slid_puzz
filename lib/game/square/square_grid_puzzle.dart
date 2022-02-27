@@ -63,10 +63,6 @@ class SquareGridPuzzle extends GridPuzzle<SquareTile> {
   bool isSolvable() {
     final size = sqrt(tiles.length).toInt();
     final height = tiles.length ~/ size;
-    assert(
-      size * height == tiles.length,
-      'tiles must be equal to size * height',
-    );
     final inversions = countInversions();
 
     if (size.isOdd) {
@@ -75,7 +71,7 @@ class SquareGridPuzzle extends GridPuzzle<SquareTile> {
 
     final whitespaceRow = getWhitespaceTile().currentPosition.y.toInt();
 
-    if (((height - whitespaceRow) + 1).isOdd) {
+    if ((height - whitespaceRow).isOdd) {
       return inversions.isEven;
     } else {
       return inversions.isOdd;
@@ -167,10 +163,12 @@ class SquareGridPuzzle extends GridPuzzle<SquareTile> {
   }
 
   /// Sorts puzzle tiles so they are in order of their current position.
-  List<SquareTile> sort() {
-    return [...tiles]..sort((tileA, tileB) {
+  SquareGridPuzzle sort() {
+    final sortedTiles = [...tiles]..sort((tileA, tileB) {
         return tileA.currentPosition.compareTo(tileB.currentPosition);
       });
+
+    return SquareGridPuzzle(tiles: sortedTiles);
   }
 
   @override

@@ -1,25 +1,28 @@
 import 'dart:async';
-import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:slide_puzzle/game/_shared/shared.dart';
 import 'package:slide_puzzle/game/square/puzzle.dart';
+import 'package:slide_puzzle/screens/_base/base.notifier.dart';
 
-class SquarePuzzleNotifier extends GameTimerNotifier implements PuzzleGameNotifier<SquareTile> {
-  SquarePuzzleNotifier({
+class SquarePuzzleNotifier extends BaseNotifier implements PuzzleGameNotifier<SquareTile> {
+  SquarePuzzleNotifier(
+    this._countdown,
+    this._timer, {
     int initialGridSize = 4,
   })  : assert(
           initialGridSize >= _minGridSize && initialGridSize <= _maxGridSize,
           'Grid size should range from $_minGridSize to $_maxGridSize',
         ),
         _gridSize = initialGridSize,
-        _gameState = GameState.gettingReady,
-        super(const Ticker()) {
+        _gameState = GameState.gettingReady {
     generatePuzzle();
   }
 
   static const _minGridSize = 3;
   static const _maxGridSize = 6;
+
+  final CountdownNotifier _countdown;
+  final GameTimerNotifier _timer;
 
   int get minSize => _minGridSize;
 
@@ -64,61 +67,99 @@ class SquarePuzzleNotifier extends GameTimerNotifier implements PuzzleGameNotifi
   @override
   Future<void> generatePuzzle({
     bool startGame = false,
-    int shuffleIterations = 0,
-    bool addDelay = false,
+    bool shuffle = false,
   }) async {
-    stop();
-    _gameState = GameState.gettingReady;
-    notifyListeners();
+    _getRead();
 
-    if (shuffleIterations > 0 && addDelay) {
-      startCountdown(countdownSeconds: shuffleIterations);
-    }
-
-    final correctPositions = <SquarePosition>[];
-    final currentPositions = <SquarePosition>[];
-
-    // Create all possible board positions.
-    for (var y = 0; y < _gridSize; y++) {
-      for (var x = 0; x < _gridSize; x++) {
-        final position = SquarePosition(x, y);
-        correctPositions.add(position);
-        currentPositions.add(position);
-      }
-    }
+    final correctPositions = _generatePositions();
+    final currentPositions = [...correctPositions];
 
     var tiles = _generateTileListFromPositions(correctPositions, currentPositions);
+    _puzzle = SquareGridPuzzle(tiles: tiles);
 
-    var puzzle = SquareGridPuzzle(tiles: tiles);
-
-    if (shuffleIterations != 0) {
+    if (shuffle) {
       while (!puzzle.isSolvable() || puzzle.numberOfCorrectTiles != 0) {
         currentPositions.shuffle();
         tiles = _generateTileListFromPositions(
           correctPositions,
           currentPositions,
         );
-        puzzle = SquareGridPuzzle(tiles: tiles);
+        _puzzle = SquareGridPuzzle(tiles: tiles).sort();
       }
-
-      // for (var i = 0; i < shuffleIterations; i++) {
-      //   _secondsToBegin = shuffleIterations - i;
-      //   notifyListeners();
-      //   _shuffleTilesAndCreatePuzzle(tiles, tileShuffleIterations: _gridSize * 100);
-      //   notifyListeners();
-      //   if (addDelay) {
-      //     await Future<void>.delayed(const Duration(seconds: 1));
-      //   }
-      // }
     }
 
-    _puzzle = SquareGridPuzzle(tiles: puzzle.sort());
     if (startGame) {
-      start();
+      _countdown.start(onComplete: start);
     } else {
       _gameState = GameState.ready;
       notifyListeners();
     }
+  }
+
+  void moveTile(SquareTile tile) {
+    if (_gameState.inProgress) {
+      print('Start moveTile: ${DateTime.now()}');
+      if (_puzzle.isTileMovable(tile)) {
+        final mutablePuzzle = SquareGridPuzzle(tiles: [..._puzzle.tiles]);
+        _puzzle = mutablePuzzle.moveTiles(tile, []).sort();
+        if (isCompleted) {
+          _gameState = GameState.completed;
+        }
+        _moveCount++;
+        notifyListeners();
+        print('End moveTile: ${DateTime.now()}');
+      }
+    }
+  }
+
+  void nextState() {
+    switch (_gameState) {
+      case GameState.gettingReady:
+        break;
+      case GameState.ready:
+      case GameState.completed:
+        generatePuzzle(startGame: true, shuffle: true);
+        break;
+      case GameState.inProgress:
+        pause();
+        break;
+      case GameState.paused:
+        start();
+        break;
+    }
+  }
+
+  void pause() {
+    _gameState = GameState.paused;
+    _timer.pause();
+    notifyListeners();
+  }
+
+  void start() {
+    _gameState = GameState.inProgress;
+    _timer.start();
+    notifyListeners();
+  }
+
+  void _getRead() {
+    _moveCount = 0;
+    _gameState = GameState.gettingReady;
+    _timer.stop();
+    notifyListeners();
+  }
+
+  /// Create all possible board positions.
+  List<SquarePosition> _generatePositions() {
+    final positions = <SquarePosition>[];
+
+    for (var y = 0; y < _gridSize; y++) {
+      for (var x = 0; x < _gridSize; x++) {
+        final position = SquarePosition(x, y);
+        positions.add(position);
+      }
+    }
+
+    return positions;
   }
 
   /// Build a list of tiles - giving each tile their correct position and a
@@ -138,69 +179,5 @@ class SquarePuzzleNotifier extends GameTimerNotifier implements PuzzleGameNotifi
         isWhitespace: i == tileCount - 1,
       ),
     );
-  }
-
-  Future<void> _shuffleTilesAndCreatePuzzle(List<SquareTile> tiles, {int tileShuffleIterations = 200}) async {
-    final random = Random();
-
-    _puzzle = SquareGridPuzzle(tiles: [...tiles]);
-    while (tileShuffleIterations > 0) {
-      final moveIndex = random.nextInt(_puzzle.tiles.length);
-      final tileToMove = _puzzle.tiles[moveIndex];
-      if (_puzzle.isTileMovable(tileToMove)) {
-        _puzzle = SquareGridPuzzle(
-          tiles: _puzzle.moveTiles(tileToMove, []).sort(),
-        );
-        tileShuffleIterations--;
-      }
-    }
-  }
-
-  void moveTile(SquareTile tile) {
-    if (_gameState.inProgress) {
-      if (_puzzle.isTileMovable(tile)) {
-        final mutablePuzzle = SquareGridPuzzle(tiles: [..._puzzle.tiles]);
-        final puzzle = mutablePuzzle.moveTiles(tile, []);
-        _puzzle = SquareGridPuzzle(tiles: puzzle.sort());
-        if (isCompleted) {
-          _gameState = GameState.completed;
-        }
-        _moveCount++;
-        notifyListeners();
-      }
-    }
-  }
-
-  void nextState() {
-    switch (_gameState) {
-      case GameState.gettingReady:
-        break;
-      case GameState.ready:
-        generatePuzzle(startGame: true, shuffleIterations: 3, addDelay: true);
-        break;
-      case GameState.inProgress:
-        pause();
-        break;
-      case GameState.paused:
-        start();
-        break;
-      case GameState.completed:
-        generatePuzzle(startGame: true, shuffleIterations: 3, addDelay: true);
-        break;
-    }
-  }
-
-  @override
-  @protected
-  void start() {
-    _gameState = GameState.inProgress;
-    super.start();
-  }
-
-  @override
-  @protected
-  void pause() {
-    _gameState = GameState.paused;
-    super.pause();
   }
 }

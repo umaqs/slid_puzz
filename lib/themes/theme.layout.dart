@@ -13,24 +13,7 @@ class ThemeLayout implements PageLayoutDelegate<ThemeNotifier> {
   final ThemeNotifier notifier;
 
   Widget startSection(BuildContext context, BoxConstraints constraints) {
-    return ResponsiveLayoutBuilder(
-      small: (_, child) => child!,
-      medium: (_, child) => child!,
-      large: (_, child) => SizedBox(
-        height: ResponsiveLayoutSize.large.squareBoardSize,
-        child: child!,
-      ),
-      child: (layoutSize, _) {
-        return Column(
-          crossAxisAlignment: layoutSize.isLarge ? CrossAxisAlignment.start : CrossAxisAlignment.center,
-          children: [
-            PuzzleTitle(
-              title: 'Themes',
-            )
-          ],
-        );
-      },
-    );
+    return MenuHeader(title: 'Themes');
   }
 
   Widget body(context, constraints) {
@@ -98,75 +81,81 @@ class ThemeLayout implements PageLayoutDelegate<ThemeNotifier> {
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              DropdownButton<AdaptiveThemeMode>(
-                isExpanded: true,
-                icon: const SizedBox.shrink(),
-                value: notifier.mode,
-                borderRadius: kBorderRadius8,
-                focusColor: Colors.transparent,
-                underline: Container(
-                  height: 2,
-                  color: context.colors.primary,
+              Material(
+                color: colors.secondaryContainer,
+                borderRadius: BorderRadius.circular(4),
+                child: Padding(
+                  padding: kEdgePadding8.add(kPadding4),
+                  child: DropdownButton<AdaptiveThemeMode>(
+                    isExpanded: true,
+                    icon: const SizedBox.shrink(),
+                    value: notifier.mode,
+                    borderRadius: kBorderRadius8,
+                    focusColor: Colors.transparent,
+                    underline: const SizedBox.shrink(),
+                    onChanged: (value) {
+                      if (value != null) {
+                        notifier.setThemeMode(
+                          mode: value,
+                          platformBrightness: platformBrightness,
+                        );
+                      }
+                    },
+                    selectedItemBuilder: (context) {
+                      return [
+                        for (final mode in AdaptiveThemeMode.values)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                mode.name,
+                                style: PuzzleTextStyle.body.copyWith(
+                                  color: context.colors.onSurface,
+                                ),
+                              ),
+                              AnimatedSwitcher(
+                                duration: kThemeChangeDuration,
+                                switchInCurve: Curves.easeIn,
+                                switchOutCurve: Curves.easeOut,
+                                child: Icon(
+                                  context.theme.brightness == Brightness.light
+                                      ? Icons.brightness_4
+                                      : Icons.brightness_2,
+                                  color: colors.primary,
+                                ),
+                              )
+                            ],
+                          ),
+                      ];
+                    },
+                    items: [
+                      for (final mode in AdaptiveThemeMode.values)
+                        DropdownMenuItem<AdaptiveThemeMode>(
+                          value: mode,
+                          alignment: Alignment.center,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                mode.name,
+                                style: PuzzleTextStyle.body.copyWith(
+                                  color: context.colors.onSurface,
+                                ),
+                              ),
+                              Icon(
+                                mode.isLight
+                                    ? Icons.brightness_4
+                                    : mode.isDark
+                                        ? Icons.brightness_2
+                                        : Icons.devices_other,
+                                color: colors.primary,
+                              ),
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
-                onChanged: (value) {
-                  if (value != null) {
-                    notifier.setThemeMode(
-                      mode: value,
-                      platformBrightness: platformBrightness,
-                    );
-                  }
-                },
-                selectedItemBuilder: (context) {
-                  return [
-                    for (final mode in AdaptiveThemeMode.values)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            mode.name,
-                            style: PuzzleTextStyle.body.copyWith(
-                              color: context.colors.onSurface,
-                            ),
-                          ),
-                          AnimatedSwitcher(
-                            duration: kThemeChangeDuration,
-                            switchInCurve: Curves.easeIn,
-                            switchOutCurve: Curves.easeOut,
-                            child: Icon(
-                              context.theme.brightness == Brightness.light ? Icons.brightness_4 : Icons.brightness_2,
-                              color: colors.primary,
-                            ),
-                          )
-                        ],
-                      ),
-                  ];
-                },
-                items: [
-                  for (final mode in AdaptiveThemeMode.values)
-                    DropdownMenuItem<AdaptiveThemeMode>(
-                      value: mode,
-                      alignment: Alignment.center,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            mode.name,
-                            style: PuzzleTextStyle.body.copyWith(
-                              color: context.colors.onSurface,
-                            ),
-                          ),
-                          Icon(
-                            mode.isLight
-                                ? Icons.brightness_4
-                                : mode.isDark
-                                    ? Icons.brightness_2
-                                    : Icons.devices_other,
-                            color: colors.primary,
-                          ),
-                        ],
-                      ),
-                    ),
-                ],
               ),
             ],
           ),

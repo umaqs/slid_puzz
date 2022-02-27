@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:slide_puzzle/layout/layout.dart';
-import 'package:slide_puzzle/widgets/widgets.dart';
+import 'package:slide_puzzle/themes/themes.dart';
+import 'package:slide_puzzle/typography/typography.dart';
 
 class MenuHeader extends StatelessWidget {
   const MenuHeader({
@@ -8,7 +9,7 @@ class MenuHeader extends StatelessWidget {
     required this.title,
   }) : super(key: key);
 
-  final PuzzleTitle title;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +30,57 @@ class MenuHeader extends StatelessWidget {
         return Column(
           crossAxisAlignment: layoutSize.isLarge ? CrossAxisAlignment.start : CrossAxisAlignment.center,
           children: [
-            title,
+            _MenuTitle(title: title),
           ],
         );
       },
     );
+  }
+}
+
+class _MenuTitle extends StatelessWidget {
+  const _MenuTitle({
+    Key? key,
+    required this.title,
+  }) : super(key: key);
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return ResponsiveLayoutBuilder(
+      small: (_, child) => child!,
+      medium: (_, child) => Padding(
+        padding: kPadding24,
+        child: child!,
+      ),
+      large: (_, child) => Padding(
+        padding: kEdgePadding8,
+        child: child!,
+      ),
+      child: (layoutSize, _) {
+        final titleColor = context.colors.primary;
+        final textStyle = layoutSize.textStyle.copyWith(color: titleColor);
+
+        return AnimatedDefaultTextStyle(
+          style: textStyle,
+          duration: kThemeChangeDuration,
+          child: Text(
+            title,
+            textAlign: layoutSize.textAlign,
+          ),
+        );
+      },
+    );
+  }
+}
+
+extension _ResponsiveLayoutSizeExtension on ResponsiveLayoutSize {
+  TextStyle get textStyle {
+    return this.isLarge ? PuzzleTextStyle.headline2 : PuzzleTextStyle.headline3;
+  }
+
+  TextAlign get textAlign {
+    return this.isLarge ? TextAlign.left : TextAlign.center;
   }
 }
