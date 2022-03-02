@@ -113,6 +113,7 @@ class HexPuzzleNotifier extends BaseNotifier implements PuzzleGameNotifier<HexTi
         _puzzle = mutablePuzzle.moveTiles(tile, []).sort();
         if (isCompleted) {
           _gameState = GameState.completed;
+          _timer.pause();
         }
         _moveCount++;
         notifyListeners();

@@ -23,13 +23,13 @@ class NumbersHexScreen extends StatelessWidget {
           ChangeNotifierProvider<GameTimerNotifier>(create: (_) => GameTimerNotifier(const Ticker())),
           ChangeNotifierProvider<CountdownNotifier>(create: (_) => CountdownNotifier(const Ticker())),
         ],
-        builder: (_, __) => ProvideNotifier<HexPuzzleNotifier>(
+        builder: (_, __) => ProvideNotifier<PuzzleGameNotifier>(
           watch: true,
           create: (context) => HexPuzzleNotifier(
             context.read<CountdownNotifier>(),
             context.read<GameTimerNotifier>(),
           ),
-          builder: (_, notifier) => NumbersHexScreen._(notifier: notifier),
+          builder: (_, notifier) => NumbersHexScreen._(notifier: notifier as HexPuzzleNotifier),
         ),
       ),
     );

@@ -21,8 +21,7 @@ class WordsSquareLayout implements PageLayoutDelegate<WordsSquarePuzzleNotifier>
 
   @override
   Widget body(context, constraints) {
-    return SquarePuzzleBoard(
-      gridSize: notifier.gridSize,
+    return PuzzleBoard.hex(
       tiles: [
         for (var i = 0; i < notifier.puzzle.tiles.length; i++) gridItem(context, i),
       ],

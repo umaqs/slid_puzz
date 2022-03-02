@@ -58,6 +58,9 @@ class PicturesPuzzleNotifier extends SquarePuzzleNotifier {
       return;
     }
 
+    _isLoading = true;
+    notifyListeners();
+
     final parts = await _imageService.splitImageIntoGrid(
       data: _imageData,
       gridSize: gridSize,

@@ -23,17 +23,11 @@ class PuzzleTimer extends StatelessWidget {
   Widget build(BuildContext context) {
     return ResponsiveLayoutBuilder(
       small: (_, child) => child!,
-      medium: (_, child) => Padding(
-        padding: kPadding24,
-        child: child!,
-      ),
-      large: (_, child) => Padding(
-        padding: kEdgePadding8,
-        child: child!,
-      ),
+      medium: (_, child) => child!,
+      large: (_, child) => child!,
       child: (layoutSize, _) {
         final notifier = context.watch<GameTimerNotifier>();
-        final duration = Duration(seconds: notifier.secondsToBegin);
+        final duration = Duration(seconds: notifier.secondsElapsed);
 
         final currentTextStyle = textStyle ?? layoutSize.defaultTextStyle;
 

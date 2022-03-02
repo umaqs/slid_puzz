@@ -20,20 +20,10 @@ class NumbersHexLayout implements PageLayoutDelegate<HexPuzzleNotifier> {
 
   @override
   Widget body(context, constraints) {
-    return ResponsiveLayoutBuilder(
-      small: (_, child) => child!,
-      medium: (_, child) => child!,
-      large: (_, child) => child!,
-      child: (layoutSize, constraints) {
-        return SizedBox.square(
-          dimension: layoutSize.hexBoardSize,
-          child: Stack(
-            children: [
-              for (var i = 0; i < notifier.puzzle.tiles.length; i++) gridItem(context, i),
-            ],
-          ),
-        );
-      },
+    return PuzzleBoard.hex(
+      tiles: [
+        for (var i = 0; i < notifier.puzzle.tiles.length; i++) gridItem(context, i),
+      ],
     );
   }
 

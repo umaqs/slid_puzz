@@ -25,7 +25,7 @@ class PicturesPuzzleScreen extends StatelessWidget {
           ChangeNotifierProvider<GameTimerNotifier>(create: (_) => GameTimerNotifier(const Ticker())),
           ChangeNotifierProvider<CountdownNotifier>(create: (_) => CountdownNotifier(const Ticker())),
         ],
-        builder: (_, __) => ProvideNotifier<PicturesPuzzleNotifier>(
+        builder: (_, __) => ProvideNotifier<PuzzleGameNotifier>(
           watch: true,
           create: (context) => PicturesPuzzleNotifier(
             context.read<CountdownNotifier>(),
@@ -33,7 +33,7 @@ class PicturesPuzzleScreen extends StatelessWidget {
             context.read<ImageService>(),
             imageData: imageData,
           ),
-          builder: (_, notifier) => PicturesPuzzleScreen._(notifier: notifier),
+          builder: (_, notifier) => PicturesPuzzleScreen._(notifier: notifier as PicturesPuzzleNotifier),
         ),
       ),
     );

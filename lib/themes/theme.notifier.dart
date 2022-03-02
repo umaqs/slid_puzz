@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +17,27 @@ extension ThemeBuildContextExtension on BuildContext {
   ThemeData get theme => themeColor.theme;
 
   ColorScheme get colors => theme.colorScheme;
+
+  LinearGradient getMenuLoaderGradient({
+    int? seed,
+    Alignment? begin,
+    Alignment? end,
+  }) {
+    final useThemeColors = themeColor.brightness.isLight;
+    final backgroundColors = [if (useThemeColors) ...themeColor.backgroundColors else ...Colors.primaries];
+    final random = Random(seed);
+    final loaderColor = backgroundColors.getRandom(random);
+
+    return LinearGradient(
+      begin: begin ?? Alignment.topLeft,
+      end: end ?? Alignment.bottomRight,
+      colors: [
+        loaderColor,
+        colors.primary,
+      ],
+      stops: [0.0, 1.0],
+    );
+  }
 }
 
 extension BrightnessExtension on Brightness {

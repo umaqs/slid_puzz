@@ -13,6 +13,7 @@ class SquareButton extends StatelessWidget {
     this.borderRadius,
     this.borderColor,
     this.borderWidth,
+    this.disableShadows = false,
     this.onTap,
     this.child,
   })  : assert(color == null || gradient == null, 'Cannot provide both a color and a gradient\n'),
@@ -25,6 +26,7 @@ class SquareButton extends StatelessWidget {
   final double elevation;
   final bool tilt;
   final double? borderRadius;
+  final bool disableShadows;
   final VoidCallback? onTap;
   final Widget? child;
 
@@ -50,18 +52,20 @@ class SquareButton extends StatelessWidget {
               decoration: BoxDecoration(
                 color: color ?? context.colors.surface,
                 gradient: gradient,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.white.withOpacity(0.08),
-                    blurRadius: elevation,
-                    offset: Offset(-shadowOffset, -shadowOffset),
-                  ),
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.08),
-                    blurRadius: elevation,
-                    offset: Offset(shadowOffset, shadowOffset),
-                  ),
-                ],
+                boxShadow: disableShadows
+                    ? []
+                    : [
+                        BoxShadow(
+                          color: Colors.white.withOpacity(0.08),
+                          blurRadius: elevation,
+                          offset: Offset(-shadowOffset, -shadowOffset),
+                        ),
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.08),
+                          blurRadius: elevation,
+                          offset: Offset(shadowOffset, shadowOffset),
+                        ),
+                      ],
                 borderRadius: borderRadius != null ? BorderRadius.circular(borderRadius!) : null,
                 border: Border.fromBorderSide(
                   borderColor != null

@@ -9,7 +9,7 @@
 [ ] Instructions pop-up for first time
 [ ] Info/Licenses pop-up
 [X] Add sound
-[ ] screenshot/share dialog
+[X] screenshot/share dialog
 [ ] Firebase leaderboard ?
 
 // To FIX

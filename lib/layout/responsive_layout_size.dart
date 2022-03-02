@@ -15,6 +15,7 @@ enum ResponsiveLayoutSize {
 
 extension ResponsiveLayoutSizeExtension on ResponsiveLayoutSize {
   bool get isLarge => this == ResponsiveLayoutSize.large;
+  bool get isSmall => this == ResponsiveLayoutSize.small;
 
   Axis get screenLayoutAxis {
     switch (this) {
@@ -116,20 +117,22 @@ extension ResponsiveLayoutSizeExtension on ResponsiveLayoutSize {
   }
 }
 
-final kEdgePadding4 = EdgeInsets.symmetric(horizontal: 4);
-final kEdgePadding8 = EdgeInsets.symmetric(horizontal: 8);
-final kEdgePadding16 = EdgeInsets.symmetric(horizontal: 16);
-final kEdgePadding24 = EdgeInsets.symmetric(horizontal: 24);
+const kEdgePadding4 = EdgeInsets.symmetric(horizontal: 4);
+const kEdgePadding8 = EdgeInsets.symmetric(horizontal: 8);
+const kEdgePadding16 = EdgeInsets.symmetric(horizontal: 16);
+const kEdgePadding24 = EdgeInsets.symmetric(horizontal: 24);
 
-final kPadding4 = EdgeInsets.all(4);
-final kPadding8 = EdgeInsets.all(8);
-final kPadding16 = EdgeInsets.all(16);
-final kPadding24 = EdgeInsets.all(24);
+const kPadding4 = EdgeInsets.all(4);
+const kPadding8 = EdgeInsets.all(8);
+const kPadding16 = EdgeInsets.all(16);
+const kPadding24 = EdgeInsets.all(24);
 
-final kBox4 = SizedBox(width: 4, height: 4);
-final kBox8 = SizedBox(width: 8, height: 8);
-final kBox16 = SizedBox(width: 16, height: 16);
-final kBox24 = SizedBox(width: 24, height: 24);
+const kBox4 = SizedBox(width: 4, height: 4);
+const kBox8 = SizedBox(width: 8, height: 8);
+const kBox12 = SizedBox(width: 12, height: 12);
+const kBox16 = SizedBox(width: 16, height: 16);
+const kBox24 = SizedBox(width: 24, height: 24);
 
 final kBorderRadius8 = BorderRadius.circular(8);
 final kBorderRadius12 = BorderRadius.circular(12);
+final kBorderRadius22 = BorderRadius.circular(22);

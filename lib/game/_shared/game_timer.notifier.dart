@@ -8,7 +8,7 @@ class GameTimerNotifier extends BaseNotifier {
 
   final Ticker _ticker;
 
-  int get secondsToBegin => _secondsElapsed;
+  int get secondsElapsed => _secondsElapsed;
   int _secondsElapsed = 0;
 
   StreamSubscription<int>? _tickerSubscription;

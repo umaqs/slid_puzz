@@ -39,7 +39,12 @@ class GridSizePicker extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
 
-    buildText(int index) => Text(_difficultyText(index));
+    buildText(int index) => Text(
+          _difficultyText(index),
+          style: TextStyle(
+            color: colors.onSecondaryContainer,
+          ),
+        );
 
     return Material(
       color: colors.secondaryContainer,
@@ -55,7 +60,11 @@ class GridSizePicker extends StatelessWidget {
           onChanged: (value) => onChanged?.call(value ?? initialValue),
           selectedItemBuilder: (context) {
             return [
-              for (var i = min; i <= max; i++) Align(alignment: Alignment.centerLeft, child: buildText(i)),
+              for (var i = min; i <= max; i++)
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: buildText(i),
+                ),
             ];
           },
           items: [

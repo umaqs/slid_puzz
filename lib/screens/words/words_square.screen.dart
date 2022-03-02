@@ -24,13 +24,13 @@ class WordsSquareScreen extends StatelessWidget {
           ChangeNotifierProvider<GameTimerNotifier>(create: (_) => GameTimerNotifier(const Ticker())),
           ChangeNotifierProvider<CountdownNotifier>(create: (_) => CountdownNotifier(const Ticker())),
         ],
-        builder: (_, __) => ProvideNotifier<WordsSquarePuzzleNotifier>(
+        builder: (_, __) => ProvideNotifier<PuzzleGameNotifier>(
           watch: true,
           create: (context) => WordsSquarePuzzleNotifier(
             context.read<CountdownNotifier>(),
             context.read<GameTimerNotifier>(),
           ),
-          builder: (_, notifier) => WordsSquareScreen._(notifier: notifier),
+          builder: (_, notifier) => WordsSquareScreen._(notifier: notifier as WordsSquarePuzzleNotifier),
         ),
       ),
     );

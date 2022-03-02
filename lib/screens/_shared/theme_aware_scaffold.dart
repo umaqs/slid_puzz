@@ -35,7 +35,7 @@ class ThemeAwareScaffold extends StatelessWidget {
               ),
             ),
           ),
-          if (Navigator.of(context).canPop())
+          if (ModalRoute.of(context)?.canPop ?? false)
             Positioned(
               top: 12,
               left: 12,
@@ -53,23 +53,29 @@ class _BackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    Consumer(
-      builder: (BuildContext context, value, Widget? child) {
-        return Container();
+
+    return ResponsiveLayoutBuilder(
+      small: (_, child) => child!,
+      medium: (_, child) => child!,
+      large: (_, child) => child!,
+      child: (layoutSize, _) {
+        return SafeArea(
+          child: SizedBox.square(
+            dimension: layoutSize.isSmall ? 36 : kToolbarHeight,
+            child: SquareButton(
+              tilt: false,
+              disableShadows: true,
+              borderRadius: 50,
+              color: colors.secondaryContainer,
+              child: Icon(
+                Icons.arrow_back,
+                color: colors.onSecondaryContainer,
+              ),
+              onTap: () => Navigator.maybePop(context),
+            ),
+          ),
+        );
       },
-    );
-    return SizedBox.square(
-      dimension: kToolbarHeight,
-      child: SquareButton(
-        tilt: false,
-        borderRadius: 50,
-        color: colors.primary,
-        child: Icon(
-          Icons.arrow_back,
-          color: colors.onPrimary,
-        ),
-        onTap: () => Navigator.maybePop(context),
-      ),
     );
   }
 }

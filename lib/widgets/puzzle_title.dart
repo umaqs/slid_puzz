@@ -50,14 +50,8 @@ class PuzzleTitle extends StatelessWidget {
       },
       child: ResponsiveLayoutBuilder(
         small: (_, child) => child!,
-        medium: (_, child) => Padding(
-          padding: kPadding24,
-          child: child!,
-        ),
-        large: (_, child) => Padding(
-          padding: kEdgePadding8,
-          child: child!,
-        ),
+        medium: (_, child) => child!,
+        large: (_, child) => child!,
         child: (layoutSize, _) {
           final textStyle = layoutSize.textStyle.copyWith(color: titleColor);
 

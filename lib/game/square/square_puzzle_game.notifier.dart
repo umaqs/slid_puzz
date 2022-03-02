@@ -98,16 +98,15 @@ class SquarePuzzleNotifier extends BaseNotifier implements PuzzleGameNotifier<Sq
 
   void moveTile(SquareTile tile) {
     if (_gameState.inProgress) {
-      print('Start moveTile: ${DateTime.now()}');
       if (_puzzle.isTileMovable(tile)) {
         final mutablePuzzle = SquareGridPuzzle(tiles: [..._puzzle.tiles]);
         _puzzle = mutablePuzzle.moveTiles(tile, []).sort();
         if (isCompleted) {
           _gameState = GameState.completed;
+          _timer.pause();
         }
         _moveCount++;
         notifyListeners();
-        print('End moveTile: ${DateTime.now()}');
       }
     }
   }

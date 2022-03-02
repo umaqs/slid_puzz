@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:slide_puzzle/screens/pictures/menu/menu_item.dart';
 import 'package:slide_puzzle/themes/themes.dart';
-import 'package:slide_puzzle/utils/extensions.dart';
 import 'package:slide_puzzle/widgets/widgets.dart';
 
 class MenuItemTile extends StatelessWidget {
@@ -87,27 +86,13 @@ class _MenuItemTileLoaderState extends State<_MenuItemTileLoader> with SingleTic
   Widget build(BuildContext context) {
     final showImage = widget.item.data != null && Random().nextBool();
 
-    final themeColor = context.themeColor;
-    final useThemeColors = themeColor.brightness.isLight;
-    final colors = [if (useThemeColors) ...themeColor.backgroundColors else ...Colors.primaries];
-    final seed = Random(widget.item.key);
-    final loaderColor = colors.getRandom(seed);
-
     return Material(
       type: MaterialType.transparency,
       clipBehavior: Clip.hardEdge,
       child: SlideTransition(
         position: _offsetAnimation,
         child: SquareButton(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              loaderColor,
-              context.colors.primary,
-            ],
-            stops: [0.0, 1.0],
-          ),
+          gradient: context.getMenuLoaderGradient(seed: widget.item.key),
           borderRadius: 8,
           child: showImage
               ? Image.memory(

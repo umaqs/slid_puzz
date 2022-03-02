@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:slide_puzzle/audio/audio.dart';
 import 'package:slide_puzzle/game/_shared/shared.dart';
 import 'package:slide_puzzle/game/square/puzzle.dart';
@@ -20,8 +21,7 @@ class PicturePuzzleLayout implements PageLayoutDelegate<PicturesPuzzleNotifier> 
 
   @override
   Widget body(context, constraints) {
-    return SquarePuzzleBoard(
-      gridSize: notifier.gridSize,
+    return PuzzleBoard.square(
       tiles: [
         for (var i = 0; i < notifier.puzzle.tiles.length; i++) gridItem(context, i),
       ],
@@ -102,20 +102,30 @@ class PicturePuzzleLayout implements PageLayoutDelegate<PicturesPuzzleNotifier> 
   ) {
     final isLoading = notifier.isLoading || notifier.puzzle.tiles.length != notifier.imageParts.length;
 
+    if (isLoading) {
+      return Shimmer(
+        enabled: true,
+        gradient: context.getMenuLoaderGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+        period: Duration(seconds: 3),
+        child: SquareButton(
+          borderRadius: 8,
+          disableShadows: true,
+          color: context.colors.primary,
+        ),
+      );
+    }
+
     return SquareButton(
       color: Colors.transparent,
       borderRadius: 8,
-      onTap: isLoading
-          ? null
-          : () {
-              context.read<AudioNotifier>().play(AudioAssets.tileMove);
-              notifier.moveTile(tile);
-            },
-      child: isLoading
-          ? null
-          : Image.memory(
-              notifier.imageParts[tile.value],
-            ),
+      onTap: () {
+        context.read<AudioNotifier>().play(AudioAssets.tileMove);
+        notifier.moveTile(tile);
+      },
+      child: Image.memory(notifier.imageParts[tile.value]),
     );
   }
 }

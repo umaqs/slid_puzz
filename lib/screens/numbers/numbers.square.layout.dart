@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:slide_puzzle/audio/audio.dart';
 import 'package:slide_puzzle/game/_shared/shared.dart';
@@ -20,8 +23,7 @@ class NumbersSquareLayout implements PageLayoutDelegate<SquarePuzzleNotifier> {
 
   @override
   Widget body(context, constraints) {
-    return SquarePuzzleBoard(
-      gridSize: notifier.gridSize,
+    return PuzzleBoard.square(
       tiles: [
         for (var i = 0; i < notifier.puzzle.tiles.length; i++) gridItem(context, i),
       ],

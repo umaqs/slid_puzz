@@ -23,13 +23,13 @@ class WordsHexScreen extends StatelessWidget {
           ChangeNotifierProvider<GameTimerNotifier>(create: (_) => GameTimerNotifier(const Ticker())),
           ChangeNotifierProvider<CountdownNotifier>(create: (_) => CountdownNotifier(const Ticker())),
         ],
-        builder: (_, __) => ProvideNotifier<WordsHexPuzzleNotifier>(
+        builder: (_, __) => ProvideNotifier<PuzzleGameNotifier>(
           watch: true,
           create: (context) => WordsHexPuzzleNotifier(
             context.read<CountdownNotifier>(),
             context.read<GameTimerNotifier>(),
           ),
-          builder: (_, notifier) => WordsHexScreen._(notifier: notifier),
+          builder: (_, notifier) => WordsHexScreen._(notifier: notifier as WordsHexPuzzleNotifier),
         ),
       ),
     );

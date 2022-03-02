@@ -61,7 +61,6 @@ class AudioNotifier extends BaseNotifier {
     final player = players.removeAt(0);
     await player.replay();
     players.add(player);
-    print('${_audioPlayers[asset]!.length} players for asset: $asset');
   }
 
   @override
