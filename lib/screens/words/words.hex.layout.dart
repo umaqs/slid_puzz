@@ -12,6 +12,7 @@ import 'package:slide_puzzle/widgets/widgets.dart';
 class WordsHexLayout implements PageLayoutDelegate<WordsHexPuzzleNotifier> {
   const WordsHexLayout(this.notifier);
 
+  @override
   final WordsHexPuzzleNotifier notifier;
 
   @override
@@ -20,7 +21,7 @@ class WordsHexLayout implements PageLayoutDelegate<WordsHexPuzzleNotifier> {
   }
 
   @override
-  Widget body(context, constraints) {
+  Widget body(BuildContext context, BoxConstraints constraints) {
     return PuzzleBoard.hex(
       tiles: [
         for (var i = 0; i < notifier.puzzle.tiles.length; i++) gridItem(context, i),
@@ -29,7 +30,7 @@ class WordsHexLayout implements PageLayoutDelegate<WordsHexPuzzleNotifier> {
   }
 
   @override
-  Widget endSection(context, constraints) {
+  Widget endSection(BuildContext context, BoxConstraints constraints) {
     return PuzzleFooter(
       gameState: notifier.gameState,
       primaryButton: PrimaryButton(
@@ -37,7 +38,7 @@ class WordsHexLayout implements PageLayoutDelegate<WordsHexPuzzleNotifier> {
         onPressed: notifier.gameState.canInteract ? notifier.nextState : null,
       ),
       secondaryButton: SecondaryButton(
-        text: 'Refresh',
+        text: 'REFRESH',
         onPressed: notifier.gameState.canInteract ? () => notifier.generatePuzzle() : null,
       ),
     );

@@ -25,7 +25,8 @@ class _AnimatedHoverInteractionState extends State<AnimatedHoverInteraction> wit
   late Animation<double> _scale;
 
   // Rotations
-  double x = 0, y = 0;
+  double x = 0;
+  double y = 0;
 
   @override
   void initState() {

@@ -1,5 +1,5 @@
 import 'app/app.dart';
 
-void main() async {
+Future<void> main() async {
   await bootstrapAndRunApp();
 }

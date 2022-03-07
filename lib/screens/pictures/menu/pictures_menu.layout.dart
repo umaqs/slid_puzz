@@ -12,13 +12,16 @@ import 'menu.dart';
 class PicturesMenuLayout implements PageLayoutDelegate<PicturesMenuNotifier> {
   const PicturesMenuLayout(this.notifier);
 
+  @override
   final PicturesMenuNotifier notifier;
 
+  @override
   Widget startSection(BuildContext context, BoxConstraints constraints) {
-    return MenuHeader(title: 'Pick One!');
+    return const MenuHeader(title: 'Pick One!');
   }
 
-  Widget body(context, constraints) {
+  @override
+  Widget body(BuildContext context, BoxConstraints constraints) {
     return MenuGrid(
       gridSize: notifier.gridSize,
       tiles: [
@@ -27,7 +30,8 @@ class PicturesMenuLayout implements PageLayoutDelegate<PicturesMenuNotifier> {
     );
   }
 
-  Widget endSection(context, constraints) {
+  @override
+  Widget endSection(BuildContext context, BoxConstraints constraints) {
     return MenuFooter(
       children: [
         const ResponsiveGap(
@@ -57,7 +61,7 @@ class PicturesMenuLayout implements PageLayoutDelegate<PicturesMenuNotifier> {
           : () {
               context.pushNamed(
                 RouteNames.picturesPuzzle,
-                extra: item.data!,
+                extra: item.data,
               );
             },
     );
@@ -69,6 +73,7 @@ class PicturesMenuLayout implements PageLayoutDelegate<PicturesMenuNotifier> {
     Future<void> _onTap(BuildContext context, ImageSource source) async {
       final imageParts = await notifier.pickImage(source);
       if (imageParts != null) {
+        // ignore: use_build_context_synchronously
         context.pushNamed(RouteNames.picturesPuzzle, extra: imageParts);
       } else {
         final error = notifier.error;
@@ -95,7 +100,7 @@ class PicturesMenuLayout implements PageLayoutDelegate<PicturesMenuNotifier> {
             ),
           ),
         ),
-        ResponsiveGap(
+        const ResponsiveGap(
           small: 8,
           medium: 12,
           large: 16,

@@ -16,12 +16,11 @@ class MenuFooter extends StatelessWidget {
       medium: (_, child) => child!,
       large: (_, child) => SizedBox(
         height: ResponsiveLayoutSize.large.squareBoardSize,
-        child: child!,
+        child: child,
       ),
       child: (layoutSize, _) {
         return Column(
           mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: children,
         );
       },

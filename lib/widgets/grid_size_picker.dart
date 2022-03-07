@@ -39,7 +39,7 @@ class GridSizePicker extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
 
-    buildText(int index) => Text(
+    Text buildText(int index) => Text(
           _difficultyText(index),
           style: TextStyle(
             color: colors.onSecondaryContainer,

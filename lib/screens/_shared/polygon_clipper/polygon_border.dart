@@ -23,7 +23,7 @@ class PolygonBorder extends ShapeBorder {
   EdgeInsetsGeometry get dimensions => EdgeInsets.all(border.width);
 
   Path _getPath(Rect rect, double radius) {
-    var specs = PolygonPathSpecs(
+    final specs = PolygonPathSpecs(
       sides: sides < 3 ? 3 : sides,
       rotate: rotate,
       borderRadiusAngle: borderRadius,
@@ -68,8 +68,8 @@ class PolygonBorder extends ShapeBorder {
       case BorderStyle.none:
         break;
       case BorderStyle.solid:
-        var radius = (rect.shortestSide - border.width) / 2.0;
-        var path = _getPath(rect, radius);
+        final radius = (rect.shortestSide - border.width) / 2.0;
+        final path = _getPath(rect, radius);
         canvas.drawPath(path, border.toPaint());
         break;
     }
@@ -96,15 +96,19 @@ class PolygonBorder extends ShapeBorder {
   }
 
   @override
-  bool operator ==(other) {
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+
     if (runtimeType != other.runtimeType) {
       return false;
     }
 
-    final PolygonBorder typedOther = other as PolygonBorder;
-    return sides == typedOther.sides &&
-        rotate == typedOther.rotate &&
-        borderRadius == typedOther.borderRadius &&
-        border == typedOther.border;
+    return other is PolygonBorder &&
+        sides == other.sides &&
+        rotate == other.rotate &&
+        borderRadius == other.borderRadius &&
+        border == other.border;
   }
 }

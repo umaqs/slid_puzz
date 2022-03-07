@@ -30,7 +30,9 @@ class _AppLifeCycleObserverState extends State<AppLifeCycleObserver> with Widget
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    widget.observers.forEach((observer) => observer.didChangeAppLifecycleState(state));
+    for (final observer in widget.observers) {
+      observer.didChangeAppLifecycleState(state);
+    }
   }
 
   @override

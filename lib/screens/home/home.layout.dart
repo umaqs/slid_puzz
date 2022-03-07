@@ -10,15 +10,16 @@ import 'package:slide_puzzle/widgets/widgets.dart';
 class HomeLayout implements PageLayoutDelegate<HomeNotifier> {
   const HomeLayout(this.notifier);
 
+  @override
   final HomeNotifier notifier;
 
   @override
   Widget startSection(BuildContext context, BoxConstraints constraints) {
-    return MenuHeader(title: 'Slide Puzzle');
+    return const MenuHeader(title: 'Slide Puzzle');
   }
 
   @override
-  Widget body(context, constraints) {
+  Widget body(BuildContext context, BoxConstraints constraints) {
     return ResponsiveLayoutBuilder(
       small: (_, child) => child!,
       medium: (_, child) => child!,
@@ -37,15 +38,15 @@ class HomeLayout implements PageLayoutDelegate<HomeNotifier> {
   }
 
   @override
-  Widget endSection(context, constraints) {
-    return MenuFooter(
+  Widget endSection(BuildContext context, BoxConstraints constraints) {
+    return const MenuFooter(
       children: [
-        const ResponsiveGap(
+        ResponsiveGap(
           small: 8,
           medium: 8,
         ),
         AudioControl(),
-        const ResponsiveGap(
+        ResponsiveGap(
           small: 8,
           medium: 16,
         ),
@@ -101,7 +102,7 @@ class HomeLayout implements PageLayoutDelegate<HomeNotifier> {
                           size: 30,
                           color: colors.surface,
                         ),
-                      ResponsiveGap(
+                      const ResponsiveGap(
                         small: 8,
                         medium: 12,
                         large: 12,

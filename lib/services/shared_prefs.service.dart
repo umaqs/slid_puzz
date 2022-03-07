@@ -17,6 +17,7 @@ class SharedPrefsService {
     return _prefs.getBool(key);
   }
 
+  // ignore: avoid_positional_boolean_parameters
   Future<bool> setBool(String key, bool value) {
     return _prefs.setBool(key, value);
   }

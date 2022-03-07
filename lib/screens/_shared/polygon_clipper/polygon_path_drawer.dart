@@ -19,11 +19,11 @@ class PolygonPathDrawer {
     final radius = (size.width - specs.borderRadiusAngle) / 2;
     final arcLength = (radius * _angleToRadian(specs.borderRadiusAngle)) + (specs.sides * 2);
 
-    Path path = Path();
+    final path = Path();
 
     for (var i = 0; i <= specs.sides; i++) {
-      double currentAngle = anglePerSide * i;
-      bool isFirst = i == 0;
+      final currentAngle = anglePerSide * i;
+      final isFirst = i == 0;
 
       if (specs.borderRadiusAngle > 0) {
         _drawLineAndArc(path, currentAngle, radius, arcLength, isFirst);
@@ -35,21 +35,22 @@ class PolygonPathDrawer {
     return path;
   }
 
-  _drawLine(Path path, double currentAngle, double radius, bool move) {
-    Offset current = _getOffset(currentAngle, radius);
+  void _drawLine(Path path, double currentAngle, double radius, bool move) {
+    final current = _getOffset(currentAngle, radius);
 
-    if (move)
+    if (move) {
       path.moveTo(current.dx, current.dy);
-    else
+    } else {
       path.lineTo(current.dx, current.dy);
+    }
   }
 
-  _drawLineAndArc(Path path, double currentAngle, double radius, double arcLength, bool isFirst) {
-    double prevAngle = currentAngle - specs.halfBorderRadiusAngle;
-    double nextAngle = currentAngle + specs.halfBorderRadiusAngle;
+  void _drawLineAndArc(Path path, double currentAngle, double radius, double arcLength, bool isFirst) {
+    final prevAngle = currentAngle - specs.halfBorderRadiusAngle;
+    final nextAngle = currentAngle + specs.halfBorderRadiusAngle;
 
-    Offset previous = _getOffset(prevAngle, radius);
-    Offset next = _getOffset(nextAngle, radius);
+    final previous = _getOffset(prevAngle, radius);
+    final next = _getOffset(nextAngle, radius);
 
     if (isFirst) {
       path.moveTo(next.dx, next.dy);

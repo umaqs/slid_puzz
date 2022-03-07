@@ -22,7 +22,9 @@ class ImageService {
     );
 
     if (imageFile == null) {
-      print('image file not picked');
+      if (kDebugMode) {
+        print('image file not picked');
+      }
       return null;
     }
 
@@ -39,7 +41,7 @@ class ImageService {
       return _splitImageIntoGrid(data: data, gridSize: gridSize);
     }
     try {
-      var receivePort = ReceivePort();
+      final receivePort = ReceivePort();
 
       await Isolate.spawn(
         _decodeImageIsolate,
@@ -61,7 +63,8 @@ class ImageService {
       return null;
     }
 
-    var x = 0, y = 0;
+    var x = 0;
+    var y = 0;
     final width = (image.width / gridSize).round();
     final height = (image.height / gridSize).round();
 

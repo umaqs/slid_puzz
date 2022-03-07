@@ -41,4 +41,10 @@ abstract class Position extends Equatable implements Comparable<Position> {
   Offset get toOffset {
     return Offset(x.toDouble(), y.toDouble());
   }
+
+  num distance(Position other) {
+    final dx = x - other.x;
+    final dy = y - other.y;
+    return dx.abs() + dy.abs();
+  }
 }

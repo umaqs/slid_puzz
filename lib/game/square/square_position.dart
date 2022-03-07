@@ -10,5 +10,6 @@ class SquarePosition extends Position {
   const SquarePosition(int x, int y) : super(x, y);
 
   /// Checks whether both positions are on either same column or same row
+  @override
   bool isAlignedWith(Position other) => x == other.x || y == other.y;
 }

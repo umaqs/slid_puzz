@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:slide_puzzle/typography/typography.dart';
 
 /// Defines text styles for the puzzle UI.
-class PuzzleTextStyle {
+mixin PuzzleTextStyle {
   /// Headline 1 text style
   static TextStyle get headline1 {
     return _baseTextStyle.copyWith(

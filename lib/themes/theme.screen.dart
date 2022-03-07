@@ -15,7 +15,7 @@ class ThemeScreen extends StatelessWidget {
 
   static ScaleTransitionPage buildPage(BuildContext context) {
     return ScaleTransitionPage(
-      key: ValueKey(RouteNames.themes),
+      key: const ValueKey(RouteNames.themes),
       child: Consumer<ThemeNotifier>(
         builder: (_, notifier, __) => ThemeScreen._(notifier: notifier),
       ),
@@ -26,7 +26,6 @@ class ThemeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeColor = notifier.currentColor;
     return AnimatedTheme(
-      duration: kThemeChangeDuration,
       data: themeColor.theme,
       child: ThemeAwareScaffold(
         pageLayoutDelegate: ThemeLayout(notifier),

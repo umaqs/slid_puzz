@@ -12,6 +12,7 @@ import 'package:slide_puzzle/widgets/widgets.dart';
 class PicturePuzzleLayout implements PageLayoutDelegate<PicturesPuzzleNotifier> {
   const PicturePuzzleLayout(this.notifier);
 
+  @override
   final PicturesPuzzleNotifier notifier;
 
   @override
@@ -20,7 +21,7 @@ class PicturePuzzleLayout implements PageLayoutDelegate<PicturesPuzzleNotifier> 
   }
 
   @override
-  Widget body(context, constraints) {
+  Widget body(BuildContext context, BoxConstraints constraints) {
     return PuzzleBoard.square(
       tiles: [
         for (var i = 0; i < notifier.puzzle.tiles.length; i++) gridItem(context, i),
@@ -29,36 +30,51 @@ class PicturePuzzleLayout implements PageLayoutDelegate<PicturesPuzzleNotifier> 
   }
 
   @override
-  Widget endSection(context, constraints) {
+  Widget endSection(BuildContext context, BoxConstraints constraints) {
     final gameState = notifier.gameState;
 
-    return PuzzleFooter(
-      gameState: gameState,
-      showValueCheckbox: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text('Show solution'),
-          CheckboxTheme(
-            data: CheckboxThemeData(
-              fillColor: MaterialStateProperty.all(context.colors.primary),
+    return IgnorePointer(
+      ignoring: notifier.isSolving,
+      child: PuzzleFooter(
+        gameState: gameState,
+        showValueCheckbox: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text('Show solution'),
+            CheckboxTheme(
+              data: CheckboxThemeData(
+                fillColor: MaterialStateProperty.all(context.colors.primary),
+              ),
+              child: Checkbox(
+                value: notifier.showSolution,
+                fillColor: MaterialStateProperty.all(context.colors.primary),
+                onChanged: (value) => notifier.showSolution = value,
+              ),
             ),
-            child: Checkbox(
-              value: notifier.showSolution,
-              fillColor: MaterialStateProperty.all(context.colors.primary),
-              onChanged: (value) => notifier.showSolution = value,
-            ),
-          ),
-        ],
-      ),
-      gridSizePicker: GridSizePicker(
-        initialValue: notifier.gridSize,
-        min: notifier.minSize,
-        max: notifier.maxSize,
-        onChanged: gameState.canInteract ? (value) => notifier.gridSize = value : null,
-      ),
-      primaryButton: PrimaryButton(
-        text: _primaryButtonTitle(gameState),
-        onPressed: gameState.canInteract ? notifier.nextState : null,
+          ],
+        ),
+        gridSizePicker: GridSizePicker(
+          initialValue: notifier.gridSize,
+          min: notifier.minSize,
+          max: notifier.maxSize,
+          onChanged: gameState.canInteract ? (value) => notifier.gridSize = value : null,
+        ),
+        primaryButton: PrimaryButton(
+          text: _primaryButtonTitle(gameState),
+          onPressed: gameState.canInteract ? notifier.nextState : null,
+        ),
+        secondaryButton: gameState.inProgress
+            ? notifier.canSolve
+                ? PrimaryButton(
+                    text: 'SOLVE',
+                    onPressed: gameState.canInteract ? () => notifier.findSolution() : null,
+                  )
+                : PrimaryButton(
+                    text: 'RESTART',
+                    onPressed:
+                        gameState.canInteract ? () => notifier.generatePuzzle(startGame: true, shuffle: true) : null,
+                  )
+            : null,
       ),
     );
   }
@@ -104,12 +120,11 @@ class PicturePuzzleLayout implements PageLayoutDelegate<PicturesPuzzleNotifier> 
 
     if (isLoading) {
       return Shimmer(
-        enabled: true,
         gradient: context.getMenuLoaderGradient(
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
         ),
-        period: Duration(seconds: 3),
+        period: const Duration(seconds: 3),
         child: SquareButton(
           borderRadius: 8,
           disableShadows: true,

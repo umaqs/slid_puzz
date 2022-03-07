@@ -39,7 +39,7 @@ class SquareButton extends StatelessWidget {
         medium: (_, child) => child!,
         large: (_, child) => child!,
         child: (layoutSize, _) {
-          final shadowOffset = 2.0;
+          const shadowOffset = 2.0;
           return AnimatedHoverInteraction(
             enabled: onTap != null,
             tilt: tilt,
@@ -58,12 +58,12 @@ class SquareButton extends StatelessWidget {
                         BoxShadow(
                           color: Colors.white.withOpacity(0.08),
                           blurRadius: elevation,
-                          offset: Offset(-shadowOffset, -shadowOffset),
+                          offset: const Offset(-shadowOffset, -shadowOffset),
                         ),
                         BoxShadow(
                           color: Colors.black.withOpacity(0.08),
                           blurRadius: elevation,
-                          offset: Offset(shadowOffset, shadowOffset),
+                          offset: const Offset(shadowOffset, shadowOffset),
                         ),
                       ],
                 borderRadius: borderRadius != null ? BorderRadius.circular(borderRadius!) : null,

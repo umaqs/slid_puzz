@@ -16,7 +16,7 @@ class PicturesMenuScreen extends StatelessWidget {
 
   static ScaleTransitionPage buildPage(BuildContext context) {
     return ScaleTransitionPage(
-      key: ValueKey(RouteNames.picturesMenu),
+      key: const ValueKey(RouteNames.picturesMenu),
       child: ProvideNotifier<PicturesMenuNotifier>(
         watch: true,
         create: (context) => PicturesMenuNotifier(

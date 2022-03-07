@@ -1,7 +1,9 @@
 import 'dart:async';
 
-import 'package:hexagon/src/grid/coordinates.dart';
+import 'package:flutter/foundation.dart';
+import 'package:hexagon/hexagon.dart' show Coordinates;
 import 'package:slide_puzzle/game/_shared/shared.dart';
+import 'package:slide_puzzle/game/_shared/solver/puzzle.solver.dart';
 import 'package:slide_puzzle/game/hex/puzzle.dart';
 import 'package:slide_puzzle/screens/_base/base.notifier.dart';
 
@@ -22,39 +24,53 @@ class HexPuzzleNotifier extends BaseNotifier implements PuzzleGameNotifier<HexTi
   final CountdownNotifier _countdown;
   final GameTimerNotifier _timer;
 
-  static const _minDepth = 2;
+  static const _minDepth = 1;
   static const _maxDepth = 4;
 
+  @override
   int get minSize => _minDepth;
 
+  @override
   int get maxSize => _maxDepth;
 
   int get _maxHexCount => 1 + (_gridDepth * 2);
 
+  @override
   int get gridSize => _gridDepth;
   int _gridDepth;
 
+  @override
   int get moveCount => _moveCount;
   int _moveCount = 0;
 
+  @override
   GameState get gameState => _gameState;
   GameState _gameState;
 
+  @override
+  bool get isSolving => _isSolving;
+  bool _isSolving = false;
+
+  @override
   HexGridPuzzle get puzzle => _puzzle;
   late HexGridPuzzle _puzzle;
 
+  @override
   set gridSize(int value) {
     if (value == _gridDepth) {
       return;
     }
     if (value >= minSize && value <= maxSize) {
       _gridDepth = value;
-      notifyListeners();
       generatePuzzle();
+      notifyListeners();
     }
   }
 
+  @override
   bool get isCompleted => _puzzle.isComplete;
+
+  bool get canSolve => !kIsWeb || gridSize <= minSize + 1;
 
   int getTileIndexAtCoordinates(Coordinates coordinates) {
     return _puzzle.tiles.indexWhere((tile) {
@@ -79,7 +95,7 @@ class HexPuzzleNotifier extends BaseNotifier implements PuzzleGameNotifier<HexTi
     bool startGame = false,
     bool shuffle = false,
   }) async {
-    _getRead();
+    _getReady();
 
     final correctPositions = _generatePositions();
     final currentPositions = [...correctPositions];
@@ -106,6 +122,35 @@ class HexPuzzleNotifier extends BaseNotifier implements PuzzleGameNotifier<HexTi
     }
   }
 
+  @override
+  Future<void> findSolution() async {
+    _isSolving = true;
+    notifyListeners();
+
+    final correctPositions = _generatePositions();
+    final currentPositions = [...correctPositions];
+    final tiles = _generateTileListFromPositions(correctPositions, currentPositions);
+    final start = HexGridPuzzle(tiles: [...puzzle.tiles]);
+    final goal = HexGridPuzzle(tiles: tiles);
+
+    final solver = PuzzleSolver<HexTile>(
+      start: puzzle,
+      goal: goal,
+    );
+    final solution = await solver.solve();
+
+    // rewind
+    _puzzle = start;
+    if (kDebugMode) {
+      print(solution.map((tile) => '${tile.value + 1}').toList().join(','));
+    }
+    for (final tile in solution) {
+      await Future.delayed(const Duration(milliseconds: 300));
+      moveTile(tile);
+    }
+  }
+
+  @override
   void moveTile(HexTile tile) {
     if (_gameState.inProgress) {
       if (_puzzle.isTileMovable(tile)) {
@@ -113,6 +158,7 @@ class HexPuzzleNotifier extends BaseNotifier implements PuzzleGameNotifier<HexTi
         _puzzle = mutablePuzzle.moveTiles(tile, []).sort();
         if (isCompleted) {
           _gameState = GameState.completed;
+          _isSolving = false;
           _timer.pause();
         }
         _moveCount++;
@@ -150,7 +196,7 @@ class HexPuzzleNotifier extends BaseNotifier implements PuzzleGameNotifier<HexTi
     notifyListeners();
   }
 
-  void _getRead() {
+  void _getReady() {
     _moveCount = 0;
     _gameState = GameState.gettingReady;
     _timer.stop();
@@ -166,10 +212,11 @@ class HexPuzzleNotifier extends BaseNotifier implements PuzzleGameNotifier<HexTi
       final crossCount = _maxHexCount - r.abs();
       for (var crossIndex = 0; crossIndex < crossCount; crossIndex++) {
         int q;
-        if (r <= 0)
+        if (r <= 0) {
           q = -_gridDepth - r + crossIndex;
-        else
+        } else {
           q = -_gridDepth + crossIndex;
+        }
 
         final position = HexPosition.axial(q, r);
         positions.add(position);

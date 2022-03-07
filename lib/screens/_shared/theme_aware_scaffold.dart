@@ -5,7 +5,7 @@ import 'package:slide_puzzle/themes/theme.notifier.dart';
 import 'package:slide_puzzle/widgets/square_button.dart';
 
 class ThemeAwareScaffold extends StatelessWidget {
-  ThemeAwareScaffold({
+  const ThemeAwareScaffold({
     Key? key,
     required this.pageLayoutDelegate,
   }) : super(key: key);
@@ -17,7 +17,6 @@ class ThemeAwareScaffold extends StatelessWidget {
     final themeColor = context.watch<ThemeNotifier>().currentColor;
 
     return AnimatedTheme(
-      duration: kThemeChangeDuration,
       data: themeColor.theme,
       child: Stack(
         children: [
@@ -36,7 +35,7 @@ class ThemeAwareScaffold extends StatelessWidget {
             ),
           ),
           if (ModalRoute.of(context)?.canPop ?? false)
-            Positioned(
+            const Positioned(
               top: 12,
               left: 12,
               child: _BackButton(),

@@ -16,15 +16,15 @@ class MenuHeader extends StatelessWidget {
     return ResponsiveLayoutBuilder(
       small: (_, child) => Padding(
         padding: kPadding16,
-        child: child!,
+        child: child,
       ),
       medium: (_, child) => Padding(
         padding: kPadding24,
-        child: child!,
+        child: child,
       ),
       large: (_, child) => SizedBox(
         height: ResponsiveLayoutSize.large.squareBoardSize,
-        child: child!,
+        child: child,
       ),
       child: (layoutSize, _) {
         return Column(
@@ -52,11 +52,11 @@ class _MenuTitle extends StatelessWidget {
       small: (_, child) => child!,
       medium: (_, child) => Padding(
         padding: kPadding24,
-        child: child!,
+        child: child,
       ),
       large: (_, child) => Padding(
         padding: kEdgePadding8,
-        child: child!,
+        child: child,
       ),
       child: (layoutSize, _) {
         final titleColor = context.colors.primary;
@@ -77,10 +77,10 @@ class _MenuTitle extends StatelessWidget {
 
 extension _ResponsiveLayoutSizeExtension on ResponsiveLayoutSize {
   TextStyle get textStyle {
-    return this.isLarge ? PuzzleTextStyle.headline2 : PuzzleTextStyle.headline3;
+    return isLarge ? PuzzleTextStyle.headline2 : PuzzleTextStyle.headline3;
   }
 
   TextAlign get textAlign {
-    return this.isLarge ? TextAlign.left : TextAlign.center;
+    return isLarge ? TextAlign.left : TextAlign.center;
   }
 }

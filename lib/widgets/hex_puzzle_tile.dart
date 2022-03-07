@@ -4,7 +4,7 @@ import 'package:slide_puzzle/layout/layout.dart';
 import 'package:slide_puzzle/widgets/animations/animated_hover_interaction.dart';
 
 class HexPuzzleTile extends StatelessWidget {
-  HexPuzzleTile({
+  const HexPuzzleTile({
     Key? key,
     required this.offset,
     required this.gridDepth,

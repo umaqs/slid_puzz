@@ -12,6 +12,7 @@ import 'package:slide_puzzle/widgets/widgets.dart';
 class WordsSquareLayout implements PageLayoutDelegate<WordsSquarePuzzleNotifier> {
   const WordsSquareLayout(this.notifier);
 
+  @override
   final WordsSquarePuzzleNotifier notifier;
 
   @override
@@ -20,8 +21,8 @@ class WordsSquareLayout implements PageLayoutDelegate<WordsSquarePuzzleNotifier>
   }
 
   @override
-  Widget body(context, constraints) {
-    return PuzzleBoard.hex(
+  Widget body(BuildContext context, BoxConstraints constraints) {
+    return PuzzleBoard.square(
       tiles: [
         for (var i = 0; i < notifier.puzzle.tiles.length; i++) gridItem(context, i),
       ],
@@ -29,24 +30,32 @@ class WordsSquareLayout implements PageLayoutDelegate<WordsSquarePuzzleNotifier>
   }
 
   @override
-  Widget endSection(context, constraints) {
+  Widget endSection(BuildContext context, BoxConstraints constraints) {
     final gameState = notifier.gameState;
 
-    return PuzzleFooter(
-      gameState: gameState,
-      gridSizePicker: GridSizePicker(
-        initialValue: notifier.gridSize,
-        min: notifier.minSize,
-        max: notifier.maxSize,
-        onChanged: gameState.canInteract ? (value) => notifier.gridSize = value : null,
-      ),
-      primaryButton: PrimaryButton(
-        text: _primaryButtonTitle(gameState),
-        onPressed: gameState.canInteract ? notifier.nextState : null,
-      ),
-      secondaryButton: SecondaryButton(
-        text: 'Refresh',
-        onPressed: gameState.canInteract ? () => notifier.generatePuzzle() : null,
+    return IgnorePointer(
+      ignoring: notifier.isSolving,
+      child: PuzzleFooter(
+        gameState: gameState,
+        gridSizePicker: GridSizePicker(
+          initialValue: notifier.gridSize,
+          min: notifier.minSize,
+          max: notifier.maxSize,
+          onChanged: gameState.canInteract ? (value) => notifier.gridSize = value : null,
+        ),
+        primaryButton: PrimaryButton(
+          text: _primaryButtonTitle(gameState),
+          onPressed: gameState.canInteract ? notifier.nextState : null,
+        ),
+        secondaryButton: notifier.canSolve
+            ? PrimaryButton(
+                text: 'SOLVE',
+                onPressed: gameState.canInteract ? () => notifier.findSolution() : null,
+              )
+            : SecondaryButton(
+                text: 'REFRESH',
+                onPressed: gameState.canInteract ? () => notifier.generatePuzzle() : null,
+              ),
       ),
     );
   }

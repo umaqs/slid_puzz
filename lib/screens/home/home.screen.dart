@@ -15,7 +15,7 @@ class HomeScreen extends StatefulWidget {
 
   static ScaleTransitionPage buildPage(BuildContext context) {
     return ScaleTransitionPage(
-      key: ValueKey(RouteNames.home),
+      key: const ValueKey(RouteNames.home),
       child: ProvideNotifier<HomeNotifier>(
         watch: true,
         create: (context) => HomeNotifier(),

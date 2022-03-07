@@ -69,7 +69,7 @@ class PuzzleScore extends StatelessWidget {
                   left: 0,
                   right: 0,
                   child: Container(
-                    padding: kPadding24.add(EdgeInsets.only(top: 12)),
+                    padding: kPadding24.add(const EdgeInsets.only(top: 12)),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
@@ -85,7 +85,6 @@ class PuzzleScore extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const ResponsiveGap(
-                          small: 0,
                           medium: 32,
                           large: 32,
                         ),

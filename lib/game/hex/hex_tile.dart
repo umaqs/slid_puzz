@@ -6,7 +6,7 @@ import 'package:slide_puzzle/game/hex/hex_position.dart';
 /// {@endtemplate}
 class HexTile extends Tile<HexPosition> {
   /// {@macro hex_tile}
-  HexTile({
+  const HexTile({
     required int value,
     required HexPosition correctPosition,
     required HexPosition currentPosition,
@@ -19,11 +19,13 @@ class HexTile extends Tile<HexPosition> {
         );
 
   // Checks whether both tiles are on either same column or same row
+  @override
   bool isAlignedWith(Tile other) {
     return other.currentPosition.isAlignedWith(currentPosition);
   }
 
   /// Create a copy of this [Tile] with updated current position.
+  @override
   HexTile copyWith({required HexPosition currentPosition}) {
     return HexTile(
       value: value,

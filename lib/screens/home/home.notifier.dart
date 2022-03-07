@@ -85,7 +85,7 @@ class HomeNotifier extends BaseNotifier {
         ];
 
   List<HexMenuItem> get menuItems => _menuItems;
-  List<HexMenuItem> _menuItems;
+  final List<HexMenuItem> _menuItems;
 
   void itemTapped(BuildContext context, HexMenuItem menuItem) {
     switch (menuItem.index) {

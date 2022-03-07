@@ -12,7 +12,6 @@ mixin RouteNames {
 }
 
 late final _router = GoRouter(
-  initialLocation: '/',
   routes: [
     GoRoute(
       name: RouteNames.home,

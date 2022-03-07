@@ -17,7 +17,7 @@ class NumbersHexScreen extends StatelessWidget {
 
   static ScaleTransitionPage buildPage(BuildContext context) {
     return ScaleTransitionPage(
-      key: ValueKey(RouteNames.numbersHex),
+      key: const ValueKey(RouteNames.numbersHex),
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider<GameTimerNotifier>(create: (_) => GameTimerNotifier(const Ticker())),

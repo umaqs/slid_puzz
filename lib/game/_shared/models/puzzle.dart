@@ -22,6 +22,9 @@ abstract class GridPuzzle<T extends Tile> extends Equatable {
   // list to _swapTiles to individually swap them.
   GridPuzzle<T> moveTiles(T tile, List<T> tilesToSwap);
 
+  /// Uniquely identify the puzzle based on the tile formation
+  String get id => tiles.map((t) => t.value).join();
+
   /// Gets the number of tiles that are currently in their correct position.
   int get numberOfCorrectTiles {
     final correctTiles = tiles.where((tile) => !tile.isWhitespace && tile.hasCorrectPosition);
@@ -45,6 +48,10 @@ abstract class GridPuzzle<T extends Tile> extends Equatable {
 
   /// Sorts puzzle tiles so they are in order of their current position.
   GridPuzzle<T> sort();
+
+  GridPuzzle<T> clone();
+
+  num getManhattanDistance();
 
   @override
   List<Object> get props => [tiles];

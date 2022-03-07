@@ -6,6 +6,7 @@ import 'package:slide_puzzle/layout/layout.dart';
 import 'package:slide_puzzle/screens/_base/infrastructure.dart';
 import 'package:slide_puzzle/themes/themes.dart';
 import 'package:slide_puzzle/typography/typography.dart';
+import 'package:slide_puzzle/widgets/widgets.dart';
 
 class PuzzleTitle extends StatelessWidget {
   const PuzzleTitle({
@@ -23,11 +24,13 @@ class PuzzleTitle extends StatelessWidget {
   String _getTitle(CountdownStatus status, int secondsToBegin) {
     switch (gameState) {
       case GameState.gettingReady:
-        return 'Get Ready ${status == CountdownStatus.running ? secondsToBegin : ''}';
+        return status == CountdownStatus.elapsed
+            ? 'Go!'
+            : 'Get Ready ${status == CountdownStatus.running ? secondsToBegin : ''}';
       case GameState.ready:
-        return 'Let\'s Go!';
+        return "Let's Go!";
       case GameState.inProgress:
-        return status == CountdownStatus.elapsed ? 'Go!' : 'Tick Tock!';
+        return 'Tick Tock!';
       case GameState.paused:
         return 'Paused!';
       case GameState.completed:
@@ -37,6 +40,10 @@ class PuzzleTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (gameState.inProgress || gameState.paused) {
+      return const PuzzleTimer();
+    }
+
     final titleColor = context.colors.primary;
 
     return Listen<CountdownNotifier>(
@@ -75,10 +82,10 @@ class PuzzleTitle extends StatelessWidget {
 
 extension _ResponsiveLayoutSizeExtension on ResponsiveLayoutSize {
   TextStyle get textStyle {
-    return this.isLarge ? PuzzleTextStyle.headline2 : PuzzleTextStyle.headline3;
+    return isLarge ? PuzzleTextStyle.headline2 : PuzzleTextStyle.headline3;
   }
 
   TextAlign get textAlign {
-    return this.isLarge ? TextAlign.left : TextAlign.center;
+    return isLarge ? TextAlign.left : TextAlign.center;
   }
 }

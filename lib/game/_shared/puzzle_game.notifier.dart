@@ -21,9 +21,13 @@ abstract class PuzzleGameNotifier<T extends Tile> extends BaseNotifier {
 
   bool get isCompleted;
 
+  bool get isSolving;
+
   Future<void> generatePuzzle({bool startGame = false, bool shuffle = false});
 
   void moveTile(T tile);
 
   bool showCorrectTileIndicator(T tile);
+
+  Future<void> findSolution();
 }

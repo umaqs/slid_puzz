@@ -40,6 +40,9 @@ Future<T?> showAppDialog<T>({
 }
 
 Future<void> showGameCompletedDialog(BuildContext context, GlobalKey boardKey) async {
+  final puzzleNotifier = context.read<PuzzleGameNotifier>();
+  final timerNotifier = context.read<GameTimerNotifier>();
+
   final boundary = boardKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
   if (boundary == null) {
     return;
@@ -56,15 +59,11 @@ Future<void> showGameCompletedDialog(BuildContext context, GlobalKey boardKey) a
 
   await showAppDialog<void>(
     context: context,
-    barrierDismissible: false,
+    barrierDismissible: true,
     child: MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(
-          value: context.read<PuzzleGameNotifier>(),
-        ),
-        ChangeNotifierProvider.value(
-          value: context.read<GameTimerNotifier>(),
-        ),
+        ChangeNotifierProvider.value(value: puzzleNotifier),
+        ChangeNotifierProvider.value(value: timerNotifier),
       ],
       child: ShareDialog(screenshot: screenshot),
     ),

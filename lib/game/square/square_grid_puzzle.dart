@@ -34,21 +34,25 @@ import 'puzzle.dart';
 /// {@endtemplate}
 class SquareGridPuzzle extends GridPuzzle<SquareTile> {
   /// {@macro square_grid_puzzle}
-  SquareGridPuzzle({required List<SquareTile> tiles}) : super(tiles: tiles);
+  const SquareGridPuzzle({required List<SquareTile> tiles}) : super(tiles: tiles);
 
+  @override
   SquareTile getWhitespaceTile() => tiles.singleWhere((tile) => tile.isWhitespace);
 
   /// Gets the number of tiles that are currently in their correct position.
+  @override
   int get numberOfCorrectTiles {
     final correctTiles = tiles.where((tile) => !tile.isWhitespace && tile.hasCorrectPosition);
     return correctTiles.length;
   }
 
   /// Determines if the puzzle is completed.
+  @override
   bool get isComplete => numberOfCorrectTiles == tiles.length - 1;
 
   /// Determines if the tapped tile can move in the direction of the whitespace
   /// tile.
+  @override
   bool isTileMovable(Tile tile) {
     final whitespaceTile = getWhitespaceTile();
     if (tile == whitespaceTile) {
@@ -120,12 +124,13 @@ class SquareGridPuzzle extends GridPuzzle<SquareTile> {
   ///
   // Recursively stores a list of all tiles that need to be moved and passes the
   // list to _swapTiles to individually swap them.
+  @override
   SquareGridPuzzle moveTiles(SquareTile tile, List<SquareTile> tilesToSwap) {
     final whitespaceTile = getWhitespaceTile();
     final deltaX = whitespaceTile.currentPosition.x - tile.currentPosition.x;
     final deltaY = whitespaceTile.currentPosition.y - tile.currentPosition.y;
 
-    final distanceToWhitespaceTile = (deltaX.abs() + deltaY.abs());
+    final distanceToWhitespaceTile = deltaX.abs() + deltaY.abs();
     if (distanceToWhitespaceTile > 1) {
       // more than 1 tiles needs to be swapped
       final shiftPointX = tile.currentPosition.x + deltaX.sign;
@@ -145,7 +150,7 @@ class SquareGridPuzzle extends GridPuzzle<SquareTile> {
   /// tile in tilesToSwap with the whitespace.
   SquareGridPuzzle _swapTiles(List<SquareTile> tilesToSwap) {
     for (final tileToSwap in tilesToSwap.reversed) {
-      final tileIndex = tiles.indexOf(tileToSwap);
+      final tileIndex = tiles.indexWhere((tile) => tile.value == tileToSwap.value);
       final tile = tiles[tileIndex];
       final whitespaceTile = getWhitespaceTile();
       final whitespaceTileIndex = tiles.indexOf(whitespaceTile);
@@ -163,12 +168,30 @@ class SquareGridPuzzle extends GridPuzzle<SquareTile> {
   }
 
   /// Sorts puzzle tiles so they are in order of their current position.
+  @override
   SquareGridPuzzle sort() {
     final sortedTiles = [...tiles]..sort((tileA, tileB) {
         return tileA.currentPosition.compareTo(tileB.currentPosition);
       });
 
     return SquareGridPuzzle(tiles: sortedTiles);
+  }
+
+  @override
+  SquareGridPuzzle clone() {
+    return SquareGridPuzzle(tiles: [...tiles]);
+  }
+
+  @override
+  num getManhattanDistance() {
+    var cost = 0.0;
+    for (final tile in tiles) {
+      final currentPosition = tile.currentPosition;
+      final correctPosition = tile.correctPosition;
+
+      cost += correctPosition.distance(currentPosition);
+    }
+    return cost;
   }
 
   @override

@@ -19,7 +19,7 @@ class PicturesPuzzleScreen extends StatelessWidget {
 
   static ScaleTransitionPage buildPage(BuildContext context, Uint8List imageData) {
     return ScaleTransitionPage(
-      key: ValueKey(RouteNames.picturesPuzzle),
+      key: const ValueKey(RouteNames.picturesPuzzle),
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider<GameTimerNotifier>(create: (_) => GameTimerNotifier(const Ticker())),

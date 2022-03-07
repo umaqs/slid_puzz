@@ -15,7 +15,7 @@ class ResponsiveGap extends StatelessWidget {
   }) : super(key: key);
 
   /// {@macro responsive_gap}
-  ResponsiveGap.all({
+  const ResponsiveGap.all({
     Key? key,
     required double value,
   })  : small = value,

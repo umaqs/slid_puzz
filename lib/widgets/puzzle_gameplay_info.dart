@@ -62,6 +62,6 @@ class PuzzleGameplayInfo extends StatelessWidget {
 
 extension _ResponsiveLayoutSizeExtension on ResponsiveLayoutSize {
   TextStyle get defaultTextStyle {
-    return this.isLarge ? PuzzleTextStyle.headline4 : PuzzleTextStyle.headline5;
+    return isLarge ? PuzzleTextStyle.headline4 : PuzzleTextStyle.headline5;
   }
 }

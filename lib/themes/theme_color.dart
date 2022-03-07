@@ -23,7 +23,6 @@ class ThemeColor {
         .toList();
     return RadialGradient(
       colors: colors,
-      center: Alignment.center,
       radius: 1,
     );
   }

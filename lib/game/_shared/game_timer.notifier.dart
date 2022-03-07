@@ -34,6 +34,7 @@ class GameTimerNotifier extends BaseNotifier {
     _secondsElapsed = 0;
   }
 
+  @override
   void dispose() {
     _tickerSubscription?.cancel();
     super.dispose();

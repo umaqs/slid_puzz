@@ -30,7 +30,7 @@ class PuzzleFooter extends StatelessWidget {
       medium: (_, child) => child!,
       large: (_, child) => SizedBox(
         height: ResponsiveLayoutSize.large.squareBoardSize,
-        child: child!,
+        child: child,
       ),
       child: (layoutSize, _) {
         return SizedBox(
@@ -39,11 +39,10 @@ class PuzzleFooter extends StatelessWidget {
             padding: layoutSize.isLarge ? kEdgePadding24 : kEdgePadding8,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 if (showValueCheckbox != null && gameState.inProgress) ...[
                   showValueCheckbox!,
-                  ResponsiveGap(
+                  const ResponsiveGap(
                     small: 4,
                     medium: 8,
                     large: 16,
@@ -51,7 +50,7 @@ class PuzzleFooter extends StatelessWidget {
                 ],
                 if (gridSizePicker != null) ...[
                   gridSizePicker!,
-                  ResponsiveGap(
+                  const ResponsiveGap(
                     small: 12,
                     medium: 16,
                     large: 24,
@@ -63,9 +62,9 @@ class PuzzleFooter extends StatelessWidget {
                     if (secondaryButton != null) ...[
                       SizedBox.square(
                         dimension: layoutSize.squareTileSize,
-                        child: secondaryButton!,
+                        child: secondaryButton,
                       ),
-                      ResponsiveGap(
+                      const ResponsiveGap(
                         small: 8,
                         medium: 12,
                         large: 16,
@@ -77,7 +76,7 @@ class PuzzleFooter extends StatelessWidget {
                     ),
                   ],
                 ),
-                ResponsiveGap(
+                const ResponsiveGap(
                   small: 16,
                   medium: 16,
                 ),

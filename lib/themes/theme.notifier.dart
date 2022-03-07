@@ -35,7 +35,7 @@ extension ThemeBuildContextExtension on BuildContext {
         loaderColor,
         colors.primary,
       ],
-      stops: [0.0, 1.0],
+      stops: const [0.0, 1.0],
     );
   }
 }
@@ -68,7 +68,7 @@ class ThemeNotifier extends BaseNotifier {
   final SharedPrefsService _sharedPrefsService;
   final GlobalKey<State<AdaptiveTheme>> adaptiveThemeKey;
 
-  AdaptiveThemeManager get _manager => adaptiveThemeKey.currentState as AdaptiveThemeManager;
+  AdaptiveThemeManager? get _manager => adaptiveThemeKey.currentState as AdaptiveThemeManager?;
 
   ThemeColor get currentColor => _currentColor;
   ThemeColor _currentColor = _lightThemes.first;
@@ -88,7 +88,8 @@ class ThemeNotifier extends BaseNotifier {
   }
 
   List<ThemeColor> get themeColors {
-    switch (_manager.theme.brightness) {
+    final brightness = _manager?.theme.brightness ?? Brightness.light;
+    switch (brightness) {
       case Brightness.light:
         return List.unmodifiable(_lightThemes);
       case Brightness.dark:
@@ -101,7 +102,7 @@ class ThemeNotifier extends BaseNotifier {
     required Brightness platformBrightness,
   }) {
     _mode = mode;
-    _manager.setThemeMode(mode);
+    _manager?.setThemeMode(mode);
     switch (mode) {
       case AdaptiveThemeMode.dark:
         setTheme(_darkThemes.first);
@@ -125,7 +126,7 @@ class ThemeNotifier extends BaseNotifier {
   void setTheme(ThemeColor value) {
     _currentColor = value;
     final dark = _currentColor.brightness == Brightness.dark ? _currentColor.theme : null;
-    _manager.setTheme(light: _currentColor.theme, dark: dark, notify: false);
+    _manager?.setTheme(light: _currentColor.theme, dark: dark, notify: false);
 
     _sharedPrefsService.setInt(_themePrefsKey, _currentColor.seedColor.value);
     notifyListeners();

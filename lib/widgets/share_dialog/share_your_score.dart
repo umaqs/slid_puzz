@@ -84,7 +84,7 @@ class ShareYourScore extends StatelessWidget {
                 opacity: animation.socialButtonsOpacity.value,
                 child: Row(
                   mainAxisAlignment: buttonsMainAxisAlignment,
-                  children: [
+                  children: const [
                     TwitterButton(),
                     kBox16,
                     FacebookButton(),

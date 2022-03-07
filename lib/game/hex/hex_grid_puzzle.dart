@@ -7,21 +7,25 @@ import 'puzzle.dart';
 /// {@endtemplate}
 class HexGridPuzzle extends GridPuzzle<HexTile> {
   /// {@macro square_grid_puzzle}
-  HexGridPuzzle({required List<HexTile> tiles}) : super(tiles: tiles);
+  const HexGridPuzzle({required List<HexTile> tiles}) : super(tiles: tiles);
 
+  @override
   HexTile getWhitespaceTile() => tiles.singleWhere((tile) => tile.isWhitespace);
 
   /// Gets the number of tiles that are currently in their correct position.
+  @override
   int get numberOfCorrectTiles {
     final correctTiles = tiles.where((tile) => !tile.isWhitespace && tile.hasCorrectPosition);
     return correctTiles.length;
   }
 
   /// Determines if the puzzle is completed.
+  @override
   bool get isComplete => numberOfCorrectTiles == tiles.length - 1;
 
   /// Determines if the tapped tile can move in the direction of the whitespace
   /// tile.
+  @override
   bool isTileMovable(Tile tile) {
     final whitespaceTile = getWhitespaceTile();
     if (tile == whitespaceTile) {
@@ -48,7 +52,7 @@ class HexGridPuzzle extends GridPuzzle<HexTile> {
     final deltaR = whiteSpaceCurrentPosition.r - currentPosition.r;
     final deltaS = whiteSpaceCurrentPosition.s - currentPosition.s;
 
-    final distanceToWhitespaceTile = (deltaQ.abs() + deltaR.abs() + deltaS.abs());
+    final distanceToWhitespaceTile = deltaQ.abs() + deltaR.abs() + deltaS.abs();
     if (distanceToWhitespaceTile > 2) {
       // more than 1 tiles needs to be swapped
       final shiftPointQ = currentPosition.q + deltaQ.sign;
@@ -90,12 +94,30 @@ class HexGridPuzzle extends GridPuzzle<HexTile> {
   }
 
   /// Sorts puzzle tiles so they are in order of their current position.
+  @override
   HexGridPuzzle sort() {
     final sortedTiles = [...tiles]..sort((tileA, tileB) {
         return tileA.currentPosition.compareTo(tileB.currentPosition);
       });
 
     return HexGridPuzzle(tiles: sortedTiles);
+  }
+
+  @override
+  HexGridPuzzle clone() {
+    return HexGridPuzzle(tiles: [...tiles]);
+  }
+
+  @override
+  num getManhattanDistance() {
+    var cost = 0.0;
+    for (final tile in tiles) {
+      final currentPosition = tile.currentPosition;
+      final correctPosition = tile.correctPosition;
+
+      cost += correctPosition.distance(currentPosition);
+    }
+    return cost;
   }
 
   @override

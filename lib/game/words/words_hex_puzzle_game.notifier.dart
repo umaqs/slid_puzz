@@ -18,8 +18,10 @@ class WordsHexPuzzleNotifier extends HexPuzzleNotifier {
 
   static const _depth = 2;
 
+  @override
   int get minSize => _depth;
 
+  @override
   int get maxSize => _depth;
 
   List<String> get letters => List.unmodifiable(_letters);
@@ -27,14 +29,15 @@ class WordsHexPuzzleNotifier extends HexPuzzleNotifier {
 
   List<String> get actualAnswers {
     return [
-      _letters.take(3).join(''),
-      _letters.skip(3).take(4).join(''),
-      _letters.skip(3 + 4).take(5).join(''),
-      _letters.skip(3 + 4 + 5).take(4).join(''),
-      _letters.skip(3 + 4 + 5 + 4).take(3).join(''),
+      _letters.take(3).join(),
+      _letters.skip(3).take(4).join(),
+      _letters.skip(3 + 4).take(5).join(),
+      _letters.skip(3 + 4 + 5).take(4).join(),
+      _letters.skip(3 + 4 + 5 + 4).take(3).join(),
     ];
   }
 
+  @override
   bool get isCompleted {
     if (super.isCompleted) {
       return true;
@@ -94,11 +97,11 @@ class WordsHexPuzzleNotifier extends HexPuzzleNotifier {
     final tiles = puzzle.tiles;
 
     final words = [
-      tiles.take(3).map((tile) => _letters[tile.value]).join(''),
-      tiles.skip(3).take(4).map((tile) => _letters[tile.value]).join(''),
-      tiles.skip(3 + 4).take(5).map((tile) => _letters[tile.value]).join(''),
-      tiles.skip(3 + 4 + 5).take(4).map((tile) => _letters[tile.value]).join(''),
-      tiles.skip(3 + 4 + 5 + 4).take(3).map((tile) => _letters[tile.value]).join(''),
+      tiles.take(3).map((tile) => _letters[tile.value]).join(),
+      tiles.skip(3).take(4).map((tile) => _letters[tile.value]).join(),
+      tiles.skip(3 + 4).take(5).map((tile) => _letters[tile.value]).join(),
+      tiles.skip(3 + 4 + 5).take(4).map((tile) => _letters[tile.value]).join(),
+      tiles.skip(3 + 4 + 5 + 4).take(3).map((tile) => _letters[tile.value]).join(),
     ];
 
     final solutions = [

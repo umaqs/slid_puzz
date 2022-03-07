@@ -10,13 +10,16 @@ import '../typography/typography.dart';
 class ThemeLayout implements PageLayoutDelegate<ThemeNotifier> {
   const ThemeLayout(this.notifier);
 
+  @override
   final ThemeNotifier notifier;
 
+  @override
   Widget startSection(BuildContext context, BoxConstraints constraints) {
-    return MenuHeader(title: 'Themes');
+    return const MenuHeader(title: 'Themes');
   }
 
-  Widget body(context, constraints) {
+  @override
+  Widget body(BuildContext context, BoxConstraints constraints) {
     return MenuGrid(
       gridSize: 3,
       spacing: 12,
@@ -26,7 +29,8 @@ class ThemeLayout implements PageLayoutDelegate<ThemeNotifier> {
     );
   }
 
-  Widget endSection(context, constraints) {
+  @override
+  Widget endSection(BuildContext context, BoxConstraints constraints) {
     return _buildModeDropDown(context);
   }
 
@@ -52,7 +56,7 @@ class ThemeLayout implements PageLayoutDelegate<ThemeNotifier> {
                 colors.primary,
                 colors.inversePrimary,
               ],
-              stops: [0.0, 1.0],
+              stops: const [0.0, 1.0],
             ),
             borderRadius: 100,
             onTap: () {
@@ -70,7 +74,7 @@ class ThemeLayout implements PageLayoutDelegate<ThemeNotifier> {
       medium: (_, child) => child!,
       large: (_, child) => SizedBox(
         height: ResponsiveLayoutSize.large.squareBoardSize,
-        child: child!,
+        child: child,
       ),
       child: (layoutSize, _) {
         final platformBrightness = MediaQuery.of(context).platformBrightness;
@@ -79,7 +83,6 @@ class ThemeLayout implements PageLayoutDelegate<ThemeNotifier> {
           width: layoutSize.squareBoardSize,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Material(
                 color: colors.secondaryContainer,

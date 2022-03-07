@@ -6,7 +6,7 @@ import 'package:slide_puzzle/game/square/puzzle.dart';
 /// {@endtemplate}
 class SquareTile extends Tile<SquarePosition> {
   /// {@macro square_tile}
-  SquareTile({
+  const SquareTile({
     required int value,
     required SquarePosition correctPosition,
     required SquarePosition currentPosition,
@@ -19,11 +19,13 @@ class SquareTile extends Tile<SquarePosition> {
         );
 
   // Checks whether both tiles are on either same column or same row
+  @override
   bool isAlignedWith(Tile other) {
     return other.currentPosition.isAlignedWith(currentPosition);
   }
 
   /// Create a copy of this [Tile] with updated current position.
+  @override
   SquareTile copyWith({required SquarePosition currentPosition}) {
     return SquareTile(
       value: value,
@@ -34,10 +36,5 @@ class SquareTile extends Tile<SquarePosition> {
   }
 
   @override
-  List<Object> get props => [
-        value,
-        correctPosition,
-        currentPosition,
-        isWhitespace,
-      ];
+  List<Object> get props => [value];
 }

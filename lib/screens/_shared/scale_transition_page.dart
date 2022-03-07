@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'circular_reveal_clipper.dart';
 
 class ScaleTransitionPage extends CustomTransitionPage<void> {
-  ScaleTransitionPage({
+  const ScaleTransitionPage({
     required LocalKey key,
     required Widget child,
   }) : super(

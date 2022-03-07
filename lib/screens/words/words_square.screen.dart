@@ -18,7 +18,7 @@ class WordsSquareScreen extends StatelessWidget {
 
   static ScaleTransitionPage buildPage(BuildContext context) {
     return ScaleTransitionPage(
-      key: ValueKey(RouteNames.wordsSquare),
+      key: const ValueKey(RouteNames.wordsSquare),
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider<GameTimerNotifier>(create: (_) => GameTimerNotifier(const Ticker())),

@@ -34,7 +34,7 @@ Future<void> bootstrapAndRunApp() async {
         Provider<ImageService>(create: (_) => ImageService()),
         Provider<SharedPrefsService>(create: (_) => sharedPrefsService),
         ChangeNotifierProvider<ThemeNotifier>(create: (_) => themeNotifier),
-        Provider<UrlLauncherService>(create: (_) => UrlLauncherService()),
+        Provider<UrlLauncherService>(create: (_) => const UrlLauncherService()),
       ];
 
       runApp(

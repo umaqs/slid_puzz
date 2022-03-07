@@ -37,12 +37,15 @@ class CountdownNotifier extends BaseNotifier {
     if (_secondsToBegin == 0) {
       _status = CountdownStatus.elapsed;
       notifyListeners();
-      onComplete?.call();
       _tickerSubscription?.cancel();
-      _status = CountdownStatus.notStarted;
+      Future.delayed(const Duration(seconds: 1), () {
+        onComplete?.call();
+        _status = CountdownStatus.notStarted;
+      });
     }
   }
 
+  @override
   void dispose() {
     _tickerSubscription?.cancel();
     super.dispose();

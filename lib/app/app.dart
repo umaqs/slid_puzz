@@ -54,8 +54,8 @@ class _PuzzleApp extends StatelessWidget {
             routerDelegate: _router.routerDelegate,
             routeInformationParser: _router.routeInformationParser,
             debugShowCheckedModeBanner: false,
-            supportedLocales: [Locale('en', 'US'), Locale('en', 'GB')],
-            localizationsDelegates: [
+            supportedLocales: const [Locale('en', 'US'), Locale('en', 'GB')],
+            localizationsDelegates: const [
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,

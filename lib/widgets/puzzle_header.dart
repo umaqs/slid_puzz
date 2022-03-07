@@ -16,15 +16,15 @@ class PuzzleHeader<T extends PuzzleGameNotifier> extends StatelessWidget {
     return ResponsiveLayoutBuilder(
       small: (_, child) => Padding(
         padding: kPadding16,
-        child: child!,
+        child: child,
       ),
       medium: (_, child) => Padding(
         padding: kPadding24,
-        child: child!,
+        child: child,
       ),
       large: (_, child) => SizedBox(
         height: ResponsiveLayoutSize.large.squareBoardSize,
-        child: child!,
+        child: child,
       ),
       child: (layoutSize, _) {
         final gameState = notifier.gameState;
@@ -33,9 +33,7 @@ class PuzzleHeader<T extends PuzzleGameNotifier> extends StatelessWidget {
           children: [
             PuzzleTitle(gameState: gameState),
             if (gameState.inProgress || gameState.paused) ...[
-              ResponsiveGap(small: 8, medium: 12, large: 24),
-              PuzzleTimer(),
-              ResponsiveGap(small: 8, medium: 12, large: 24),
+              const ResponsiveGap(small: 8, medium: 12, large: 24),
               PuzzleGameplayInfo(
                 numberOfMoves: notifier.moveCount,
                 numberOfTilesLeft: notifier.puzzle.tiles.length - notifier.puzzle.numberOfCorrectTiles - 1,

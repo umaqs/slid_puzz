@@ -10,7 +10,7 @@ import 'package:slide_puzzle/game/_shared/shared.dart';
 /// {@endtemplate}
 class HexPosition extends Position {
   /// {@macro position}
-  HexPosition.axial(num x, num y) : super(x, y);
+  const HexPosition.axial(num x, num y) : super(x, y);
 
   num get q => x;
 
@@ -19,6 +19,7 @@ class HexPosition extends Position {
   num get s => -q - r;
 
   /// Checks whether both positions are on either same column or same row
+  @override
   bool isAlignedWith(Position other) {
     if (other is HexPosition) {
       return q == other.q || r == other.r || s == other.s;
@@ -31,5 +32,14 @@ class HexPosition extends Position {
     final x = q * sqrt(3) + r * sqrt(3) / 2;
     final y = r * 3 / 2.0;
     return Offset(x, y);
+  }
+
+  @override
+  num distance(Position other) {
+    if (other is HexPosition) {
+      return (q - other.q).abs() + (q + other.r - other.q - other.r).abs() + (r - other.r).abs() / 2;
+    }
+
+    throw UnsupportedError('other Position must be a HexPosition');
   }
 }

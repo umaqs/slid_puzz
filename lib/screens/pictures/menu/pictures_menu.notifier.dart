@@ -63,7 +63,7 @@ class PicturesMenuNotifier extends BaseNotifier {
   List<MenuItem> _generateItems() {
     final seed = Random().nextInt(100);
 
-    int getKey(int index) => (index + seed) * seed;
+    int getKey(int index) => ((index + seed) * seed).hashCode;
 
     return List.generate(
       gridSize * gridSize,
@@ -72,7 +72,7 @@ class PicturesMenuNotifier extends BaseNotifier {
   }
 
   Future<List<MenuItem>> _loadImages() async {
-    return await Future.wait([
+    return Future.wait([
       for (final item in _items)
         _imageCacheManager
             .getSingleFile('https://picsum.photos/seed/${item.key}/500', key: '${item.key}')

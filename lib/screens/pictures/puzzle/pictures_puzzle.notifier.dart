@@ -29,7 +29,7 @@ class PicturesPuzzleNotifier extends SquarePuzzleNotifier {
   Uint8List get imageData => _imageData;
 
   List<Uint8List> get imageParts => List.unmodifiable(_imageParts[gridSize] ?? []);
-  Map<int, List<Uint8List>> _imageParts;
+  final Map<int, List<Uint8List>> _imageParts;
 
   @override
   set gridSize(int value) {

@@ -25,7 +25,7 @@ class PrimaryButton extends StatelessWidget {
           textStyle: theme.textTheme.headline2?.copyWith(
             fontSize: layoutSize.buttonFontSize,
           ),
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           shape: RoundedRectangleBorder(
             borderRadius: kBorderRadius12,
           ),
@@ -68,7 +68,7 @@ class SecondaryButton extends StatelessWidget {
           textStyle: theme.textTheme.headline2?.copyWith(
             fontSize: layoutSize.buttonFontSize,
           ),
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           shape: RoundedRectangleBorder(
             borderRadius: kBorderRadius12,
           ),

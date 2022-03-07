@@ -12,30 +12,32 @@ class ClipPolygon extends StatelessWidget {
   final double borderRadius;
   final List<PolygonBoxShadow> boxShadows;
 
-  ClipPolygon({
+  const ClipPolygon({
     required this.child,
     required this.sides,
-    this.rotate: 0.0,
-    this.borderRadius: 0.0,
-    this.boxShadows: const [],
+    this.rotate = 0.0,
+    this.borderRadius = 0.0,
+    this.boxShadows = const [],
   });
 
   @override
   Widget build(BuildContext context) {
-    PolygonPathSpecs specs = PolygonPathSpecs(
+    final specs = PolygonPathSpecs(
       sides: sides < 3 ? 3 : sides,
       rotate: rotate,
       borderRadiusAngle: borderRadius,
     );
 
     return AspectRatio(
-        aspectRatio: 1.0,
-        child: CustomPaint(
-            painter: BoxShadowPainter(specs, boxShadows),
-            child: ClipPath(
-              clipper: Polygon(specs),
-              child: child,
-            )));
+      aspectRatio: 1.0,
+      child: CustomPaint(
+        painter: BoxShadowPainter(specs, boxShadows),
+        child: ClipPath(
+          clipper: Polygon(specs),
+          child: child,
+        ),
+      ),
+    );
   }
 }
 
@@ -63,11 +65,11 @@ class BoxShadowPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    Path path = PolygonPathDrawer(size: size, specs: specs).draw();
+    final path = PolygonPathDrawer(size: size, specs: specs).draw();
 
-    boxShadows.forEach((PolygonBoxShadow shadow) {
+    for (final shadow in boxShadows) {
       canvas.drawShadow(path, shadow.color, shadow.elevation, false);
-    });
+    }
   }
 
   @override

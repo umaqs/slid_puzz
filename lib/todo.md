@@ -5,11 +5,12 @@
 [X] Add word puzzle implementation
 [X] Main menu (Hex)
 [X] Theme picker (light/dark)
-[ ] L10n
-[ ] Instructions pop-up for first time
-[ ] Info/Licenses pop-up
 [X] Add sound
 [X] screenshot/share dialog
+[X] Auto-solver
+[ ] L10n
+[ ] Instructions pop-up for first time (feature_discovery)
+[ ] Info/Licenses pop-up
 [ ] Firebase leaderboard ?
 
 // To FIX
@@ -22,3 +23,4 @@
 [X] Moves / correct tiles UI
 [X] Fix pictures menu loading state issue 
 [ ] Web service workers
+[ ] Multiple audio players

@@ -51,7 +51,6 @@ class PageLayout extends StatelessWidget {
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             LayoutBuilder(builder: layoutBuilderDelegate.startSection),
             kBox8,

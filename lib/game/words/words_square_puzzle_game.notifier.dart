@@ -29,11 +29,12 @@ class WordsSquarePuzzleNotifier extends SquarePuzzleNotifier {
   List<String> get actualAnswers {
     return [
       for (var i = 0; i < gridSize; i++) ...[
-        _letters.skip(gridSize * i).take(gridSize).join(''),
+        _letters.skip(gridSize * i).take(gridSize).join(),
       ],
     ];
   }
 
+  @override
   bool get isCompleted {
     if (super.isCompleted) {
       return true;
@@ -90,7 +91,7 @@ class WordsSquarePuzzleNotifier extends SquarePuzzleNotifier {
 
     final words = [
       for (var i = 0; i < gridSize; i++) ...[
-        tiles.skip(gridSize * i).take(gridSize).map((tile) => _letters[tile.value]).join(''),
+        tiles.skip(gridSize * i).take(gridSize).map((tile) => _letters[tile.value]).join(),
       ],
     ];
 

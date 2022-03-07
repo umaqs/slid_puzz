@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:slide_puzzle/game/_shared/shared.dart';
+import 'package:slide_puzzle/game/_shared/solver/puzzle.solver.dart';
 import 'package:slide_puzzle/game/square/puzzle.dart';
 import 'package:slide_puzzle/screens/_base/base.notifier.dart';
 
@@ -24,34 +26,48 @@ class SquarePuzzleNotifier extends BaseNotifier implements PuzzleGameNotifier<Sq
   final CountdownNotifier _countdown;
   final GameTimerNotifier _timer;
 
+  @override
   int get minSize => _minGridSize;
 
+  @override
   int get maxSize => _maxGridSize;
 
+  @override
   int get gridSize => _gridSize;
   int _gridSize;
 
+  @override
   int get moveCount => _moveCount;
   int _moveCount = 0;
 
+  @override
   GameState get gameState => _gameState;
   GameState _gameState;
 
+  @override
+  bool get isSolving => _isSolving;
+  bool _isSolving = false;
+
+  @override
   SquareGridPuzzle get puzzle => _puzzle;
   late SquareGridPuzzle _puzzle;
 
+  @override
   set gridSize(int value) {
     if (value == _gridSize) {
       return;
     }
     if (value >= minSize && value <= maxSize) {
       _gridSize = value;
-
       generatePuzzle();
+      notifyListeners();
     }
   }
 
+  @override
   bool get isCompleted => _puzzle.isComplete;
+
+  bool get canSolve => !kIsWeb || gridSize <= minSize + 1;
 
   @override
   bool showCorrectTileIndicator(SquareTile tile) {
@@ -69,7 +85,7 @@ class SquarePuzzleNotifier extends BaseNotifier implements PuzzleGameNotifier<Sq
     bool startGame = false,
     bool shuffle = false,
   }) async {
-    _getRead();
+    _getReady();
 
     final correctPositions = _generatePositions();
     final currentPositions = [...correctPositions];
@@ -96,6 +112,36 @@ class SquarePuzzleNotifier extends BaseNotifier implements PuzzleGameNotifier<Sq
     }
   }
 
+  @override
+  Future<void> findSolution() async {
+    _isSolving = true;
+    notifyListeners();
+
+    final correctPositions = _generatePositions();
+    final currentPositions = [...correctPositions];
+    final tiles = _generateTileListFromPositions(correctPositions, currentPositions);
+    final start = SquareGridPuzzle(tiles: [...puzzle.tiles]);
+    final goal = SquareGridPuzzle(tiles: tiles);
+
+    final solver = PuzzleSolver<SquareTile>(
+      start: start,
+      goal: goal,
+    );
+
+    final solution = (await solver.solve()).toList();
+
+    // rewind
+    _puzzle = start;
+    if (kDebugMode) {
+      print(solution.map((tile) => '${tile.value + 1}').toList().join(','));
+    }
+    for (final tile in solution) {
+      moveTile(tile);
+      await Future.delayed(const Duration(milliseconds: 300));
+    }
+  }
+
+  @override
   void moveTile(SquareTile tile) {
     if (_gameState.inProgress) {
       if (_puzzle.isTileMovable(tile)) {
@@ -103,6 +149,7 @@ class SquarePuzzleNotifier extends BaseNotifier implements PuzzleGameNotifier<Sq
         _puzzle = mutablePuzzle.moveTiles(tile, []).sort();
         if (isCompleted) {
           _gameState = GameState.completed;
+          _isSolving = false;
           _timer.pause();
         }
         _moveCount++;
@@ -140,7 +187,7 @@ class SquarePuzzleNotifier extends BaseNotifier implements PuzzleGameNotifier<Sq
     notifyListeners();
   }
 
-  void _getRead() {
+  void _getReady() {
     _moveCount = 0;
     _gameState = GameState.gettingReady;
     _timer.stop();

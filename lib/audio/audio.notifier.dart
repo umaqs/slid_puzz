@@ -65,7 +65,11 @@ class AudioNotifier extends BaseNotifier {
 
   @override
   void dispose() {
-    _audioPlayers.values.forEach((list) => list.forEach((player) => player.dispose()));
+    for (final list in _audioPlayers.values) {
+      for (final player in list) {
+        player.dispose();
+      }
+    }
     super.dispose();
   }
 }
