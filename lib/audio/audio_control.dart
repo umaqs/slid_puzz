@@ -16,7 +16,7 @@ class AudioControl extends StatelessWidget {
       medium: (_, child) => child!,
       large: (_, child) => child!,
       child: (layoutSize, constraints) {
-        final colors = context.colors;
+        final colors = context.watch<ThemeNotifier>().currentColor.theme.colorScheme;
 
         final notifier = context.watch<AudioNotifier>();
         final audioMuted = notifier.isMuted;

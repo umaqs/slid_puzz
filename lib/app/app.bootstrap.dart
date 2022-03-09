@@ -19,6 +19,8 @@ Future<void> bootstrapAndRunApp() async {
         platformBrightness = MediaQueryData.fromWindow(window).platformBrightness;
       }
 
+      SnackBarService.init();
+
       final themeNotifier = ThemeNotifier(
         sharedPrefsService,
         adaptiveThemeKey,
@@ -45,6 +47,11 @@ Future<void> bootstrapAndRunApp() async {
       );
     },
     (error, stack) {
+      if (kDebugMode) {
+        print('Error: $error');
+        print('Stacktrace: $stack');
+        Error.throwWithStackTrace(error, stack);
+      }
       log('Error: $error', error: error, stackTrace: stack);
     },
   );

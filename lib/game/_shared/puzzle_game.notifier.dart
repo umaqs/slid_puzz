@@ -23,6 +23,10 @@ abstract class PuzzleGameNotifier<T extends Tile> extends BaseNotifier {
 
   bool get isSolving;
 
+  num get solvingThresholdFactor;
+
+  GridPuzzle<T> getSolvedPuzzle();
+
   Future<void> generatePuzzle({bool startGame = false, bool shuffle = false});
 
   void moveTile(T tile);

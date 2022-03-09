@@ -33,49 +33,35 @@ class PicturePuzzleLayout implements PageLayoutDelegate<PicturesPuzzleNotifier> 
   Widget endSection(BuildContext context, BoxConstraints constraints) {
     final gameState = notifier.gameState;
 
-    return IgnorePointer(
-      ignoring: notifier.isSolving,
-      child: PuzzleFooter(
-        gameState: gameState,
-        showValueCheckbox: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text('Show solution'),
-            CheckboxTheme(
-              data: CheckboxThemeData(
-                fillColor: MaterialStateProperty.all(context.colors.primary),
-              ),
-              child: Checkbox(
-                value: notifier.showSolution,
-                fillColor: MaterialStateProperty.all(context.colors.primary),
-                onChanged: (value) => notifier.showSolution = value,
-              ),
+    return PuzzleFooter(
+      gameState: gameState,
+      showValueCheckbox: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text('Show solution'),
+          CheckboxTheme(
+            data: CheckboxThemeData(
+              fillColor: MaterialStateProperty.all(context.colors.primary),
             ),
-          ],
-        ),
-        gridSizePicker: GridSizePicker(
-          initialValue: notifier.gridSize,
-          min: notifier.minSize,
-          max: notifier.maxSize,
-          onChanged: gameState.canInteract ? (value) => notifier.gridSize = value : null,
-        ),
-        primaryButton: PrimaryButton(
-          text: _primaryButtonTitle(gameState),
-          onPressed: gameState.canInteract ? notifier.nextState : null,
-        ),
-        secondaryButton: gameState.inProgress
-            ? notifier.canSolve
-                ? PrimaryButton(
-                    text: 'SOLVE',
-                    onPressed: gameState.canInteract ? () => notifier.findSolution() : null,
-                  )
-                : PrimaryButton(
-                    text: 'RESTART',
-                    onPressed:
-                        gameState.canInteract ? () => notifier.generatePuzzle(startGame: true, shuffle: true) : null,
-                  )
-            : null,
+            child: Checkbox(
+              value: notifier.showSolution,
+              fillColor: MaterialStateProperty.all(context.colors.primary),
+              onChanged: (value) => notifier.showSolution = value,
+            ),
+          ),
+        ],
       ),
+      gridSizePicker: GridSizePicker(
+        initialValue: notifier.gridSize,
+        min: notifier.minSize,
+        max: notifier.maxSize,
+        onChanged: gameState.canInteract ? (value) => notifier.gridSize = value : null,
+      ),
+      primaryButton: PrimaryButton(
+        text: _primaryButtonTitle(gameState),
+        onPressed: gameState.canInteract ? notifier.nextState : null,
+      ),
+      secondaryButton: gameState.inProgress ? const SolveButton() : null,
     );
   }
 
@@ -101,12 +87,11 @@ class PicturePuzzleLayout implements PageLayoutDelegate<PicturesPuzzleNotifier> 
       tile: tile,
       gridSize: notifier.gridSize,
       useCorrectPosition: notifier.showSolution,
-      childBuilder: (context, layoutSize) => tile.isWhitespace
+      childBuilder: (context) => tile.isWhitespace
           ? const SizedBox.shrink()
           : _buildPictureSquareTile(
               context,
               tile,
-              layoutSize,
             ),
     );
   }
@@ -114,7 +99,6 @@ class PicturePuzzleLayout implements PageLayoutDelegate<PicturesPuzzleNotifier> 
   Widget _buildPictureSquareTile(
     BuildContext context,
     SquareTile tile,
-    ResponsiveLayoutSize layoutSize,
   ) {
     final isLoading = notifier.isLoading || notifier.puzzle.tiles.length != notifier.imageParts.length;
 
@@ -137,6 +121,9 @@ class PicturePuzzleLayout implements PageLayoutDelegate<PicturesPuzzleNotifier> 
       color: Colors.transparent,
       borderRadius: 8,
       onTap: () {
+        if (notifier.isSolving) {
+          return;
+        }
         context.read<AudioNotifier>().play(AudioAssets.tileMove);
         notifier.moveTile(tile);
       },

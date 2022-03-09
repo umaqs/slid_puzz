@@ -51,7 +51,27 @@ abstract class GridPuzzle<T extends Tile> extends Equatable {
 
   GridPuzzle<T> clone();
 
-  num getManhattanDistance();
+  num getManhattanDistance({bool weighted = true}) {
+    var cost = 0.0;
+    for (final tile in tiles) {
+      if (tile.isWhitespace) {
+        continue;
+      }
+
+      if (weighted) {
+        cost += _getTileManhattanDistance(tile);
+      } else {
+        cost += tile.manhattanDistance;
+      }
+    }
+    return cost;
+  }
+
+  num _getTileManhattanDistance(Tile tile) {
+    final tileCount = tiles.length;
+    final exp = tileCount - tile.value + 1.0;
+    return exp * tile.manhattanDistance;
+  }
 
   @override
   List<Object> get props => [tiles];

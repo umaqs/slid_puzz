@@ -63,15 +63,11 @@ class HomeLayout implements PageLayoutDelegate<HomeNotifier> {
       gridDepth: 1,
       color: context.colors.primary,
       offset: menuItem.offset,
-      childBuilder: (context, layoutSize) => _buildMenuTile(
-        context,
-        menuItem,
-        layoutSize,
-      ),
+      childBuilder: (context) => _buildMenuTile(context, menuItem),
     );
   }
 
-  Widget _buildMenuTile(BuildContext context, HexMenuItem menuItem, ResponsiveLayoutSize layoutSize) {
+  Widget _buildMenuTile(BuildContext context, HexMenuItem menuItem) {
     final colors = context.colors;
 
     return SizedBox.expand(
@@ -112,7 +108,7 @@ class HomeLayout implements PageLayoutDelegate<HomeNotifier> {
                         textAlign: TextAlign.center,
                         style: PuzzleTextStyle.body.copyWith(
                           color: colors.surface,
-                          fontSize: layoutSize.menuTileFontSize,
+                          fontSize: context.layoutSize.menuTileFontSize,
                         ),
                       ),
                     ],

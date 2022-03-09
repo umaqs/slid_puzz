@@ -9,18 +9,21 @@ class PuzzleNode<T extends Tile> {
     this.actionTile,
     this.parent,
   })  : remainingTile = puzzle.tiles.length - puzzle.numberOfCorrectTiles,
-        manhattanDistance = puzzle.getManhattanDistance();
+        manhattanDistance = puzzle.getManhattanDistance(weighted: false),
+        weightedManhattanDistance = puzzle.getManhattanDistance();
 
   final GridPuzzle<T> puzzle;
   final num cost;
   final num manhattanDistance;
+  final num weightedManhattanDistance;
   final int remainingTile;
   final PuzzleNode<T>? parent;
   final T? actionTile;
 
   String get key => puzzle.id;
 
-  num get totalCost => cost + 1.001 * manhattanDistance;
+  num get totalCost => cost + 1.01 * manhattanDistance;
+  num get totalCostWeighted => cost + 1.01 * weightedManhattanDistance;
 
   Set<PuzzleNode<T>> getChildren(Set<String> visited) {
     final children = HashSet<PuzzleNode<T>>();
@@ -55,7 +58,9 @@ class PuzzleNode<T extends Tile> {
   Iterable<T> getPath() {
     final path = <T>[];
 
-    path.add(actionTile!);
+    if (actionTile != null) {
+      path.add(actionTile!);
+    }
 
     var pointer = parent;
     // Go up the chain to recreate the path
@@ -71,6 +76,10 @@ class PuzzleNode<T extends Tile> {
 
   static int comparator(PuzzleNode a, PuzzleNode b) {
     return a.totalCost.compareTo(b.totalCost);
+  }
+
+  static int comparatorWeighed(PuzzleNode a, PuzzleNode b) {
+    return a.totalCostWeighted.compareTo(b.totalCostWeighted);
   }
 
   static int comparatorHeuristicOnly(PuzzleNode a, PuzzleNode b) {

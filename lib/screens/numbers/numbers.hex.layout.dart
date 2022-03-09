@@ -31,33 +31,19 @@ class NumbersHexLayout implements PageLayoutDelegate<HexPuzzleNotifier> {
   @override
   Widget endSection(BuildContext context, BoxConstraints constraints) {
     final gameState = notifier.gameState;
-    return IgnorePointer(
-      ignoring: notifier.isSolving,
-      child: PuzzleFooter(
-        gameState: gameState,
-        gridSizePicker: GridSizePicker(
-          initialValue: notifier.gridSize,
-          min: notifier.minSize,
-          max: notifier.maxSize,
-          onChanged: gameState.canInteract ? (value) => notifier.gridSize = value : null,
-        ),
-        primaryButton: PrimaryButton(
-          text: _primaryButtonTitle(gameState),
-          onPressed: gameState.canInteract ? notifier.nextState : null,
-        ),
-        secondaryButton: gameState.inProgress
-            ? notifier.canSolve
-                ? PrimaryButton(
-                    text: 'SOLVE',
-                    onPressed: gameState.canInteract ? () => notifier.findSolution() : null,
-                  )
-                : PrimaryButton(
-                    text: 'RESTART',
-                    onPressed:
-                        gameState.canInteract ? () => notifier.generatePuzzle(startGame: true, shuffle: true) : null,
-                  )
-            : null,
+    return PuzzleFooter(
+      gameState: gameState,
+      gridSizePicker: GridSizePicker(
+        initialValue: notifier.gridSize,
+        min: notifier.minSize,
+        max: notifier.maxSize,
+        onChanged: gameState.canInteract ? (value) => notifier.gridSize = value : null,
       ),
+      primaryButton: PrimaryButton(
+        text: _primaryButtonTitle(gameState),
+        onPressed: gameState.canInteract ? notifier.nextState : null,
+      ),
+      secondaryButton: gameState.inProgress ? const SolveButton() : null,
     );
   }
 
@@ -77,24 +63,28 @@ class NumbersHexLayout implements PageLayoutDelegate<HexPuzzleNotifier> {
 
   @override
   Widget gridItem(BuildContext context, int index) {
+    final colors = context.colors;
     final tile = notifier.puzzle.tiles[index];
     if (tile.isWhitespace) {
       return const SizedBox.shrink();
     }
+
+    final gameState = notifier.gameState;
+    final showCorrectTileIndicator = tile.hasCorrectPosition && (gameState.inProgress || gameState.isCompleted);
+
     return HexPuzzleTile(
       key: Key('hex_puzzle_tile_${tile.value}'),
+      tilt: !notifier.isSolving,
       gridDepth: notifier.gridSize,
       color: context.colors.surface,
+      elevation: showCorrectTileIndicator ? 0 : 16,
+      borderColor: showCorrectTileIndicator ? colors.primary : null,
       offset: tile.currentPosition.toOffset,
-      childBuilder: (context, layoutSize) => _buildNumberHexTile(
-        context,
-        tile,
-        layoutSize,
-      ),
+      childBuilder: (context) => _buildNumberHexTile(context, tile),
     );
   }
 
-  Widget _buildNumberHexTile(BuildContext context, HexTile tile, ResponsiveLayoutSize layoutSize) {
+  Widget _buildNumberHexTile(BuildContext context, HexTile tile) {
     final colors = context.colors;
 
     final gridScaleFactor = 4 / notifier.gridSize;
@@ -103,6 +93,9 @@ class NumbersHexLayout implements PageLayoutDelegate<HexPuzzleNotifier> {
     return SizedBox.expand(
       child: GestureDetector(
         onTap: () {
+          if (notifier.isSolving) {
+            return;
+          }
           context.read<AudioNotifier>().play(AudioAssets.tileMove);
           notifier.moveTile(tile);
         },

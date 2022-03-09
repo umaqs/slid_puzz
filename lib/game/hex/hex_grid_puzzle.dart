@@ -76,7 +76,7 @@ class HexGridPuzzle extends GridPuzzle<HexTile> {
   /// tile in tilesToSwap with the whitespace.
   HexGridPuzzle _swapTiles(List<HexTile> tilesToSwap) {
     for (final tileToSwap in tilesToSwap.reversed) {
-      final tileIndex = tiles.indexOf(tileToSwap);
+      final tileIndex = tiles.indexWhere((tile) => tile.value == tileToSwap.value);
       final tile = tiles[tileIndex];
       final whitespaceTile = getWhitespaceTile();
       final whitespaceTileIndex = tiles.indexOf(whitespaceTile);
@@ -106,18 +106,6 @@ class HexGridPuzzle extends GridPuzzle<HexTile> {
   @override
   HexGridPuzzle clone() {
     return HexGridPuzzle(tiles: [...tiles]);
-  }
-
-  @override
-  num getManhattanDistance() {
-    var cost = 0.0;
-    for (final tile in tiles) {
-      final currentPosition = tile.currentPosition;
-      final correctPosition = tile.correctPosition;
-
-      cost += correctPosition.distance(currentPosition);
-    }
-    return cost;
   }
 
   @override

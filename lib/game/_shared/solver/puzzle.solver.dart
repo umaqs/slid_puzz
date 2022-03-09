@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:math';
 
 import 'package:async_task/async_task.dart';
 import 'package:collection/collection.dart' show HeapPriorityQueue;
@@ -10,19 +11,16 @@ import 'package:slide_puzzle/game/hex/hex_grid_puzzle.dart';
 import 'package:slide_puzzle/game/hex/hex_tile.dart';
 import 'package:slide_puzzle/game/square/puzzle.dart';
 
-class Result<T extends Tile> {
-  Result(this.nodeCount, {this.path});
-
-  final int nodeCount;
-  final Iterable<T>? path;
-}
-
 class PuzzleSolver<T extends Tile> {
   PuzzleSolver({
     required this.start,
     required this.goal,
-  }) : _queue = HeapPriorityQueue<PuzzleNode<T>>(PuzzleNode.comparator);
+    this.distanceThreshold = 0,
+  }) : _queue = HeapPriorityQueue<PuzzleNode<T>>(
+          distanceThreshold == 0 ? PuzzleNode.comparator : PuzzleNode.comparatorWeighed,
+        );
 
+  final num distanceThreshold;
   final GridPuzzle<T> start;
   final GridPuzzle<T> goal;
   final HeapPriorityQueue<PuzzleNode<T>> _queue;
@@ -44,22 +42,42 @@ class PuzzleSolver<T extends Tile> {
     _queue
       ..clear()
       ..add(startNode);
+    _open
+      ..clear()
+      ..add(startNode.key);
 
     _visited.clear();
-
-    _open.add(startNode.key);
 
     final startTime = DateTime.now();
 
     while (_queue.isNotEmpty) {
       final currentNode = _queue.removeFirst();
 
-      if (currentNode.puzzle == goal) {
+      if (currentNode.key == goal.id) {
         if (kDebugMode) {
           print('visited nodes: ${_visited.length}');
           print('Solved in: ${DateTime.now().difference(startTime).inMilliseconds} ms');
         }
         return currentNode.getPath();
+      }
+
+      if (currentNode.manhattanDistance <= distanceThreshold) {
+        if (kDebugMode) {
+          print('visited nodes: ${_visited.length}');
+          print('Met threshold in: ${DateTime.now().difference(startTime).inMilliseconds} ms');
+        }
+        final path = currentNode.parent?.getPath();
+        if (path != null && path.length >= sqrt(goal.tiles.length)) {
+          return path;
+        }
+      }
+
+      if (DateTime.now().difference(startTime).inSeconds >= 5) {
+        if (kDebugMode) {
+          print('visited nodes: ${_visited.length}');
+          print('Timeout in: ${DateTime.now().difference(startTime).inMilliseconds} ms');
+        }
+        return [];
       }
 
       _visited.add(currentNode.key);

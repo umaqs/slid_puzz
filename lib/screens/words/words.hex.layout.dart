@@ -31,16 +31,19 @@ class WordsHexLayout implements PageLayoutDelegate<WordsHexPuzzleNotifier> {
 
   @override
   Widget endSection(BuildContext context, BoxConstraints constraints) {
+    final gameState = notifier.gameState;
     return PuzzleFooter(
       gameState: notifier.gameState,
       primaryButton: PrimaryButton(
         text: _primaryButtonTitle(notifier.gameState),
         onPressed: notifier.gameState.canInteract ? notifier.nextState : null,
       ),
-      secondaryButton: SecondaryButton(
-        text: 'REFRESH',
-        onPressed: notifier.gameState.canInteract ? () => notifier.generatePuzzle() : null,
-      ),
+      secondaryButton: gameState.inProgress
+          ? const SolveButton()
+          : SecondaryButton(
+              text: 'REFRESH',
+              onPressed: gameState.canInteract ? () => notifier.generatePuzzle() : null,
+            ),
     );
   }
 
@@ -60,22 +63,25 @@ class WordsHexLayout implements PageLayoutDelegate<WordsHexPuzzleNotifier> {
 
   @override
   Widget gridItem(BuildContext context, int index) {
+    final colors = context.colors;
     final tile = notifier.puzzle.tiles[index];
+
+    final showCorrectTileIndicator = notifier.shouldHighlightTile(index);
+
     return HexPuzzleTile(
       key: Key('hex_puzzle_tile_${tile.value}'),
+      tilt: !notifier.isSolving,
       showWhitespaceTile: tile.isWhitespace,
       gridDepth: notifier.gridSize,
       color: context.colors.surface,
+      elevation: showCorrectTileIndicator ? 0 : 16,
+      borderColor: showCorrectTileIndicator ? colors.primary : null,
       offset: tile.currentPosition.toOffset,
-      childBuilder: (context, layoutSize) => _buildWordHexTile(
-        context,
-        tile,
-        layoutSize,
-      ),
+      childBuilder: (context) => _buildWordHexTile(context, tile),
     );
   }
 
-  Widget _buildWordHexTile(BuildContext context, HexTile tile, ResponsiveLayoutSize layoutSize) {
+  Widget _buildWordHexTile(BuildContext context, HexTile tile) {
     final colors = context.colors;
 
     final gridScaleFactor = 4 / notifier.gridSize;
@@ -86,6 +92,9 @@ class WordsHexLayout implements PageLayoutDelegate<WordsHexPuzzleNotifier> {
         onTap: tile.isWhitespace
             ? null
             : () {
+                if (notifier.isSolving) {
+                  return;
+                }
                 context.read<AudioNotifier>().play(AudioAssets.tileMove);
                 notifier.moveTile(tile);
               },

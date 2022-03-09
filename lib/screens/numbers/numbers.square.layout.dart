@@ -32,33 +32,19 @@ class NumbersSquareLayout implements PageLayoutDelegate<SquarePuzzleNotifier> {
   Widget endSection(BuildContext context, BoxConstraints constraints) {
     final gameState = notifier.gameState;
 
-    return IgnorePointer(
-      ignoring: notifier.isSolving,
-      child: PuzzleFooter(
-        gameState: gameState,
-        gridSizePicker: GridSizePicker(
-          initialValue: notifier.gridSize,
-          min: notifier.minSize,
-          max: notifier.maxSize,
-          onChanged: gameState.canInteract ? (value) => notifier.gridSize = value : null,
-        ),
-        primaryButton: PrimaryButton(
-          text: _primaryButtonTitle(gameState),
-          onPressed: gameState.canInteract ? notifier.nextState : null,
-        ),
-        secondaryButton: gameState.inProgress
-            ? notifier.canSolve
-                ? PrimaryButton(
-                    text: 'SOLVE',
-                    onPressed: gameState.canInteract ? () => notifier.findSolution() : null,
-                  )
-                : PrimaryButton(
-                    text: 'RESTART',
-                    onPressed:
-                        gameState.canInteract ? () => notifier.generatePuzzle(startGame: true, shuffle: true) : null,
-                  )
-            : null,
+    return PuzzleFooter(
+      gameState: gameState,
+      gridSizePicker: GridSizePicker(
+        initialValue: notifier.gridSize,
+        min: notifier.minSize,
+        max: notifier.maxSize,
+        onChanged: gameState.canInteract ? (value) => notifier.gridSize = value : null,
       ),
+      primaryButton: PrimaryButton(
+        text: _primaryButtonTitle(gameState),
+        onPressed: gameState.canInteract ? notifier.nextState : null,
+      ),
+      secondaryButton: gameState.inProgress ? const SolveButton() : null,
     );
   }
 
@@ -83,30 +69,32 @@ class NumbersSquareLayout implements PageLayoutDelegate<SquarePuzzleNotifier> {
       key: Key('square_puzzle_tile_${tile.value}'),
       tile: tile,
       gridSize: notifier.gridSize,
-      childBuilder: (context, layoutSize) => tile.isWhitespace
+      childBuilder: (context) => tile.isWhitespace
           ? const SizedBox.shrink()
           : _buildNumberSquareTile(
               context,
               tile,
-              layoutSize,
             ),
     );
   }
 
-  Widget _buildNumberSquareTile(BuildContext context, SquareTile tile, ResponsiveLayoutSize layoutSize) {
+  Widget _buildNumberSquareTile(BuildContext context, SquareTile tile) {
     final colors = context.colors;
 
     final gridScaleFactor = 4 / notifier.gridSize;
-    final tileFontSize = layoutSize.tileFontSize * gridScaleFactor;
+    final tileFontSize = context.layoutSize.tileFontSize * gridScaleFactor;
 
     final gameState = notifier.gameState;
-    final showCorrectTileIndicator = tile.hasCorrectPosition && (gameState.inProgress || gameState.completed);
+    final showCorrectTileIndicator = tile.hasCorrectPosition && (gameState.inProgress || gameState.isCompleted);
     return SquareButton(
       key: Key('tile_button_${tile.value}'),
       borderRadius: 8,
       elevation: showCorrectTileIndicator ? 0 : 16,
       borderColor: showCorrectTileIndicator ? colors.primary : null,
       onTap: () {
+        if (notifier.isSolving) {
+          return;
+        }
         final audio = context.read<AudioNotifier>();
         final canMove = notifier.puzzle.isTileMovable(tile);
         if (gameState.inProgress && canMove) {

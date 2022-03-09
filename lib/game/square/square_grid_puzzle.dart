@@ -183,17 +183,5 @@ class SquareGridPuzzle extends GridPuzzle<SquareTile> {
   }
 
   @override
-  num getManhattanDistance() {
-    var cost = 0.0;
-    for (final tile in tiles) {
-      final currentPosition = tile.currentPosition;
-      final correctPosition = tile.correctPosition;
-
-      cost += correctPosition.distance(currentPosition);
-    }
-    return cost;
-  }
-
-  @override
   List<Object> get props => [tiles];
 }

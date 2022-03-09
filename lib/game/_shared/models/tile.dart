@@ -30,6 +30,9 @@ abstract class Tile<P extends Position> extends Equatable {
   /// Denotes if the [Tile] is in its correct position
   bool get hasCorrectPosition => currentPosition == correctPosition;
 
+  /// Manhattan distance to calculate heuristics
+  num get manhattanDistance => correctPosition.distance(currentPosition);
+
   /// Checks whether both tiles are on either same column or same row
   bool isAlignedWith(Tile other) {
     return other.currentPosition.isAlignedWith(currentPosition);

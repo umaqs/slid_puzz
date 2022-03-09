@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:slide_puzzle/game/_shared/puzzle.game.solver_extension.dart';
 import 'package:slide_puzzle/game/_shared/shared.dart';
 import 'package:slide_puzzle/game/square/puzzle.dart';
 import 'package:slide_puzzle/game/words/data/_data.dart';
@@ -26,6 +27,22 @@ class WordsSquarePuzzleNotifier extends SquarePuzzleNotifier {
   List<String> get letters => List.unmodifiable(_letters);
   List<String> _letters;
 
+  @override
+  bool get isSolving => _isSolving;
+  bool _isSolving = false;
+
+  bool shouldHighlightTile(int index) {
+    if (gameState.isCompleted) {
+      return true;
+    }
+
+    if (gameState.inProgress) {
+      final tile = puzzle.tiles[index];
+      return tile.hasCorrectPosition || letters[index] == letters[tile.value];
+    }
+    return false;
+  }
+
   List<String> get actualAnswers {
     return [
       for (var i = 0; i < gridSize; i++) ...[
@@ -44,7 +61,20 @@ class WordsSquarePuzzleNotifier extends SquarePuzzleNotifier {
   }
 
   @override
+  Future<void> findSolution() async {
+    _isSolving = true;
+    notifyListeners();
+
+    final solved = await solve<SquareTile>(distanceThreshold: gridSize);
+    if (_isSolving && !solved) {
+      _isSolving = false;
+      notifyListeners();
+    }
+  }
+
+  @override
   void nextState() {
+    _isSolving = false;
     switch (gameState) {
       case GameState.gettingReady:
         break;

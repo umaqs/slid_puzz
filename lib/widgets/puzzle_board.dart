@@ -41,7 +41,7 @@ class _PuzzleBoardState extends State<PuzzleBoard> {
       child: (layoutSize, _) {
         return Listen<PuzzleGameNotifier>(
           listener: (notifier) {
-            if (notifier.gameState.completed) {
+            if (notifier.gameState.isCompleted) {
               Future.delayed(
                 const Duration(seconds: 1),
                 () => showGameCompletedDialog(

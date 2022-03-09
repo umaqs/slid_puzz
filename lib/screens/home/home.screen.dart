@@ -5,7 +5,7 @@ import 'package:slide_puzzle/screens/_shared/shared.dart';
 import 'package:slide_puzzle/screens/home/home.layout.dart';
 import 'package:slide_puzzle/screens/home/home.notifier.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen._({
     Key? key,
     required this.notifier,
@@ -25,27 +25,9 @@ class HomeScreen extends StatefulWidget {
   }
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // final themeNotifier = context.read<ThemeNotifier>();
-    // final platformBrightness = context.dependOnInheritedWidgetOfExactType<MediaQuery>()?.data.platformBrightness;
-    // if (platformBrightness != null) {
-    //   themeNotifier.setThemeMode(mode: themeNotifier.mode, platformBrightness: platformBrightness);
-    // }
-  }
-
-  @override
   Widget build(BuildContext context) {
     return ThemeAwareScaffold(
-      key: _scaffoldKey,
-      pageLayoutDelegate: HomeLayout(widget.notifier),
+      pageLayoutDelegate: HomeLayout(notifier),
     );
   }
 }

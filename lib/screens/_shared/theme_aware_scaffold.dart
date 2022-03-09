@@ -17,7 +17,7 @@ class ThemeAwareScaffold extends StatelessWidget {
     final themeColor = context.watch<ThemeNotifier>().currentColor;
 
     return AnimatedTheme(
-      data: themeColor.theme,
+      data: context.theme,
       child: Stack(
         children: [
           Positioned.fill(

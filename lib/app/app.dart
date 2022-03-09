@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
@@ -19,6 +20,7 @@ import 'package:slide_puzzle/screens/words/words.dart';
 import 'package:slide_puzzle/screens/words/words_hex.screen.dart';
 import 'package:slide_puzzle/services/image.service.dart';
 import 'package:slide_puzzle/services/shared_prefs.service.dart';
+import 'package:slide_puzzle/services/snackbar.service.dart';
 import 'package:slide_puzzle/services/url_launcher.service.dart';
 import 'package:slide_puzzle/themes/theme.notifier.dart';
 import 'package:slide_puzzle/themes/theme.screen.dart';
@@ -55,6 +57,7 @@ class _PuzzleApp extends StatelessWidget {
             routeInformationParser: _router.routeInformationParser,
             debugShowCheckedModeBanner: false,
             supportedLocales: const [Locale('en', 'US'), Locale('en', 'GB')],
+            scaffoldMessengerKey: SnackBarService.instance.scaffoldMessengerKey,
             localizationsDelegates: const [
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,

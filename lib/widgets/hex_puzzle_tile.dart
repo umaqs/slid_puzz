@@ -10,14 +10,22 @@ class HexPuzzleTile extends StatelessWidget {
     required this.gridDepth,
     required this.color,
     required this.childBuilder,
+    this.elevation = 12,
+    this.borderColor,
+    this.borderWidth,
+    this.tilt = true,
     this.showWhitespaceTile = false,
   }) : super(key: key);
 
   final Offset offset;
   final int gridDepth;
   final Color color;
+  final Color? borderColor;
+  final double? borderWidth;
+  final double elevation;
+  final bool tilt;
   final bool showWhitespaceTile;
-  final Widget Function(BuildContext context, ResponsiveLayoutSize layoutSize) childBuilder;
+  final WidgetBuilder childBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +46,27 @@ class HexPuzzleTile extends StatelessWidget {
             ) *
             offsetScaleFactor;
 
+        Widget buildChild() {
+          final child = HexagonWidget.pointy(
+            inBounds: false,
+            color: color,
+            cornerRadius: layoutSize.hexTileCornerRadius,
+            width: tileSize,
+            child: childBuilder(context),
+          );
+          if (borderColor == null) {
+            return child;
+          }
+          return HexagonWidget.pointy(
+            inBounds: false,
+            elevation: elevation,
+            color: borderColor,
+            cornerRadius: layoutSize.hexTileCornerRadius,
+            width: tileSize + (borderWidth ?? (layoutSize.isSmall ? 4 : 8)),
+            child: child,
+          );
+        }
+
         return AnimatedAlign(
           curve: Curves.easeInOut,
           duration: const Duration(milliseconds: 300),
@@ -45,18 +74,11 @@ class HexPuzzleTile extends StatelessWidget {
           child: Opacity(
             opacity: showWhitespaceTile ? 0.2 : 1,
             child: AnimatedHoverInteraction(
-              enabled: !showWhitespaceTile,
+              enabled: tilt && !showWhitespaceTile,
               tilt: true,
               child: SizedBox.square(
                 dimension: tileSize,
-                child: HexagonWidget.pointy(
-                  inBounds: false,
-                  elevation: 12,
-                  color: color,
-                  cornerRadius: layoutSize.hexTileCornerRadius,
-                  width: tileSize,
-                  child: childBuilder(context, layoutSize),
-                ),
+                child: buildChild(),
               ),
             ),
           ),

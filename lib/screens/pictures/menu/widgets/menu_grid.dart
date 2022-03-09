@@ -15,24 +15,17 @@ class MenuGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayoutBuilder(
-      small: (_, child) => child!,
-      medium: (_, child) => child!,
-      large: (_, child) => child!,
-      child: (layoutSize, _) {
-        return SizedBox.square(
-          dimension: layoutSize.squareBoardSize,
-          child: GridView.count(
-            padding: EdgeInsets.zero,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            crossAxisCount: gridSize,
-            mainAxisSpacing: spacing,
-            crossAxisSpacing: spacing,
-            children: tiles,
-          ),
-        );
-      },
+    return SizedBox.square(
+      dimension: context.layoutSize.squareBoardSize,
+      child: GridView.count(
+        padding: EdgeInsets.zero,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        crossAxisCount: gridSize,
+        mainAxisSpacing: spacing,
+        crossAxisSpacing: spacing,
+        children: tiles,
+      ),
     );
   }
 }

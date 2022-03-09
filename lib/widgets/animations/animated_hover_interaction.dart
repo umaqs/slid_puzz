@@ -77,7 +77,11 @@ class _AnimatedHoverInteractionState extends State<AnimatedHoverInteraction> wit
       },
       onExit: (_) {
         if (widget.enabled) {
-          _controller.reverse();
+          _controller.reverse().then((_) {
+            if (mounted) {
+              setState(() {});
+            }
+          });
           if (widget.tilt) {
             setState(() {
               x = 0;

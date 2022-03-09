@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:slide_puzzle/layout/layout.dart';
 
 /// Represents the layout size passed to [ResponsiveLayoutBuilder.child].
 enum ResponsiveLayoutSize {
@@ -11,6 +12,22 @@ enum ResponsiveLayoutSize {
 
   /// Large layout
   large
+}
+
+extension ResponsiveLayoutSizeCtxExtension on BuildContext {
+
+  ResponsiveLayoutSize get layoutSize {
+    final screenWidth = MediaQuery.of(this).size.width;
+
+    if (screenWidth <= PuzzleBreakpoints.small) {
+      return
+          ResponsiveLayoutSize.small;
+    }
+    if (screenWidth <= PuzzleBreakpoints.medium) {
+      return ResponsiveLayoutSize.medium;
+    }
+    return ResponsiveLayoutSize.large;
+  }
 }
 
 extension ResponsiveLayoutSizeExtension on ResponsiveLayoutSize {

@@ -23,7 +23,7 @@ class SquarePuzzleTile extends StatelessWidget {
   final int gridSize;
 
   /// Use to build custom child for the game mode
-  final Widget Function(BuildContext context, ResponsiveLayoutSize layoutSize) childBuilder;
+  final WidgetBuilder childBuilder;
 
   /// Display the tile at it's correct position on the grid
   final bool useCorrectPosition;
@@ -39,16 +39,9 @@ class SquarePuzzleTile extends StatelessWidget {
         (useCorrectPosition ? tile.correctPosition : tile.currentPosition).toOffset,
         Size.square(gridSize.toDouble() - 1),
       ),
-      child: ResponsiveLayoutBuilder(
-        small: (_, child) => child!,
-        medium: (_, child) => child!,
-        large: (_, child) => child!,
-        child: (layoutSize, _) {
-          return SizedBox.square(
-            dimension: layoutSize.squareTileSize * gridScaleFactor,
-            child: childBuilder(context, layoutSize),
-          );
-        },
+      child: SizedBox.square(
+        dimension: context.layoutSize.squareTileSize * gridScaleFactor,
+        child: childBuilder(context),
       ),
     );
   }
