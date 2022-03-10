@@ -11,6 +11,7 @@
 [ ] L10n
 [ ] Instructions pop-up for first time (feature_discovery)
 [ ] Info/Licenses pop-up
+[ ] Icon link for attribute: <a href="https://www.flaticon.com/free-icons/ingredient" title="ingredient icons">Ingredient icons created by Darius Dan - Flaticon</a>
 [ ] Firebase leaderboard ?
 
 // To FIX

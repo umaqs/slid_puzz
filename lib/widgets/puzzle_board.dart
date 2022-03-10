@@ -34,38 +34,32 @@ class _PuzzleBoardState extends State<PuzzleBoard> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayoutBuilder(
-      small: (_, child) => child!,
-      medium: (_, child) => child!,
-      large: (_, child) => child!,
-      child: (layoutSize, _) {
-        return Listen<PuzzleGameNotifier>(
-          listener: (notifier) {
-            if (notifier.gameState.isCompleted) {
-              Future.delayed(
-                const Duration(seconds: 1),
-                () => showGameCompletedDialog(
-                  context,
-                  _boardKey,
-                ),
-              );
-            }
-          },
-          child: RepaintBoundary(
-            key: _boardKey,
-            child: SizedBox.square(
-              dimension: widget.type == BoardType.square ? layoutSize.squareBoardSize : layoutSize.hexBoardSize,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  if (widget.background != null) widget.background!,
-                  ...widget.tiles,
-                ],
-              ),
+    final layoutSize = context.layoutSize;
+    return Listen<PuzzleGameNotifier>(
+      listener: (notifier) {
+        if (notifier.gameState.isCompleted) {
+          Future.delayed(
+            const Duration(seconds: 1),
+            () => showGameCompletedDialog(
+              context,
+              _boardKey,
             ),
-          ),
-        );
+          );
+        }
       },
+      child: RepaintBoundary(
+        key: _boardKey,
+        child: SizedBox.square(
+          dimension: widget.type == BoardType.square ? layoutSize.squareBoardSize : layoutSize.hexBoardSize,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              if (widget.background != null) widget.background!,
+              ...widget.tiles,
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

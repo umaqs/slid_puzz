@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:slide_puzzle/game/_shared/game_state.dart';
 import 'package:slide_puzzle/game/_shared/models/models.dart';
@@ -19,8 +21,10 @@ extension SolverExtension on PuzzleGameNotifier {
         threshold = 0;
       }
       if (threshold * 2 < targetDistance) {
-        final messages = canSolveMessages..shuffle();
-        snackBar.showSnackBar(message: messages.first);
+        if (threshold == 0 || Random().nextBool()) {
+          final messages = canSolveMessages..shuffle();
+          snackBar.showSnackBar(message: messages.first);
+        }
       }
       if (kDebugMode) {
         print('Starting solver with distance threshold: $threshold');
@@ -59,3 +63,21 @@ extension SolverExtension on PuzzleGameNotifier {
     return true;
   }
 }
+
+final canSolveMessages = [
+  'Let me think... 🧠',
+  'Bear with me! 🐻',
+  'Watch and learn! 👆',
+  'Sweaty palms 😰',
+  'I think I got this! 😎',
+  'Hold my cookie 🍪',
+  'Almost there 😊'
+];
+
+final cannotSolveMessages = [
+  'I think you got it from here! Show me some moves 💃',
+  'Sorry, I am going for a coffee break! ☕️',
+  'You solve some, I solve some 🥵',
+  'Try again after making a few moves 🙏',
+  'This is tougher than I thought, you try 🙇',
+];

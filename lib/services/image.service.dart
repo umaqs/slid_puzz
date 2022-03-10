@@ -1,4 +1,5 @@
 import 'dart:isolate';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
@@ -68,15 +69,17 @@ class ImageService {
     final width = (image.width / gridSize).round();
     final height = (image.height / gridSize).round();
 
+    final dimension = min(width, height);
+
     final pieceList = <Image>[];
     for (var i = 0; i < gridSize; i++) {
       for (var j = 0; j < gridSize; j++) {
-        final copy = copyCrop(image, x, y, width, height);
+        final copy = copyCrop(image, x, y, dimension, dimension);
         pieceList.add(copy);
-        x += width;
+        x += dimension;
       }
       x = 0;
-      y += height;
+      y += dimension;
     }
 
     return <Uint8List>[

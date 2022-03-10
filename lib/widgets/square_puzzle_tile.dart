@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:slide_puzzle/game/square/puzzle.dart';
 import 'package:slide_puzzle/layout/layout.dart';
@@ -33,8 +35,8 @@ class SquarePuzzleTile extends StatelessWidget {
     final gridScaleFactor = 4 / gridSize;
 
     return AnimatedAlign(
-      curve: Curves.easeIn,
-      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+      duration: Duration(milliseconds: 100 * min(gridSize, 4)),
       alignment: FractionalOffset.fromOffsetAndSize(
         (useCorrectPosition ? tile.correctPosition : tile.currentPosition).toOffset,
         Size.square(gridSize.toDouble() - 1),

@@ -69,7 +69,7 @@ class HexPuzzleTile extends StatelessWidget {
 
         return AnimatedAlign(
           curve: Curves.easeInOut,
-          duration: const Duration(milliseconds: 300),
+          duration: Duration(milliseconds: 100 * (gridDepth + 2)),
           alignment: FractionalOffset.center.add(alignment),
           child: Opacity(
             opacity: showWhitespaceTile ? 0.2 : 1,

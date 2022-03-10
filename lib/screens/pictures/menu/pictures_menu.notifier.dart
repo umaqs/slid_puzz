@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:slide_puzzle/screens/_base/base.notifier.dart';
 import 'package:slide_puzzle/screens/pictures/menu/menu.dart';
 import 'package:slide_puzzle/services/image.service.dart';
+import 'package:slide_puzzle/services/snackbar.service.dart';
 
 class PicturesMenuNotifier extends BaseNotifier {
   PicturesMenuNotifier(
@@ -30,16 +31,22 @@ class PicturesMenuNotifier extends BaseNotifier {
   bool get isLoading => _isLoading;
   bool _isLoading;
 
-  String? get error => _error;
-  String? _error;
-
   Future<void> reloadMenu() async {
     _items = _generateItems();
 
     _isLoading = true;
     notifyListeners();
 
-    _items = await _loadImages();
+    try {
+      _items = await _loadImages();
+    } catch (_) {
+      SnackBarService.instance.showSnackBar(
+        message: 'Unable to load pictures, Please try again',
+        isError: true,
+        seconds: 5,
+      );
+      _items = [];
+    }
 
     _isLoading = false;
     notifyListeners();
@@ -49,12 +56,17 @@ class PicturesMenuNotifier extends BaseNotifier {
     try {
       final imageData = await _imageService.pickImage(
         source: source,
-        // maxWidth: 500,
-        // maxHeight: 500,
+        maxWidth: 500,
+        maxHeight: 500,
       );
 
       return imageData;
     } catch (e) {
+      SnackBarService.instance.showSnackBar(
+        message: 'Unable to select a picture, Please try again!',
+        isError: true,
+        seconds: 5,
+      );
       notifyListeners();
       return null;
     }

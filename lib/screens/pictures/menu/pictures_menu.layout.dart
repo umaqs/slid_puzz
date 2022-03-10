@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:slide_puzzle/app/app.dart';
 import 'package:slide_puzzle/layout/layout.dart';
-import 'package:slide_puzzle/services/snackbar.service.dart';
 import 'package:slide_puzzle/themes/themes.dart';
 import 'package:slide_puzzle/widgets/widgets.dart';
 
@@ -71,15 +70,10 @@ class PicturesMenuLayout implements PageLayoutDelegate<PicturesMenuNotifier> {
     final colors = context.colors;
 
     Future<void> _onTap(BuildContext context, ImageSource source) async {
-      final imageParts = await notifier.pickImage(source);
-      if (imageParts != null) {
+      final imageData = await notifier.pickImage(source);
+      if (imageData != null) {
         // ignore: use_build_context_synchronously
-        context.pushNamed(RouteNames.picturesPuzzle, extra: imageParts);
-      } else {
-        final error = notifier.error;
-        if (error != null) {
-          SnackBarService.instance.showSnackBar(message: error);
-        }
+        context.pushNamed(RouteNames.picturesPuzzle, extra: imageData);
       }
     }
 

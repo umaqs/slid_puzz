@@ -88,7 +88,9 @@ class PicturePuzzleLayout implements PageLayoutDelegate<PicturesPuzzleNotifier> 
       gridSize: notifier.gridSize,
       useCorrectPosition: notifier.showSolution,
       childBuilder: (context) => tile.isWhitespace
-          ? const SizedBox.shrink()
+          ? notifier.gameState.isCompleted
+              ? _buildPictureSquareTile(context, tile)
+              : const SizedBox.shrink()
           : _buildPictureSquareTile(
               context,
               tile,
@@ -127,7 +129,10 @@ class PicturePuzzleLayout implements PageLayoutDelegate<PicturesPuzzleNotifier> 
         context.read<AudioNotifier>().play(AudioAssets.tileMove);
         notifier.moveTile(tile);
       },
-      child: Image.memory(notifier.imageParts[tile.value]),
+      child: Image.memory(
+        notifier.imageParts[tile.value],
+        fit: BoxFit.cover,
+      ),
     );
   }
 }

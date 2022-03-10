@@ -77,6 +77,7 @@ class WordsHexPuzzleNotifier extends HexPuzzleNotifier {
 
   @override
   void nextState() {
+    _isSolving = false;
     switch (gameState) {
       case GameState.gettingReady:
         break;
