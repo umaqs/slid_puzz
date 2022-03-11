@@ -15,6 +15,7 @@ class PicturesMenuNotifier extends BaseNotifier {
     this._imageService,
     this._imageCacheManager,
   )   : _isLoading = true,
+        _isSearching = false,
         _items = [] {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       reloadMenu();
@@ -30,6 +31,32 @@ class PicturesMenuNotifier extends BaseNotifier {
 
   bool get isLoading => _isLoading;
   bool _isLoading;
+
+  bool get isSearching => _isSearching;
+  bool _isSearching;
+
+  Future<Uint8List?> onSearch(String term) async {
+    _isSearching = true;
+    notifyListeners();
+
+    final image = await _imageService.searchImage(term: term);
+    if (image != null) {
+      _isSearching = false;
+      _isLoading = false;
+      notifyListeners();
+      return image;
+    }
+
+    SnackBarService.instance.showSnackBar(
+      message: 'Unable to load a picture, Please try again!',
+      isError: true,
+      seconds: 5,
+    );
+
+    _isSearching = false;
+    notifyListeners();
+    return null;
+  }
 
   Future<void> reloadMenu() async {
     _items = _generateItems();

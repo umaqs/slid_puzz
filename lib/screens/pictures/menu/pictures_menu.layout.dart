@@ -3,7 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:slide_puzzle/app/app.dart';
 import 'package:slide_puzzle/layout/layout.dart';
+import 'package:slide_puzzle/screens/pictures/menu/widgets/search_field.dart';
 import 'package:slide_puzzle/themes/themes.dart';
+import 'package:slide_puzzle/typography/text_styles.dart';
 import 'package:slide_puzzle/widgets/widgets.dart';
 
 import 'menu.dart';
@@ -16,7 +18,79 @@ class PicturesMenuLayout implements PageLayoutDelegate<PicturesMenuNotifier> {
 
   @override
   Widget startSection(BuildContext context, BoxConstraints constraints) {
-    return const MenuHeader(title: 'Pick One!');
+    return MenuHeader(
+      title: 'Pick One!',
+      subtitle: _buildSubtitle(context),
+    );
+  }
+
+  Widget _buildSubtitle(BuildContext context) {
+    final colors = context.colors;
+    final loading = notifier.isLoading || notifier.isSearching;
+    return Column(
+      children: [
+        if (!loading) ...[
+          Container(
+            padding: kPadding4.add(kEdgePadding24),
+            decoration: BoxDecoration(
+              color: colors.primaryContainer,
+              borderRadius: kBorderRadius22,
+            ),
+            child: Text(
+              'OR',
+              style: PuzzleTextStyle.bodySmall.copyWith(
+                color: colors.primary,
+              ),
+            ),
+          ),
+          kBox8,
+        ],
+        ClipRect(
+          clipBehavior: Clip.antiAlias,
+          child: Padding(
+            padding: kPadding8,
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 500),
+              switchInCurve: Curves.easeInOut,
+              switchOutCurve: Curves.easeInOut,
+              transitionBuilder: (child, animation) {
+                return SlideTransition(
+                  position: Tween<Offset>(
+                    begin: const Offset(0, 1),
+                    end: Offset.zero,
+                  ).animate(animation),
+                  child: AnimatedSwitcher.defaultTransitionBuilder(
+                    child,
+                    animation,
+                  ),
+                );
+              },
+              child: loading
+                  ? Center(
+                      child: RefreshProgressIndicator(
+                        strokeWidth: 2,
+                        color: colors.primaryContainer,
+                        valueColor: AlwaysStoppedAnimation(colors.primary),
+                        backgroundColor: colors.surfaceVariant,
+                      ),
+                    )
+                  : SearchField(
+                      onSubmitted: (term) async {
+                        final imageData = await notifier.onSearch(term);
+                        if (imageData != null) {
+                          // ignore: use_build_context_synchronously
+                          context.pushNamed(
+                            RouteNames.picturesPuzzle,
+                            extra: imageData,
+                          );
+                        }
+                      },
+                    ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   @override
@@ -77,6 +151,8 @@ class PicturesMenuLayout implements PageLayoutDelegate<PicturesMenuNotifier> {
       }
     }
 
+    final stopInteraction = notifier.isLoading || notifier.isSearching;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -86,7 +162,7 @@ class PicturesMenuLayout implements PageLayoutDelegate<PicturesMenuNotifier> {
           child: SquareButton(
             borderRadius: 8,
             color: colors.primary,
-            onTap: notifier.isLoading ? null : () => _onTap(context, ImageSource.gallery),
+            onTap: stopInteraction ? null : () => _onTap(context, ImageSource.gallery),
             child: Icon(
               Icons.image,
               size: 30,
@@ -105,7 +181,7 @@ class PicturesMenuLayout implements PageLayoutDelegate<PicturesMenuNotifier> {
           child: SquareButton(
             borderRadius: 8,
             color: colors.primary,
-            onTap: notifier.isLoading
+            onTap: stopInteraction
                 ? null
                 : () {
                     notifier.reloadMenu();

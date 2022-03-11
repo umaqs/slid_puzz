@@ -22,6 +22,7 @@ class ThemeAwareScaffold extends StatelessWidget {
         children: [
           Positioned.fill(
             child: Scaffold(
+              resizeToAvoidBottomInset: false,
               body: SizedBox.expand(
                 child: DecoratedBox(
                   decoration: BoxDecoration(
@@ -51,7 +52,8 @@ class _BackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
+    final themeColor = context.watch<ThemeNotifier>().currentColor;
+    final colors = themeColor.theme.colorScheme;
 
     return ResponsiveLayoutBuilder(
       small: (_, child) => child!,

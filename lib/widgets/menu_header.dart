@@ -8,9 +8,11 @@ class MenuHeader extends StatelessWidget {
   const MenuHeader({
     Key? key,
     required this.title,
+    this.subtitle,
   }) : super(key: key);
 
   final String title;
+  final Widget? subtitle;
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +31,12 @@ class MenuHeader extends StatelessWidget {
       ),
       child: (layoutSize, _) {
         return Column(
-          crossAxisAlignment: layoutSize.isLarge ? CrossAxisAlignment.start : CrossAxisAlignment.center,
           children: [
             _MenuTitle(title: title),
+            if (subtitle != null) ...[
+              kBox16,
+              subtitle!,
+            ],
           ],
         );
       },
