@@ -1,41 +1,31 @@
 import 'dart:async';
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:slide_puzzle/game/_shared/shared.dart';
 import 'package:slide_puzzle/game/square/puzzle.dart';
-import 'package:slide_puzzle/services/image.service.dart';
+import 'package:slide_puzzle/services/snackbar.service.dart';
 
 class PicturesPuzzleNotifier extends SquarePuzzleNotifier {
   PicturesPuzzleNotifier(
     CountdownNotifier countdown,
-    GameTimerNotifier timer,
-    this._imageService, {
+    GameTimerNotifier timer, {
     int initialGridSize = 4,
     required Uint8List imageData,
   })  : _imageData = imageData,
         _isLoading = true,
-        _imageParts = {},
         super(
           countdown,
           timer,
           initialGridSize: initialGridSize,
         ) {
-    _generateImageParts(initialGridSize);
+    _initImage();
   }
 
   final Uint8List _imageData;
-  final ImageService _imageService;
 
-  Uint8List get imageData => _imageData;
-
-  List<Uint8List> get imageParts => List.unmodifiable(_imageParts[gridSize] ?? []);
-  final Map<int, List<Uint8List>> _imageParts;
-
-  @override
-  set gridSize(int value) {
-    super.gridSize = value;
-    _generateImageParts(value);
-  }
+  Image get uiImage => _uiImage;
+  late Image _uiImage;
 
   bool get showSolution => _showSolution;
   bool _showSolution = false;
@@ -53,22 +43,20 @@ class PicturesPuzzleNotifier extends SquarePuzzleNotifier {
   String? get error => _error;
   String? _error;
 
-  Future<void> _generateImageParts(int size) async {
-    if (_imageParts.containsKey(size)) {
-      return;
-    }
-
+  Future<void> _initImage() async {
     _isLoading = true;
     notifyListeners();
 
-    final parts = await _imageService.splitImageIntoGrid(
-      data: _imageData,
-      gridSize: gridSize,
-    );
-    if (parts == null) {
-      _error = 'Unable to load this image, Please try a different one';
-    } else {
-      _imageParts[size] = parts;
+    try {
+      final codec = await instantiateImageCodec(_imageData, allowUpscaling: false);
+      final frameInfo = await codec.getNextFrame();
+      _uiImage = frameInfo.image;
+    } catch (e) {
+      SnackBarService.instance.showSnackBar(
+        message: 'Unable to load the picture, Please try again',
+        isError: true,
+        seconds: 5,
+      );
     }
 
     _isLoading = false;

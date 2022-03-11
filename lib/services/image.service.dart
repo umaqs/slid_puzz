@@ -1,9 +1,6 @@
-import 'dart:isolate';
-import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
-import 'package:image/image.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImageService {
@@ -32,74 +29,4 @@ class ImageService {
     final data = await imageFile.readAsBytes();
     return data;
   }
-
-  Future<List<Uint8List>?> splitImageIntoGrid({
-    required Uint8List data,
-    required int gridSize,
-  }) async {
-    if (kIsWeb) {
-      //TODO(UMAIR): Use isolates/background workers to split the images
-      return _splitImageIntoGrid(data: data, gridSize: gridSize);
-    }
-    try {
-      final receivePort = ReceivePort();
-
-      await Isolate.spawn(
-        _decodeImageIsolate,
-        _DecodeParam(data, gridSize, receivePort.sendPort),
-      );
-
-      return await receivePort.first as List<Uint8List>?;
-    } catch (_) {
-      return null;
-    }
-  }
-
-  List<Uint8List>? _splitImageIntoGrid({
-    required Uint8List data,
-    required int gridSize,
-  }) {
-    final image = decodeImage(data);
-    if (image == null) {
-      return null;
-    }
-
-    var x = 0;
-    var y = 0;
-    final width = (image.width / gridSize).round();
-    final height = (image.height / gridSize).round();
-
-    final dimension = min(width, height);
-
-    final pieceList = <Image>[];
-    for (var i = 0; i < gridSize; i++) {
-      for (var j = 0; j < gridSize; j++) {
-        final copy = copyCrop(image, x, y, dimension, dimension);
-        pieceList.add(copy);
-        x += dimension;
-      }
-      x = 0;
-      y += dimension;
-    }
-
-    return <Uint8List>[
-      for (final image in pieceList) encodeJpg(image) as Uint8List,
-    ];
-  }
-
-  void _decodeImageIsolate(_DecodeParam param) {
-    final images = _splitImageIntoGrid(
-      data: param.data,
-      gridSize: param.gridSize,
-    );
-    param.sendPort.send(images);
-  }
-}
-
-class _DecodeParam {
-  const _DecodeParam(this.data, this.gridSize, this.sendPort);
-
-  final Uint8List data;
-  final int gridSize;
-  final SendPort sendPort;
 }

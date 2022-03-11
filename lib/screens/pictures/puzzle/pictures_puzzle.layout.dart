@@ -5,6 +5,7 @@ import 'package:slide_puzzle/audio/audio.dart';
 import 'package:slide_puzzle/game/_shared/shared.dart';
 import 'package:slide_puzzle/game/square/puzzle.dart';
 import 'package:slide_puzzle/layout/layout.dart';
+import 'package:slide_puzzle/screens/pictures/puzzle/partial_image.dart';
 import 'package:slide_puzzle/screens/pictures/puzzle/puzzle.dart';
 import 'package:slide_puzzle/themes/themes.dart';
 import 'package:slide_puzzle/widgets/widgets.dart';
@@ -102,7 +103,7 @@ class PicturePuzzleLayout implements PageLayoutDelegate<PicturesPuzzleNotifier> 
     BuildContext context,
     SquareTile tile,
   ) {
-    final isLoading = notifier.isLoading || notifier.puzzle.tiles.length != notifier.imageParts.length;
+    final isLoading = notifier.isLoading;
 
     if (isLoading) {
       return Shimmer(
@@ -129,9 +130,10 @@ class PicturePuzzleLayout implements PageLayoutDelegate<PicturesPuzzleNotifier> 
         context.read<AudioNotifier>().play(AudioAssets.tileMove);
         notifier.moveTile(tile);
       },
-      child: Image.memory(
-        notifier.imageParts[tile.value],
-        fit: BoxFit.cover,
+      child: PartialImage(
+        gridSize: notifier.gridSize,
+        image: notifier.uiImage,
+        offset: tile.correctPosition.toOffset,
       ),
     );
   }

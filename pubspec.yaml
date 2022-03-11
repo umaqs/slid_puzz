@@ -10,7 +10,6 @@ environment:
 
 
 dependencies:
-  a_star: ^1.0.0
   adaptive_theme: ^2.3.0
   async_task: ^1.0.17
   cached_network_image: ^3.2.0
@@ -28,10 +27,8 @@ dependencies:
   google_fonts: ^2.1.0
   hexagon: ^0.2.0-nullsafety.1
   http: ^0.13.4
-  image: ^3.1.1
   image_picker: ^0.8.4+6
   intl: ^0.17.0
-  isolate_handler: ^1.0.0
   js: ^0.6.3
   just_audio: ^0.9.18
   provider: ^6.0.2

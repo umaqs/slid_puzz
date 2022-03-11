@@ -7,7 +7,6 @@ import 'package:slide_puzzle/game/_shared/shared.dart';
 import 'package:slide_puzzle/screens/_base/infrastructure.dart';
 import 'package:slide_puzzle/screens/_shared/shared.dart';
 import 'package:slide_puzzle/screens/pictures/puzzle/puzzle.dart';
-import 'package:slide_puzzle/services/image.service.dart';
 
 class PicturesPuzzleScreen extends StatelessWidget {
   const PicturesPuzzleScreen._({
@@ -30,7 +29,6 @@ class PicturesPuzzleScreen extends StatelessWidget {
           create: (context) => PicturesPuzzleNotifier(
             context.read<CountdownNotifier>(),
             context.read<GameTimerNotifier>(),
-            context.read<ImageService>(),
             imageData: imageData,
           ),
           builder: (_, notifier) => PicturesPuzzleScreen._(notifier: notifier as PicturesPuzzleNotifier),

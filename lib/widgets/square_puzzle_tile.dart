@@ -33,6 +33,7 @@ class SquarePuzzleTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final gridScaleFactor = 4 / gridSize;
+    final dimension = context.layoutSize.squareTileSize * gridScaleFactor;
 
     return AnimatedAlign(
       curve: Curves.easeInOut,
@@ -42,7 +43,7 @@ class SquarePuzzleTile extends StatelessWidget {
         Size.square(gridSize.toDouble() - 1),
       ),
       child: SizedBox.square(
-        dimension: context.layoutSize.squareTileSize * gridScaleFactor,
+        dimension: dimension,
         child: childBuilder(context),
       ),
     );
