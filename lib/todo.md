@@ -23,5 +23,4 @@
 [X] Copy refinement
 [X] Moves / correct tiles UI
 [X] Fix pictures menu loading state issue 
-[ ] Web service workers
 [ ] Multiple audio players

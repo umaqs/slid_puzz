@@ -46,7 +46,7 @@ class WordsSquareLayout implements PageLayoutDelegate<WordsSquarePuzzleNotifier>
       ),
       secondaryButton: gameState.inProgress
           ? const SolveButton()
-          : SecondaryButton(
+          : PrimaryButton(
               text: 'REFRESH',
               onPressed: gameState.canInteract ? () => notifier.generatePuzzle() : null,
             ),
@@ -89,7 +89,7 @@ class WordsSquareLayout implements PageLayoutDelegate<WordsSquarePuzzleNotifier>
     final showCorrectTileIndicator = notifier.shouldHighlightTile(index);
 
     return Opacity(
-      opacity: tile.isWhitespace ? 0.2 : 1,
+      opacity: tile.isWhitespace && !notifier.gameState.isCompleted ? 0.2 : 1,
       child: SquareButton(
         key: Key('tile_button_${tile.value}'),
         borderRadius: 8,

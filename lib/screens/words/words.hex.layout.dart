@@ -40,7 +40,7 @@ class WordsHexLayout implements PageLayoutDelegate<WordsHexPuzzleNotifier> {
       ),
       secondaryButton: gameState.inProgress
           ? const SolveButton()
-          : SecondaryButton(
+          : PrimaryButton(
               text: 'REFRESH',
               onPressed: gameState.canInteract ? () => notifier.generatePuzzle() : null,
             ),
@@ -71,7 +71,7 @@ class WordsHexLayout implements PageLayoutDelegate<WordsHexPuzzleNotifier> {
     return HexPuzzleTile(
       key: Key('hex_puzzle_tile_${tile.value}'),
       tilt: !notifier.isSolving,
-      showWhitespaceTile: tile.isWhitespace,
+      showWhitespaceTile: tile.isWhitespace && !notifier.gameState.isCompleted,
       gridDepth: notifier.gridSize,
       color: context.colors.surface,
       elevation: showCorrectTileIndicator ? 0 : 16,

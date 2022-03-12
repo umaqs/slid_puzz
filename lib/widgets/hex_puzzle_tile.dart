@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:slide_puzzle/layout/layout.dart';
 import 'package:slide_puzzle/widgets/animations/animated_hover_interaction.dart';
+import 'package:slide_puzzle/widgets/animations/tile_animation.dart';
 
 class HexPuzzleTile extends StatelessWidget {
   const HexPuzzleTile({
@@ -29,61 +30,54 @@ class HexPuzzleTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayoutBuilder(
-      small: (_, child) => child!,
-      medium: (_, child) => child!,
-      large: (_, child) => child!,
-      child: (layoutSize, constraints) {
-        final scale = gridDepth.tileScale;
-        final tileSize = layoutSize.hexTileWidth * scale;
+    final layoutSize = context.layoutSize;
+    final scale = gridDepth.tileScale;
+    final tileSize = layoutSize.hexTileWidth * scale;
 
-        final offsetScaleFactor = gridDepth.offsetScaleFactor;
-        final offset = this.offset.scale(offsetScaleFactor, offsetScaleFactor);
+    final offsetScaleFactor = gridDepth.offsetScaleFactor;
+    final offset = this.offset.scale(offsetScaleFactor, offsetScaleFactor);
 
-        final alignment = FractionalOffset.fromOffsetAndSize(
-              offset,
-              Size.square(1 + gridDepth * 2.0),
-            ) *
-            offsetScaleFactor;
+    final alignment = FractionalOffset.fromOffsetAndSize(
+          offset,
+          Size.square(1 + gridDepth * 2.0),
+        ) *
+        offsetScaleFactor;
 
-        Widget buildChild() {
-          final child = HexagonWidget.pointy(
-            inBounds: false,
-            color: color,
-            cornerRadius: layoutSize.hexTileCornerRadius,
-            width: tileSize,
-            child: childBuilder(context),
-          );
-          if (borderColor == null) {
-            return child;
-          }
-          return HexagonWidget.pointy(
-            inBounds: false,
-            elevation: elevation,
-            color: borderColor,
-            cornerRadius: layoutSize.hexTileCornerRadius,
-            width: tileSize + (borderWidth ?? (layoutSize.isSmall ? 4 : 8)),
-            child: child,
-          );
-        }
+    Widget buildChild() {
+      final child = HexagonWidget.pointy(
+        inBounds: false,
+        color: color,
+        cornerRadius: layoutSize.hexTileCornerRadius,
+        width: tileSize,
+        child: childBuilder(context),
+      );
+      if (borderColor == null) {
+        return child;
+      }
+      return HexagonWidget.pointy(
+        inBounds: false,
+        elevation: elevation,
+        color: borderColor,
+        cornerRadius: layoutSize.hexTileCornerRadius,
+        width: tileSize + (borderWidth ?? (layoutSize.isSmall ? 4 : 8)),
+        child: child,
+      );
+    }
 
-        return AnimatedAlign(
-          curve: Curves.easeInOut,
-          duration: Duration(milliseconds: 100 * (gridDepth + 2)),
-          alignment: FractionalOffset.center.add(alignment),
-          child: Opacity(
-            opacity: showWhitespaceTile ? 0.2 : 1,
-            child: AnimatedHoverInteraction(
-              enabled: tilt && !showWhitespaceTile,
-              tilt: true,
-              child: SizedBox.square(
-                dimension: tileSize,
-                child: buildChild(),
-              ),
-            ),
+    return TileAnimation(
+      offset: FractionalOffset.center.add(alignment) as FractionalOffset,
+      duration: Duration(milliseconds: 300 * (gridDepth + 3)),
+      child: Opacity(
+        opacity: showWhitespaceTile ? 0.2 : 1,
+        child: AnimatedHoverInteraction(
+          enabled: tilt && !showWhitespaceTile,
+          tilt: true,
+          child: SizedBox.square(
+            dimension: tileSize,
+            child: buildChild(),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }
