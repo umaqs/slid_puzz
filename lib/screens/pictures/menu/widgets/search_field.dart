@@ -22,6 +22,19 @@ class _SearchFieldState extends State<SearchField> {
   @override
   void initState() {
     super.initState();
+    _focusNode.addListener(_setState);
+  }
+
+  @override
+  void dispose() {
+    _focusNode.removeListener(_setState);
+    _controller.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  void _setState() {
+    setState(() {});
   }
 
   bool get hasFocus => _focusNode.hasFocus;
@@ -29,17 +42,17 @@ class _SearchFieldState extends State<SearchField> {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final decorationColor = hasFocus ? colors.primary : colors.secondary;
-    final labelStyle = PuzzleTextStyle.label.copyWith(
+    final decorationColor = hasFocus || context.theme.brightness.isLight ? colors.primary : colors.tertiary;
+    final labelStyle = PuzzleTextStyle.bodySmall.copyWith(
       color: decorationColor,
-      height: 1,
+      height: hasFocus ? null : 1,
     );
 
     final border = OutlineInputBorder(
       borderRadius: kBorderRadius8,
       borderSide: BorderSide(
         color: decorationColor,
-        width: hasFocus ? 3 : 1,
+        width: hasFocus ? 3 : 2,
       ),
     );
 
@@ -60,7 +73,7 @@ class _SearchFieldState extends State<SearchField> {
           widget.onSubmitted(value);
         },
         decoration: InputDecoration(
-          labelText: 'Search from unsplash',
+          labelText: 'Search',
           hoverColor: colors.secondaryContainer,
           labelStyle: labelStyle,
           floatingLabelStyle: labelStyle,

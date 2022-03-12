@@ -58,6 +58,12 @@ class _TileAnimationState extends State<TileAnimation> with SingleTickerProvider
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   void didUpdateWidget(covariant TileAnimation oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.offset != oldWidget.offset) {

@@ -11,46 +11,40 @@ class AudioControl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayoutBuilder(
-      small: (_, child) => child!,
-      medium: (_, child) => child!,
-      large: (_, child) => child!,
-      child: (layoutSize, constraints) {
-        final colors = context.watch<ThemeNotifier>().currentColor.theme.colorScheme;
+    final layoutSize = context.layoutSize;
+    final colors = context.watch<ThemeNotifier>().currentColor.theme.colorScheme;
 
-        final notifier = context.watch<AudioNotifier>();
-        final audioMuted = notifier.isMuted;
+    final notifier = context.watch<AudioNotifier>();
+    final audioMuted = notifier.isMuted;
 
-        return AnimatedHoverInteraction(
-          child: HexagonWidget.flat(
-            inBounds: false,
-            elevation: 12,
-            color: colors.primary,
-            cornerRadius: 8,
-            width: layoutSize.hexTileWidth * 0.9,
-            child: SizedBox.expand(
-              child: GestureDetector(
-                onTap: notifier.toggleSound,
-                child: Stack(
-                  children: [
-                    Positioned.fill(
-                      child: Container(
-                        color: Colors.transparent,
-                        alignment: Alignment.center,
-                        child: Icon(
-                          audioMuted ? Icons.volume_off : Icons.volume_up,
-                          size: 36,
-                          color: colors.surface,
-                        ),
-                      ),
+    return AnimatedHoverInteraction(
+      child: HexagonWidget.flat(
+        inBounds: false,
+        elevation: 12,
+        color: colors.primary,
+        cornerRadius: 8,
+        width: layoutSize.hexTileWidth * 0.9,
+        child: SizedBox.expand(
+          child: GestureDetector(
+            onTap: notifier.toggleSound,
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: Container(
+                    color: Colors.transparent,
+                    alignment: Alignment.center,
+                    child: Icon(
+                      audioMuted ? Icons.volume_off : Icons.volume_up,
+                      size: 36,
+                      color: colors.surface,
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }
