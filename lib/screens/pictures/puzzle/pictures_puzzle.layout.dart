@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:slide_puzzle/audio/audio.dart';
 import 'package:slide_puzzle/game/_shared/shared.dart';
 import 'package:slide_puzzle/game/square/puzzle.dart';
 import 'package:slide_puzzle/layout/layout.dart';
@@ -127,7 +125,6 @@ class PicturePuzzleLayout implements PageLayoutDelegate<PicturesPuzzleNotifier> 
         if (notifier.isSolving) {
           return;
         }
-        context.read<AudioNotifier>().play(AudioAssets.tileMove);
         notifier.moveTile(tile);
       },
       child: PartialImage(

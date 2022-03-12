@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:slide_puzzle/audio/audio.dart';
 import 'package:slide_puzzle/game/_shared/shared.dart';
 import 'package:slide_puzzle/layout/layout.dart';
-import 'package:slide_puzzle/screens/_base/infrastructure.dart';
 import 'package:slide_puzzle/themes/themes.dart';
 import 'package:slide_puzzle/typography/typography.dart';
 import 'package:slide_puzzle/widgets/widgets.dart';
@@ -45,37 +43,18 @@ class PuzzleTitle extends StatelessWidget {
     }
 
     final titleColor = context.colors.primary;
+    final layoutSize = context.layoutSize;
 
-    return Listen<CountdownNotifier>(
-      listener: (notifier) {
-        if (notifier.status != CountdownStatus.running) {
-          return;
-        }
-        if (notifier.secondsToBegin == notifier.totalSeconds) {
-          context.read<AudioNotifier>().play(AudioAssets.shuffle);
-        }
-      },
-      child: ResponsiveLayoutBuilder(
-        small: (_, child) => child!,
-        medium: (_, child) => child!,
-        large: (_, child) => child!,
-        child: (layoutSize, _) {
-          final textStyle = layoutSize.textStyle.copyWith(color: titleColor);
+    final textStyle = layoutSize.textStyle.copyWith(color: titleColor);
 
-          final countdownNotifier = context.watch<CountdownNotifier>();
-          final status = countdownNotifier.status;
-          final secondsToBegin = countdownNotifier.secondsToBegin;
+    final countdownNotifier = context.watch<CountdownNotifier>();
+    final status = countdownNotifier.status;
+    final secondsToBegin = countdownNotifier.secondsToBegin;
 
-          return AnimatedDefaultTextStyle(
-            style: textStyle,
-            duration: kThemeChangeDuration,
-            child: Text(
-              _getTitle(status, secondsToBegin),
-              textAlign: layoutSize.textAlign,
-            ),
-          );
-        },
-      ),
+    return Text(
+      _getTitle(status, secondsToBegin),
+      style: textStyle,
+      textAlign: layoutSize.textAlign,
     );
   }
 }

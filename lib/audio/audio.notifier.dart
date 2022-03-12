@@ -20,7 +20,7 @@ class AudioNotifier extends BaseNotifier {
     AudioAssets.sandwich: 'assets/audio/sandwich.mp3',
     AudioAssets.skateboard: 'assets/audio/skateboard.mp3',
     AudioAssets.success: 'assets/audio/success.mp3',
-    AudioAssets.tileMove: 'assets/audio/tile_move.mp3',
+    AudioAssets.tileMove: 'assets/audio/slide.ogg',
   };
 
   final _audioPlayers = <String, List<AudioPlayer>>{};
@@ -51,6 +51,10 @@ class AudioNotifier extends BaseNotifier {
     _sharedPrefsService.setBool('muted', _isMuted);
 
     notifyListeners();
+  }
+
+  Future<void> playClick() {
+    return play(AudioAssets.click);
   }
 
   Future<void> play(String asset) async {

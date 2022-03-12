@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:slide_puzzle/audio/audio.dart';
 import 'package:slide_puzzle/game/_shared/shared.dart';
 import 'package:slide_puzzle/game/square/puzzle.dart';
 import 'package:slide_puzzle/layout/layout.dart';
@@ -94,13 +92,6 @@ class NumbersSquareLayout implements PageLayoutDelegate<SquarePuzzleNotifier> {
       onTap: () {
         if (notifier.isSolving) {
           return;
-        }
-        final audio = context.read<AudioNotifier>();
-        final canMove = notifier.puzzle.isTileMovable(tile);
-        if (gameState.inProgress && canMove) {
-          audio.play(AudioAssets.tileMove);
-        } else {
-          audio.play(AudioAssets.dumbbell);
         }
         notifier.moveTile(tile);
       },

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:slide_puzzle/audio/audio.dart';
 import 'package:slide_puzzle/game/_shared/shared.dart';
 import 'package:slide_puzzle/game/hex/puzzle.dart';
 import 'package:slide_puzzle/layout/layout.dart';
@@ -96,7 +94,6 @@ class NumbersHexLayout implements PageLayoutDelegate<HexPuzzleNotifier> {
           if (notifier.isSolving) {
             return;
           }
-          context.read<AudioNotifier>().play(AudioAssets.tileMove);
           notifier.moveTile(tile);
         },
         child: Stack(

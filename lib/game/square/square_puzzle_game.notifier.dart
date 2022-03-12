@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:slide_puzzle/audio/audio.dart';
 import 'package:slide_puzzle/game/_shared/puzzle.game.solver_extension.dart';
 import 'package:slide_puzzle/game/_shared/shared.dart';
 import 'package:slide_puzzle/game/square/puzzle.dart';
@@ -7,6 +8,7 @@ import 'package:slide_puzzle/screens/_base/base.notifier.dart';
 
 class SquarePuzzleNotifier extends BaseNotifier implements PuzzleGameNotifier<SquareTile> {
   SquarePuzzleNotifier(
+    this._audio,
     this._countdown,
     this._timer, {
     int initialGridSize = 4,
@@ -21,6 +23,8 @@ class SquarePuzzleNotifier extends BaseNotifier implements PuzzleGameNotifier<Sq
 
   static const _minGridSize = 3;
   static const _maxGridSize = 6;
+
+  final AudioNotifier _audio;
 
   final CountdownNotifier _countdown;
   final GameTimerNotifier _timer;
@@ -117,6 +121,7 @@ class SquarePuzzleNotifier extends BaseNotifier implements PuzzleGameNotifier<Sq
     }
 
     if (startGame) {
+      await _audio.play(AudioAssets.shuffle);
       _countdown.start(onComplete: start);
     } else {
       _gameState = GameState.ready;
@@ -137,9 +142,10 @@ class SquarePuzzleNotifier extends BaseNotifier implements PuzzleGameNotifier<Sq
   }
 
   @override
-  void moveTile(SquareTile tile) {
+  Future<void> moveTile(SquareTile tile) async {
     if (_gameState.inProgress) {
       if (_puzzle.isTileMovable(tile)) {
+        await _audio.play(AudioAssets.tileMove);
         final mutablePuzzle = SquareGridPuzzle(tiles: [..._puzzle.tiles]);
         _puzzle = mutablePuzzle.moveTiles(tile, []).sort();
         if (isCompleted) {
@@ -149,6 +155,8 @@ class SquarePuzzleNotifier extends BaseNotifier implements PuzzleGameNotifier<Sq
         }
         _moveCount++;
         notifyListeners();
+      } else {
+        _audio.play(AudioAssets.dumbbell);
       }
     }
   }

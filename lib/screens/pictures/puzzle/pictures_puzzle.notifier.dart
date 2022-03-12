@@ -2,12 +2,14 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:slide_puzzle/audio/audio.dart';
 import 'package:slide_puzzle/game/_shared/shared.dart';
 import 'package:slide_puzzle/game/square/puzzle.dart';
 import 'package:slide_puzzle/services/snackbar.service.dart';
 
 class PicturesPuzzleNotifier extends SquarePuzzleNotifier {
   PicturesPuzzleNotifier(
+    AudioNotifier audio,
     CountdownNotifier countdown,
     GameTimerNotifier timer, {
     int initialGridSize = 4,
@@ -15,6 +17,7 @@ class PicturesPuzzleNotifier extends SquarePuzzleNotifier {
   })  : _imageData = imageData,
         _isLoading = true,
         super(
+          audio,
           countdown,
           timer,
           initialGridSize: initialGridSize,

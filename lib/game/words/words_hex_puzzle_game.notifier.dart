@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:slide_puzzle/audio/audio.dart';
 import 'package:slide_puzzle/game/_shared/puzzle.game.solver_extension.dart';
 import 'package:slide_puzzle/game/_shared/shared.dart';
 import 'package:slide_puzzle/game/hex/puzzle.dart';
@@ -8,10 +9,12 @@ import 'package:slide_puzzle/game/words/data/_data.dart';
 
 class WordsHexPuzzleNotifier extends HexPuzzleNotifier {
   WordsHexPuzzleNotifier(
+    AudioNotifier audio,
     CountdownNotifier countdown,
     GameTimerNotifier timer,
   )   : _letters = [],
         super(
+          audio,
           countdown,
           timer,
           initialDepth: _depth,

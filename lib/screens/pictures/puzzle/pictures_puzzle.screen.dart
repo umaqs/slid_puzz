@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:slide_puzzle/app/app.dart';
+import 'package:slide_puzzle/audio/audio.dart';
 import 'package:slide_puzzle/game/_shared/shared.dart';
 import 'package:slide_puzzle/screens/_base/infrastructure.dart';
 import 'package:slide_puzzle/screens/_shared/shared.dart';
@@ -27,6 +28,7 @@ class PicturesPuzzleScreen extends StatelessWidget {
         builder: (_, __) => ProvideNotifier<PuzzleGameNotifier>(
           watch: true,
           create: (context) => PicturesPuzzleNotifier(
+            context.read<AudioNotifier>(),
             context.read<CountdownNotifier>(),
             context.read<GameTimerNotifier>(),
             imageData: imageData,

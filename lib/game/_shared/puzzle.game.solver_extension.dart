@@ -52,8 +52,8 @@ extension SolverExtension on PuzzleGameNotifier {
       }
 
       for (final tile in solution) {
-        moveTile(tile);
-        await Future.delayed(const Duration(milliseconds: 300));
+        await moveTile(tile);
+        await Future.delayed(const Duration(milliseconds: 500));
         if (!isSolving || !mounted) {
           return false;
         }
