@@ -46,8 +46,8 @@ class AudioNotifier extends BaseNotifier {
   }
 
   void toggleSound() {
-    play(AudioAssets.click);
     _isMuted = !_isMuted;
+    play(AudioAssets.click);
     _sharedPrefsService.setBool('muted', _isMuted);
 
     notifyListeners();
@@ -58,6 +58,9 @@ class AudioNotifier extends BaseNotifier {
   }
 
   Future<void> play(String asset) async {
+    if (_isMuted) {
+      return;
+    }
     assert(_audioAssets.containsKey(asset), 'Unable to find the file: $asset');
 
     final players = _audioPlayers[asset]!;
