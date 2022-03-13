@@ -7,7 +7,7 @@ import 'package:slide_puzzle/helpers/helpers.dart';
 import 'package:slide_puzzle/layout/responsive_layout_size.dart';
 import 'package:slide_puzzle/typography/typography.dart';
 
-const _shareUrl = 'https://flutterhack.devpost.com/';
+const _shareUrl = 'https://slidpuzz.web.app/';
 const _shareText = 'Just solved the #FlutterPuzzleHack! Check it out ↓';
 
 class TwitterButton extends StatelessWidget {

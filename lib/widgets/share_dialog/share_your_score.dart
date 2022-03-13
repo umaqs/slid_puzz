@@ -16,85 +16,80 @@ class ShareYourScore extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayoutBuilder(
-      small: (_, child) => child!,
-      medium: (_, child) => child!,
-      large: (_, child) => child!,
-      child: (layoutSize, _) {
-        final titleTextStyle =
-            layoutSize == ResponsiveLayoutSize.small ? PuzzleTextStyle.headline4 : PuzzleTextStyle.headline3;
+    final layoutSize = context.layoutSize;
 
-        final messageTextStyle =
-            layoutSize == ResponsiveLayoutSize.small ? PuzzleTextStyle.bodyXSmall : PuzzleTextStyle.bodySmall;
+    final titleTextStyle =
+        layoutSize == ResponsiveLayoutSize.small ? PuzzleTextStyle.headline4 : PuzzleTextStyle.headline3;
 
-        final titleAndMessageCrossAxisAlignment =
-            layoutSize == ResponsiveLayoutSize.large ? CrossAxisAlignment.start : CrossAxisAlignment.center;
+    final messageTextStyle =
+        layoutSize == ResponsiveLayoutSize.small ? PuzzleTextStyle.bodyXSmall : PuzzleTextStyle.bodySmall;
 
-        final textAlign = layoutSize == ResponsiveLayoutSize.large ? TextAlign.left : TextAlign.center;
+    final titleAndMessageCrossAxisAlignment =
+        layoutSize == ResponsiveLayoutSize.large ? CrossAxisAlignment.start : CrossAxisAlignment.center;
 
-        final messageWidth = layoutSize == ResponsiveLayoutSize.large
-            ? double.infinity
-            : (layoutSize == ResponsiveLayoutSize.medium ? 434.0 : 307.0);
+    final textAlign = layoutSize == ResponsiveLayoutSize.large ? TextAlign.left : TextAlign.center;
 
-        final buttonsMainAxisAlignment =
-            layoutSize == ResponsiveLayoutSize.large ? MainAxisAlignment.start : MainAxisAlignment.center;
+    final messageWidth = layoutSize == ResponsiveLayoutSize.large
+        ? double.infinity
+        : (layoutSize == ResponsiveLayoutSize.medium ? 434.0 : 307.0);
 
-        final colors = context.colors;
+    final buttonsMainAxisAlignment =
+        layoutSize == ResponsiveLayoutSize.large ? MainAxisAlignment.start : MainAxisAlignment.center;
 
-        return Column(
-          crossAxisAlignment: titleAndMessageCrossAxisAlignment,
-          children: [
-            SlideTransition(
-              position: animation.shareYourScoreOffset,
-              child: Opacity(
-                opacity: animation.shareYourScoreOpacity.value,
-                child: Column(
-                  crossAxisAlignment: titleAndMessageCrossAxisAlignment,
-                  children: [
-                    Text(
-                      'Share your score!',
-                      textAlign: textAlign,
-                      style: titleTextStyle.copyWith(
-                        color: colors.onSurface,
-                      ),
-                    ),
-                    kBox16,
-                    SizedBox(
-                      width: messageWidth,
-                      child: Text(
-                        'Share this puzzle to challenge your friends and family.',
-                        textAlign: textAlign,
-                        style: messageTextStyle.copyWith(
-                          color: colors.onSurfaceVariant,
-                        ),
-                      ),
-                    ),
-                  ],
+    final colors = context.colors;
+
+    return Column(
+      crossAxisAlignment: titleAndMessageCrossAxisAlignment,
+      children: [
+        SlideTransition(
+          position: animation.shareYourScoreOffset,
+          child: Opacity(
+            opacity: animation.shareYourScoreOpacity.value,
+            child: Column(
+              crossAxisAlignment: titleAndMessageCrossAxisAlignment,
+              children: [
+                Text(
+                  'Share your score!',
+                  textAlign: textAlign,
+                  style: titleTextStyle.copyWith(
+                    color: colors.onSurface,
+                  ),
                 ),
-              ),
-            ),
-            const ResponsiveGap(
-              small: 40,
-              medium: 40,
-              large: 24,
-            ),
-            SlideTransition(
-              position: animation.socialButtonsOffset,
-              child: Opacity(
-                opacity: animation.socialButtonsOpacity.value,
-                child: Row(
-                  mainAxisAlignment: buttonsMainAxisAlignment,
-                  children: const [
-                    TwitterButton(),
-                    kBox16,
-                    FacebookButton(),
-                  ],
+                kBox16,
+                SizedBox(
+                  width: messageWidth,
+                  child: Text(
+                    'Share this puzzle to challenge your friends and family.',
+                    textAlign: textAlign,
+                    style: messageTextStyle.copyWith(
+                      color: colors.onSurfaceVariant,
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
-        );
-      },
+          ),
+        ),
+        const ResponsiveGap(
+          small: 40,
+          medium: 40,
+          large: 24,
+        ),
+        SlideTransition(
+          position: animation.socialButtonsOffset,
+          child: Opacity(
+            opacity: animation.socialButtonsOpacity.value,
+            child: Row(
+              mainAxisAlignment: buttonsMainAxisAlignment,
+              children: const [
+                TwitterButton(),
+                kBox16,
+                FacebookButton(),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
