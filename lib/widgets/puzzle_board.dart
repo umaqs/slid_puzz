@@ -48,6 +48,8 @@ class _PuzzleBoardState extends State<PuzzleBoard> {
               _boardKey,
             ),
           );
+        } else {
+          _shownCompletedDialog = false;
         }
       },
       child: RepaintBoundary(
