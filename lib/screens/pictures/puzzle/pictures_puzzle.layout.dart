@@ -91,14 +91,9 @@ class PicturePuzzleLayout implements PageLayoutDelegate<PicturesPuzzleNotifier> 
       tile: tile,
       gridSize: notifier.gridSize,
       useCorrectPosition: notifier.showSolution,
-      childBuilder: (context) => tile.isWhitespace
-          ? notifier.gameState.isCompleted
-              ? _buildPictureSquareTile(context, tile)
-              : const SizedBox.shrink()
-          : _buildPictureSquareTile(
-              context,
-              tile,
-            ),
+      childBuilder: (context) => !tile.isWhitespace || notifier.gameState.isCompleted
+          ? _buildPictureSquareTile(context, tile)
+          : const SizedBox.shrink(),
     );
   }
 
@@ -108,6 +103,8 @@ class PicturePuzzleLayout implements PageLayoutDelegate<PicturesPuzzleNotifier> 
   ) {
     final isLoading = notifier.isLoading;
 
+    final margin = context.layoutSize.isSmall ? kPadding2 : kPadding4;
+
     if (isLoading) {
       return Shimmer(
         gradient: context.getMenuLoaderGradient(
@@ -116,6 +113,7 @@ class PicturePuzzleLayout implements PageLayoutDelegate<PicturesPuzzleNotifier> 
         ),
         period: const Duration(seconds: 3),
         child: SquareButton(
+          margin: margin,
           borderRadius: 8,
           disableShadows: true,
           color: context.colors.primary,
@@ -124,6 +122,7 @@ class PicturePuzzleLayout implements PageLayoutDelegate<PicturesPuzzleNotifier> 
     }
 
     return SquareButton(
+      margin: margin,
       color: Colors.transparent,
       borderRadius: 8,
       onTap: () {
@@ -133,6 +132,7 @@ class PicturePuzzleLayout implements PageLayoutDelegate<PicturesPuzzleNotifier> 
         notifier.moveTile(tile);
       },
       child: PartialImage(
+        margin: margin,
         gridSize: notifier.gridSize,
         image: notifier.uiImage,
         offset: tile.correctPosition.toOffset,

@@ -78,16 +78,16 @@ class NumbersSquareLayout implements PageLayoutDelegate<SquarePuzzleNotifier> {
 
   Widget _buildNumberSquareTile(BuildContext context, SquareTile tile) {
     final colors = context.colors;
-
+    final layoutSize = context.layoutSize;
     final gridScaleFactor = 4 / notifier.gridSize;
-    final tileFontSize = context.layoutSize.tileFontSize * gridScaleFactor;
+    final tileFontSize = layoutSize.tileFontSize * gridScaleFactor;
 
     final gameState = notifier.gameState;
     final showCorrectTileIndicator = tile.hasCorrectPosition && (gameState.inProgress || gameState.isCompleted);
     return SquareButton(
-      key: Key('tile_button_${tile.value}'),
       borderRadius: 8,
       elevation: showCorrectTileIndicator ? 0 : 16,
+      margin: layoutSize.isSmall ? kPadding2 : kPadding4,
       borderColor: showCorrectTileIndicator ? colors.primary : null,
       onTap: () {
         if (notifier.isSolving) {

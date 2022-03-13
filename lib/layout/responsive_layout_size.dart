@@ -15,13 +15,11 @@ enum ResponsiveLayoutSize {
 }
 
 extension ResponsiveLayoutSizeCtxExtension on BuildContext {
-
   ResponsiveLayoutSize get layoutSize {
     final screenWidth = MediaQuery.of(this).size.width;
 
     if (screenWidth <= PuzzleBreakpoints.small) {
-      return
-          ResponsiveLayoutSize.small;
+      return ResponsiveLayoutSize.small;
     }
     if (screenWidth <= PuzzleBreakpoints.medium) {
       return ResponsiveLayoutSize.medium;
@@ -81,11 +79,11 @@ extension ResponsiveLayoutSizeExtension on ResponsiveLayoutSize {
   double get squareTileSize {
     switch (this) {
       case ResponsiveLayoutSize.small:
-        return 75.0;
+        return 78.0;
       case ResponsiveLayoutSize.medium:
-        return 100.0;
+        return 106.0;
       case ResponsiveLayoutSize.large:
-        return 112.0;
+        return 118.0;
     }
   }
 
@@ -139,6 +137,7 @@ const kEdgePadding8 = EdgeInsets.symmetric(horizontal: 8);
 const kEdgePadding16 = EdgeInsets.symmetric(horizontal: 16);
 const kEdgePadding24 = EdgeInsets.symmetric(horizontal: 24);
 
+const kPadding2 = EdgeInsets.all(2);
 const kPadding4 = EdgeInsets.all(4);
 const kPadding8 = EdgeInsets.all(8);
 const kPadding16 = EdgeInsets.all(16);

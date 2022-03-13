@@ -9,11 +9,13 @@ class PartialImage extends StatelessWidget {
     required this.gridSize,
     required this.image,
     required this.offset,
+    required this.margin,
   }) : super(key: key);
 
   final int gridSize;
   final ui.Image image;
   final Offset offset;
+  final EdgeInsetsGeometry margin;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +24,7 @@ class PartialImage extends StatelessWidget {
         gridSize: gridSize,
         image: image,
         offset: offset,
+        margin: margin,
       ),
     );
   }
@@ -32,11 +35,13 @@ class _PartialImagePainter extends CustomPainter {
     required this.offset,
     required this.image,
     required this.gridSize,
+    required this.margin,
   });
 
   final Offset offset;
   final ui.Image image;
   final int gridSize;
+  final EdgeInsetsGeometry margin;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -47,7 +52,10 @@ class _PartialImagePainter extends CustomPainter {
     final tileSize = min(width, height);
     final srcOffset = offset * tileSize;
 
-    final src = Rect.fromLTWH(srcOffset.dx, srcOffset.dy, tileSize, tileSize);
+    final dx = margin.horizontal * 0.5;
+    final dy = margin.vertical * 0.5;
+
+    final src = Rect.fromLTWH(srcOffset.dx + dx, srcOffset.dy + dy, tileSize - dx, tileSize - dy);
     final dst = Rect.fromLTWH(0, 0, size.width, size.height);
 
     canvas.drawImageRect(image, src, dst, paint);

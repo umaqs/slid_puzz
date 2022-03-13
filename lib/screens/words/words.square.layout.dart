@@ -79,9 +79,9 @@ class WordsSquareLayout implements PageLayoutDelegate<WordsSquarePuzzleNotifier>
 
   Widget _buildNumberSquareTile(BuildContext context, int index) {
     final colors = context.colors;
-
+    final layoutSize = context.layoutSize;
     final gridScaleFactor = 4 / notifier.gridSize;
-    final tileFontSize = context.layoutSize.tileFontSize * gridScaleFactor;
+    final tileFontSize = layoutSize.tileFontSize * gridScaleFactor;
 
     final tile = notifier.puzzle.tiles[index];
     final showCorrectTileIndicator = notifier.shouldHighlightTile(index);
@@ -89,9 +89,9 @@ class WordsSquareLayout implements PageLayoutDelegate<WordsSquarePuzzleNotifier>
     return Opacity(
       opacity: tile.isWhitespace && !notifier.gameState.isCompleted ? 0.2 : 1,
       child: SquareButton(
-        key: Key('tile_button_${tile.value}'),
         borderRadius: 8,
         elevation: showCorrectTileIndicator ? 0 : 16,
+        margin: layoutSize.isSmall ? kPadding2 : kPadding4,
         borderColor: showCorrectTileIndicator ? colors.primary : null,
         onTap: tile.isWhitespace
             ? null

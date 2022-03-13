@@ -15,6 +15,7 @@ class SquareButton extends StatelessWidget {
     this.borderWidth,
     this.disableShadows = false,
     this.onTap,
+    this.margin,
     this.child,
   })  : assert(color == null || gradient == null, 'Cannot provide both a color and a gradient\n'),
         super(key: key);
@@ -28,58 +29,55 @@ class SquareButton extends StatelessWidget {
   final double? borderRadius;
   final bool disableShadows;
   final VoidCallback? onTap;
+  final EdgeInsetsGeometry? margin;
   final Widget? child;
 
   @override
   Widget build(BuildContext context) {
+    const shadowOffset = 2.0;
+    final layoutSize = context.layoutSize;
+
     return GestureDetector(
       onTap: onTap,
-      child: ResponsiveLayoutBuilder(
-        small: (_, child) => child!,
-        medium: (_, child) => child!,
-        large: (_, child) => child!,
-        child: (layoutSize, _) {
-          const shadowOffset = 2.0;
-          return AnimatedHoverInteraction(
-            enabled: onTap != null,
-            tilt: tilt,
-            scale: false,
-            child: AnimatedContainer(
-              width: layoutSize.squareTileSize,
-              height: layoutSize.squareTileSize,
-              duration: const Duration(milliseconds: 300),
-              clipBehavior: Clip.hardEdge,
-              decoration: BoxDecoration(
-                color: color ?? context.colors.surface,
-                gradient: gradient,
-                boxShadow: disableShadows
-                    ? []
-                    : [
-                        BoxShadow(
-                          color: Colors.white.withOpacity(0.08),
-                          blurRadius: elevation,
-                          offset: const Offset(-shadowOffset, -shadowOffset),
-                        ),
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.08),
-                          blurRadius: elevation,
-                          offset: const Offset(shadowOffset, shadowOffset),
-                        ),
-                      ],
-                borderRadius: borderRadius != null ? BorderRadius.circular(borderRadius!) : null,
-                border: Border.fromBorderSide(
-                  borderColor != null
-                      ? BorderSide(
-                          width: borderWidth ?? 4,
-                          color: borderColor!,
-                        )
-                      : BorderSide.none,
-                ),
-              ),
-              child: child,
+      child: AnimatedHoverInteraction(
+        enabled: onTap != null,
+        tilt: tilt,
+        scale: false,
+        child: AnimatedContainer(
+          margin: margin,
+          width: layoutSize.squareTileSize,
+          height: layoutSize.squareTileSize,
+          duration: const Duration(milliseconds: 300),
+          clipBehavior: Clip.hardEdge,
+          decoration: BoxDecoration(
+            color: color ?? context.colors.surface,
+            gradient: gradient,
+            boxShadow: disableShadows
+                ? []
+                : [
+                    BoxShadow(
+                      color: Colors.white.withOpacity(0.08),
+                      blurRadius: elevation,
+                      offset: const Offset(-shadowOffset, -shadowOffset),
+                    ),
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.08),
+                      blurRadius: elevation,
+                      offset: const Offset(shadowOffset, shadowOffset),
+                    ),
+                  ],
+            borderRadius: borderRadius != null ? BorderRadius.circular(borderRadius!) : null,
+            border: Border.fromBorderSide(
+              borderColor != null
+                  ? BorderSide(
+                      width: borderWidth ?? 4,
+                      color: borderColor!,
+                    )
+                  : BorderSide.none,
             ),
-          );
-        },
+          ),
+          child: child,
+        ),
       ),
     );
   }

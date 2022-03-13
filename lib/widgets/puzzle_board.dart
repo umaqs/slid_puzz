@@ -32,12 +32,15 @@ class PuzzleBoard extends StatefulWidget {
 class _PuzzleBoardState extends State<PuzzleBoard> {
   final _boardKey = GlobalKey();
 
+  bool _shownCompletedDialog = false;
+
   @override
   Widget build(BuildContext context) {
     final layoutSize = context.layoutSize;
     return Listen<PuzzleGameNotifier>(
       listener: (notifier) {
-        if (notifier.gameState.isCompleted) {
+        if (notifier.gameState.isCompleted && !_shownCompletedDialog) {
+          _shownCompletedDialog = true;
           Future.delayed(
             const Duration(seconds: 1),
             () => showGameCompletedDialog(

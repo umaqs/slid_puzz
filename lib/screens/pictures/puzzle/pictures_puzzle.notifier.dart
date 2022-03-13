@@ -32,6 +32,7 @@ class PicturesPuzzleNotifier extends SquarePuzzleNotifier {
   final ImageService _imageService;
   final String? _term;
 
+  Uint8List? get imageData => _imageData;
   Uint8List? _imageData;
 
   Image get uiImage => _uiImage;

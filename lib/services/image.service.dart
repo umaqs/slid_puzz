@@ -13,7 +13,7 @@ class ImageService {
     required String term,
   }) async {
     try {
-      final uri = Uri.parse('https://source.unsplash.com/featured/500/?$term');
+      final uri = Uri.parse('https://source.unsplash.com/featured/500x500/?$term');
       final response = await http.get(uri);
 
       if (response.headers['x-imgix-id'] == '7dab072e2bcf469f60fa23c7cb543f2c426565ff') {
