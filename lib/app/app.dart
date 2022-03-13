@@ -26,6 +26,7 @@ import 'package:slide_puzzle/themes/theme.notifier.dart';
 import 'package:slide_puzzle/themes/theme.screen.dart';
 
 part 'app.bootstrap.dart';
+part 'app.licenses.dart';
 part 'app.lifecycle_observer.dart';
 part 'app.router.dart';
 
