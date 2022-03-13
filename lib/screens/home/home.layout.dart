@@ -15,7 +15,10 @@ class HomeLayout implements PageLayoutDelegate<HomeNotifier> {
 
   @override
   Widget startSection(BuildContext context, BoxConstraints constraints) {
-    return const MenuHeader(title: 'Slide Puzzle');
+    return MenuHeader(
+      title: notifier.appName,
+      subtitle: const AppLogo(),
+    );
   }
 
   @override

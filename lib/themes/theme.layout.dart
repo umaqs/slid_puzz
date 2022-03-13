@@ -15,7 +15,14 @@ class ThemeLayout implements PageLayoutDelegate<ThemeNotifier> {
 
   @override
   Widget startSection(BuildContext context, BoxConstraints constraints) {
-    return const MenuHeader(title: 'Themes');
+    return MenuHeader(
+      title: 'Themes',
+      subtitle: Icon(
+        Icons.color_lens,
+        size: context.layoutSize.tileFontSize,
+        color: context.colors.primary,
+      ),
+    );
   }
 
   @override

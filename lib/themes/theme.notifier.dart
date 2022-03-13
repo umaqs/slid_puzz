@@ -10,8 +10,14 @@ import 'package:slide_puzzle/utils/extensions.dart';
 
 extension ThemeBuildContextExtension on BuildContext {
   ThemeColor get themeColor {
-    final themeNotifier = read<ThemeNotifier>();
-    return themeNotifier.currentColor;
+    try {
+      final themeNotifier = watch<ThemeNotifier>();
+      return themeNotifier.currentColor;
+    } catch (_) {
+      // watch fails when called from outside of widget.build method
+      final themeNotifier = read<ThemeNotifier>();
+      return themeNotifier.currentColor;
+    }
   }
 
   ThemeData get theme => themeColor.theme;

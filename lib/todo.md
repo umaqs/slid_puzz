@@ -10,8 +10,7 @@
 [X] Auto-solver
 [ ] L10n
 [ ] Instructions pop-up for first time (feature_discovery)
-[ ] Info/Licenses pop-up
-[ ] Icon link for attribute: <a href="https://www.flaticon.com/free-icons/ingredient" title="ingredient icons">Ingredient icons created by Darius Dan - Flaticon</a>
+[X] Info/Licenses pop-up
 [ ] Firebase leaderboard ?
 
 // To FIX
@@ -23,4 +22,4 @@
 [X] Copy refinement
 [X] Moves / correct tiles UI
 [X] Fix pictures menu loading state issue 
-[ ] Multiple audio players
+[X] Multiple audio players

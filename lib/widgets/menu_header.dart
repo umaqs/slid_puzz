@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:slide_puzzle/layout/layout.dart';
 import 'package:slide_puzzle/themes/themes.dart';
 import 'package:slide_puzzle/typography/typography.dart';
@@ -65,7 +64,7 @@ class _MenuTitle extends StatelessWidget {
         child: child,
       ),
       child: (layoutSize, _) {
-        final titleColor = context.watch<ThemeNotifier>().currentColor.theme.colorScheme.primary;
+        final titleColor = context.colors.primary;
         final textStyle = layoutSize.textStyle.copyWith(color: titleColor);
 
         return AnimatedDefaultTextStyle(

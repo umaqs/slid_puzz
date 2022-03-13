@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:slide_puzzle/layout/layout.dart';
 import 'package:slide_puzzle/themes/theme.notifier.dart';
 import 'package:slide_puzzle/widgets/square_button.dart';
@@ -14,8 +13,6 @@ class ThemeAwareScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeColor = context.watch<ThemeNotifier>().currentColor;
-
     return AnimatedTheme(
       data: context.theme,
       child: Stack(
@@ -26,7 +23,7 @@ class ThemeAwareScaffold extends StatelessWidget {
               body: SizedBox.expand(
                 child: DecoratedBox(
                   decoration: BoxDecoration(
-                    gradient: themeColor.gradient,
+                    gradient: context.themeColor.gradient,
                   ),
                   child: PageLayout(
                     layoutBuilderDelegate: pageLayoutDelegate,
@@ -52,31 +49,24 @@ class _BackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeColor = context.watch<ThemeNotifier>().currentColor;
-    final colors = themeColor.theme.colorScheme;
+    final colors = context.colors;
+    final layoutSize = context.layoutSize;
 
-    return ResponsiveLayoutBuilder(
-      small: (_, child) => child!,
-      medium: (_, child) => child!,
-      large: (_, child) => child!,
-      child: (layoutSize, _) {
-        return SafeArea(
-          child: SizedBox.square(
-            dimension: layoutSize.isSmall ? 36 : kToolbarHeight,
-            child: SquareButton(
-              tilt: false,
-              disableShadows: true,
-              borderRadius: 50,
-              color: colors.secondaryContainer,
-              child: Icon(
-                Icons.arrow_back,
-                color: colors.onSecondaryContainer,
-              ),
-              onTap: () => Navigator.maybePop(context),
-            ),
+    return SafeArea(
+      child: SizedBox.square(
+        dimension: layoutSize.isSmall ? 36 : kToolbarHeight,
+        child: SquareButton(
+          tilt: false,
+          disableShadows: true,
+          borderRadius: 50,
+          color: colors.secondaryContainer,
+          child: Icon(
+            Icons.arrow_back,
+            color: colors.onSecondaryContainer,
           ),
-        );
-      },
+          onTap: () => Navigator.maybePop(context),
+        ),
+      ),
     );
   }
 }

@@ -7,6 +7,8 @@ Future<void> bootstrapAndRunApp() async {
 
       GoRouter.setUrlPathStrategy(UrlPathStrategy.path);
 
+      LicenseRegistry.addLicense(_addLicenses);
+
       final sharedPrefs = await SharedPreferences.getInstance();
       final sharedPrefsService = SharedPrefsService(sharedPrefs);
 
@@ -55,4 +57,19 @@ Future<void> bootstrapAndRunApp() async {
       log('Error: $error', error: error, stackTrace: stack);
     },
   );
+}
+
+Stream<LicenseEntry> _addLicenses() {
+  late final StreamController<LicenseEntry> controller;
+  controller = StreamController<LicenseEntry>(
+    onListen: () async {
+      const license = LicenseEntryWithLineBreaks(
+        ['App Icon'],
+        'Hexagon icons created by Freepik - Flaticon: https://www.flaticon.com/free-icons/hexagon',
+      );
+      controller.add(license);
+      await controller.close();
+    },
+  );
+  return controller.stream;
 }

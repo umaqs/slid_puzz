@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:slide_puzzle/app/app.dart';
 import 'package:slide_puzzle/screens/_base/base.notifier.dart';
+import 'package:slide_puzzle/widgets/widgets.dart';
 
 class HexMenuItem {
   HexMenuItem({
@@ -77,12 +78,14 @@ class HomeNotifier extends BaseNotifier {
           ),
           HexMenuItem(
             index: 6,
-            icon: Icons.help,
-            label: 'Help',
-            modeToolTip: 'Learn the rules',
+            icon: Icons.info,
+            label: 'About',
+            modeToolTip: 'View app info',
             coordinates: Coordinates.axial(0, 1),
           ),
         ];
+
+  String get appName => 'SlidPuzz';
 
   List<HexMenuItem> get menuItems => _menuItems;
   final List<HexMenuItem> _menuItems;
@@ -106,6 +109,14 @@ class HomeNotifier extends BaseNotifier {
         break;
       case 5:
         _navigateTo(context, RouteNames.themes);
+        break;
+      case 6:
+        showAboutDialog(
+          context: context,
+          applicationName: appName,
+          applicationVersion: '1.0.0',
+          applicationIcon: const AppLogo(),
+        );
         break;
     }
   }

@@ -1,5 +1,6 @@
 export 'animations/animations.dart';
 export 'app_dialog.dart';
+export 'app_logo.dart';
 export 'buttons.dart';
 export 'grid_size_picker.dart';
 export 'hex_puzzle_tile.dart';
