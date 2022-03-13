@@ -14,7 +14,7 @@ jobs:
       - uses: subosito/flutter-action@v1 #required (unofficial as no official tool exists, yet!)
         with:
           channel: 'stable' # or: 'beta', 'dev' or 'master'
-      - run: flutter pub get && flutter build web
+      - run: flutter pub get && flutter build web --web-renderer canvaskit
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
