@@ -60,7 +60,12 @@ class PicturePuzzleLayout implements PageLayoutDelegate<PicturesPuzzleNotifier> 
         text: _primaryButtonTitle(gameState),
         onPressed: gameState.canInteract ? notifier.nextState : null,
       ),
-      secondaryButton: gameState.inProgress ? const SolveButton() : null,
+      secondaryButton: gameState.inProgress
+          ? const SolveButton()
+          : PrimaryButton(
+              text: 'REFRESH',
+              onPressed: gameState.canInteract ? () => notifier.refresh() : null,
+            ),
     );
   }
 

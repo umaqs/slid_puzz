@@ -8,6 +8,7 @@ import 'package:slide_puzzle/game/_shared/shared.dart';
 import 'package:slide_puzzle/screens/_base/infrastructure.dart';
 import 'package:slide_puzzle/screens/_shared/shared.dart';
 import 'package:slide_puzzle/screens/pictures/puzzle/puzzle.dart';
+import 'package:slide_puzzle/services/image.service.dart';
 
 class PicturesPuzzleScreen extends StatelessWidget {
   const PicturesPuzzleScreen._({
@@ -17,7 +18,11 @@ class PicturesPuzzleScreen extends StatelessWidget {
 
   final PicturesPuzzleNotifier notifier;
 
-  static ScaleTransitionPage buildPage(BuildContext context, Uint8List imageData) {
+  static ScaleTransitionPage buildPage(
+    BuildContext context, {
+    Uint8List? imageData,
+    String? term,
+  }) {
     return ScaleTransitionPage(
       key: const ValueKey(RouteNames.picturesPuzzle),
       child: MultiProvider(
@@ -31,7 +36,9 @@ class PicturesPuzzleScreen extends StatelessWidget {
             context.read<AudioNotifier>(),
             context.read<CountdownNotifier>(),
             context.read<GameTimerNotifier>(),
+            context.read<ImageService>(),
             imageData: imageData,
+            term: term,
           ),
           builder: (_, notifier) => PicturesPuzzleScreen._(notifier: notifier as PicturesPuzzleNotifier),
         ),

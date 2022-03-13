@@ -82,6 +82,7 @@ class PicturesMenuLayout implements PageLayoutDelegate<PicturesMenuNotifier> {
                           context.pushNamed(
                             RouteNames.picturesPuzzle,
                             extra: imageData,
+                            queryParams: {'term': term},
                           );
                         }
                       },

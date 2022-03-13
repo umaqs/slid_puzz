@@ -36,17 +36,11 @@ late final _router = GoRouter(
         GoRoute(
           name: RouteNames.picturesPuzzle,
           path: 'puzzle',
-          redirect: (state) {
-            final extra = state.extra;
-            if (extra == null) {
-              return '/';
-            }
-            return null;
-          },
           pageBuilder: (context, state) {
             return PicturesPuzzleScreen.buildPage(
               context,
-              state.extra! as Uint8List,
+              imageData: state.extra as Uint8List?,
+              term: state.queryParams['term'],
             );
           },
         ),

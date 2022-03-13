@@ -5,16 +5,20 @@ import 'dart:ui';
 import 'package:slide_puzzle/audio/audio.dart';
 import 'package:slide_puzzle/game/_shared/shared.dart';
 import 'package:slide_puzzle/game/square/puzzle.dart';
+import 'package:slide_puzzle/services/image.service.dart';
 import 'package:slide_puzzle/services/snackbar.service.dart';
 
 class PicturesPuzzleNotifier extends SquarePuzzleNotifier {
   PicturesPuzzleNotifier(
     AudioNotifier audio,
     CountdownNotifier countdown,
-    GameTimerNotifier timer, {
+    GameTimerNotifier timer,
+    this._imageService, {
     int initialGridSize = 4,
-    required Uint8List imageData,
+    Uint8List? imageData,
+    String? term,
   })  : _imageData = imageData,
+        _term = term,
         _isLoading = true,
         super(
           audio,
@@ -22,10 +26,13 @@ class PicturesPuzzleNotifier extends SquarePuzzleNotifier {
           timer,
           initialGridSize: initialGridSize,
         ) {
-    _initImage();
+    refresh(force: false);
   }
 
-  final Uint8List _imageData;
+  final ImageService _imageService;
+  final String? _term;
+
+  Uint8List? _imageData;
 
   Image get uiImage => _uiImage;
   late Image _uiImage;
@@ -46,12 +53,15 @@ class PicturesPuzzleNotifier extends SquarePuzzleNotifier {
   String? get error => _error;
   String? _error;
 
-  Future<void> _initImage() async {
+  Future<void> refresh({bool force = true}) async {
     _isLoading = true;
     notifyListeners();
 
+    if (_imageData == null || force) {
+      _imageData = await _imageService.searchImage(term: _term ?? '');
+    }
     try {
-      final codec = await instantiateImageCodec(_imageData, allowUpscaling: false);
+      final codec = await instantiateImageCodec(_imageData!, allowUpscaling: false);
       final frameInfo = await codec.getNextFrame();
       _uiImage = frameInfo.image;
     } catch (e) {
@@ -62,6 +72,9 @@ class PicturesPuzzleNotifier extends SquarePuzzleNotifier {
       );
     }
 
+    if (force) {
+      await generatePuzzle();
+    }
     _isLoading = false;
     notifyListeners();
   }
