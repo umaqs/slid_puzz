@@ -66,7 +66,7 @@ class HexPuzzleTile extends StatelessWidget {
 
     return TileAnimation(
       offset: FractionalOffset.center.add(alignment) as FractionalOffset,
-      duration: Duration(milliseconds: 300 * (gridDepth + 3)),
+      duration: Duration(milliseconds: 300 * gridDepth),
       child: Opacity(
         opacity: showWhitespaceTile ? 0.2 : 1,
         child: AnimatedHoverInteraction(
