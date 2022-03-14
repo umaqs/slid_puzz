@@ -19,9 +19,9 @@ import 'package:slide_puzzle/screens/pictures/puzzle/puzzle.dart';
 import 'package:slide_puzzle/screens/words/words.dart';
 import 'package:slide_puzzle/screens/words/words_hex.screen.dart';
 import 'package:slide_puzzle/services/image.service.dart';
+import 'package:slide_puzzle/services/share.service.dart';
 import 'package:slide_puzzle/services/shared_prefs.service.dart';
 import 'package:slide_puzzle/services/snackbar.service.dart';
-import 'package:slide_puzzle/services/url_launcher.service.dart';
 import 'package:slide_puzzle/themes/theme.notifier.dart';
 import 'package:slide_puzzle/themes/theme.screen.dart';
 

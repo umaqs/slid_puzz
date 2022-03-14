@@ -1,11 +1,14 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:slide_puzzle/audio/audio.dart';
 import 'package:slide_puzzle/helpers/helpers.dart';
 import 'package:slide_puzzle/layout/responsive_layout_size.dart';
-import 'package:slide_puzzle/typography/typography.dart';
+import 'package:slide_puzzle/services/share.service.dart';
+import 'package:slide_puzzle/themes/themes.dart';
+import 'package:slide_puzzle/widgets/square_button.dart';
 
 const _shareUrl = 'https://slidpuzz.web.app/';
 const _shareText = 'Just solved the #FlutterPuzzleHack! Check it out ↓';
@@ -21,14 +24,10 @@ class TwitterButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ShareButton(
-      title: 'Twitter',
-      icon: Image.asset(
-        'assets/images/twitter_icon.png',
-        width: 13.13,
-        height: 10.67,
-      ),
-      color: const Color(0xFF13B9FD),
-      onPressed: () => openLink(_twitterShareUrl(context)),
+      onTap: () => openLink(_twitterShareUrl(context)),
+      color: const Color(0xFFFFFFFF),
+      backgroundColor: const Color(0xFF13B9FD),
+      icon: FontAwesomeIcons.twitter,
     );
   }
 }
@@ -44,14 +43,35 @@ class FacebookButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ShareButton(
-      title: 'Facebook',
-      icon: Image.asset(
-        'assets/images/facebook_icon.png',
-        width: 6.56,
-        height: 13.13,
-      ),
-      color: const Color(0xFF0468D7),
-      onPressed: () => openLink(_facebookShareUrl(context)),
+      onTap: () => openLink(_facebookShareUrl(context)),
+      color: const Color(0xFFFFFFFF),
+      backgroundColor: const Color(0xFF0468D7),
+      icon: FontAwesomeIcons.facebookF,
+    );
+  }
+}
+
+class ShareImageButton extends StatelessWidget {
+  const ShareImageButton({
+    Key? key,
+    required this.imageData,
+  }) : super(key: key);
+
+  final Uint8List? imageData;
+
+  Future<void> _onTap(BuildContext context) async {
+    const text = '$_shareText\n$_shareUrl';
+    final shareService = context.read<ShareService>();
+    shareService.share(context, text: text, image: imageData);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ShareButton(
+      onTap: () => _onTap(context),
+      color: context.colors.onPrimary,
+      backgroundColor: context.colors.primary,
+      icon: Icons.share,
     );
   }
 }
@@ -59,61 +79,27 @@ class FacebookButton extends StatelessWidget {
 class ShareButton extends StatelessWidget {
   const ShareButton({
     Key? key,
-    required this.onPressed,
-    required this.title,
+    required this.onTap,
     required this.icon,
     required this.color,
+    required this.backgroundColor,
   }) : super(key: key);
 
-  final VoidCallback onPressed;
-  final String title;
-  final Widget icon;
+  final VoidCallback onTap;
+  final IconData icon;
   final Color color;
+  final Color backgroundColor;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 48,
-      decoration: BoxDecoration(
-        border: Border.all(color: color),
-        borderRadius: kBorderRadius8,
-      ),
-      child: TextButton(
-        style: TextButton.styleFrom(
-          padding: EdgeInsets.zero,
-          primary: color,
-          shape: RoundedRectangleBorder(
-            borderRadius: kBorderRadius8,
-          ),
-          backgroundColor: Colors.transparent,
-        ),
-        onPressed: () async {
-          onPressed();
-          unawaited(context.read<AudioNotifier>().play(AudioAssets.click));
-        },
-        child: Row(
-          children: [
-            kBox12,
-            ClipRRect(
-              borderRadius: kBorderRadius8,
-              child: Container(
-                alignment: Alignment.center,
-                width: 32,
-                height: 32,
-                color: color,
-                child: icon,
-              ),
-            ),
-            kBox12,
-            Text(
-              title,
-              style: PuzzleTextStyle.headline5.copyWith(
-                color: color,
-              ),
-            ),
-            kBox24,
-          ],
-        ),
+    return SizedBox.square(
+      dimension: context.layoutSize.squareTileSize * 0.6,
+      child: SquareButton(
+        onTap: onTap,
+        color: backgroundColor,
+        elevation: 100,
+        borderRadius: 100,
+        child: Icon(icon, color: color),
       ),
     );
   }

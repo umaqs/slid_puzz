@@ -145,7 +145,7 @@ class SquarePuzzleNotifier extends BaseNotifier implements PuzzleGameNotifier<Sq
   Future<void> moveTile(SquareTile tile) async {
     if (_gameState.inProgress) {
       if (_puzzle.isTileMovable(tile)) {
-        _audio.play(AudioAssets.tileMove);
+        _audio.play(AudioAssets.tileMove, 0.5);
         final mutablePuzzle = SquareGridPuzzle(tiles: [..._puzzle.tiles]);
         _puzzle = mutablePuzzle.moveTiles(tile, []).sort();
         if (isCompleted) {

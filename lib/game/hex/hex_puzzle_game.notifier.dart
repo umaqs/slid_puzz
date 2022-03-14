@@ -144,7 +144,7 @@ class HexPuzzleNotifier extends BaseNotifier implements PuzzleGameNotifier<HexTi
   Future<void> moveTile(HexTile tile) async {
     if (_gameState.inProgress) {
       if (_puzzle.isTileMovable(tile)) {
-        _audio.play(AudioAssets.tileMove);
+        _audio.play(AudioAssets.tileMove, 0.5);
         final mutablePuzzle = HexGridPuzzle(tiles: [..._puzzle.tiles]);
         _puzzle = mutablePuzzle.moveTiles(tile, []).sort();
         if (isCompleted) {

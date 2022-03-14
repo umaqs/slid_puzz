@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:slide_puzzle/layout/layout.dart';
 import 'package:slide_puzzle/themes/themes.dart';
@@ -9,9 +12,11 @@ import 'share_dialog_animated_builder.dart';
 class ShareYourScore extends StatelessWidget {
   const ShareYourScore({
     Key? key,
+    required this.imageData,
     required this.animation,
   }) : super(key: key);
 
+  final Uint8List? imageData;
   final ShareDialogEnterAnimation animation;
 
   @override
@@ -81,10 +86,14 @@ class ShareYourScore extends StatelessWidget {
             opacity: animation.socialButtonsOpacity.value,
             child: Row(
               mainAxisAlignment: buttonsMainAxisAlignment,
-              children: const [
-                TwitterButton(),
+              children: [
+                const TwitterButton(),
                 kBox16,
-                FacebookButton(),
+                const FacebookButton(),
+                if (!kIsWeb) ...[
+                  kBox16,
+                  ShareImageButton(imageData: imageData),
+                ],
               ],
             ),
           ),

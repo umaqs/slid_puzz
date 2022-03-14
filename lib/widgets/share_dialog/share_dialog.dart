@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:slide_puzzle/audio/audio.dart';
+import 'package:slide_puzzle/helpers/helpers.dart';
 import 'package:slide_puzzle/layout/layout.dart';
 
 import 'puzzle_score.dart';
@@ -24,11 +25,13 @@ class ShareDialog extends StatefulWidget {
 
 class _ShareDialogState extends State<ShareDialog> with TickerProviderStateMixin {
   late final AnimationController _controller;
+  final _scoreKey = GlobalKey();
+
+  Uint8List? _scoreImage;
 
   @override
   void initState() {
     super.initState();
-
     unawaited(context.read<AudioNotifier>().play(AudioAssets.success));
 
     _controller = AnimationController(
@@ -39,7 +42,19 @@ class _ShareDialogState extends State<ShareDialog> with TickerProviderStateMixin
     Future.delayed(
       const Duration(milliseconds: 140),
       _controller.forward,
-    );
+    ).then((_) => _takeScreenshot());
+  }
+
+  Future<void> _takeScreenshot() async {
+    if (_scoreImage != null) {
+      return;
+    }
+
+    final image = await takeScreenshot(context, _scoreKey);
+
+    setState(() {
+      _scoreImage = image;
+    });
   }
 
   @override
@@ -84,7 +99,12 @@ class _ShareDialogState extends State<ShareDialog> with TickerProviderStateMixin
                                 position: animation.scoreOffset,
                                 child: Opacity(
                                   opacity: animation.scoreOpacity.value,
-                                  child: PuzzleScore(screenshot: widget.screenshot),
+                                  child: RepaintBoundary(
+                                    key: _scoreKey,
+                                    child: PuzzleScore(
+                                      screenshot: widget.screenshot,
+                                    ),
+                                  ),
                                 ),
                               ),
                               const ResponsiveGap(
@@ -94,6 +114,7 @@ class _ShareDialogState extends State<ShareDialog> with TickerProviderStateMixin
                               ),
                               ShareYourScore(
                                 animation: animation,
+                                imageData: _scoreImage,
                               ),
                             ],
                           );

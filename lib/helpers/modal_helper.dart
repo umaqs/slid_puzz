@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -43,16 +44,7 @@ Future<void> showGameCompletedDialog(BuildContext context, GlobalKey boardKey) a
   final puzzleNotifier = context.read<PuzzleGameNotifier>();
   final timerNotifier = context.read<GameTimerNotifier>();
 
-  final boundary = boardKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
-  if (boundary == null) {
-    return;
-  }
-
-  final screenshot = await boundary
-      .toImage()
-      .then((image) => image.toByteData(format: ImageByteFormat.png))
-      .then((data) => data == null ? null : data.buffer.asUint8List());
-
+  final screenshot = await takeScreenshot(context, boardKey);
   if (screenshot == null) {
     return;
   }
@@ -68,4 +60,16 @@ Future<void> showGameCompletedDialog(BuildContext context, GlobalKey boardKey) a
       child: ShareDialog(screenshot: screenshot),
     ),
   );
+}
+
+Future<Uint8List?> takeScreenshot(BuildContext context, GlobalKey key) async {
+  final boundary = key.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+  if (boundary == null) {
+    return null;
+  }
+
+  return boundary
+      .toImage()
+      .then((image) => image.toByteData(format: ImageByteFormat.png))
+      .then((data) => data == null ? null : data.buffer.asUint8List());
 }

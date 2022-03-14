@@ -57,7 +57,7 @@ class AudioNotifier extends BaseNotifier {
     return play(AudioAssets.click);
   }
 
-  Future<void> play(String asset) async {
+  Future<void> play(String asset, [double volume = 1.0]) async {
     if (_isMuted) {
       return;
     }
@@ -66,6 +66,7 @@ class AudioNotifier extends BaseNotifier {
     final players = _audioPlayers[asset]!;
 
     final player = players.removeAt(0);
+    await player.setVolume(volume);
     await player.replay();
     players.add(player);
   }
