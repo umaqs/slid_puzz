@@ -34,7 +34,6 @@ class ShareService {
         await Share.shareFiles(
           [file.path],
           text: text,
-          subject: text,
           sharePositionOrigin: position,
         );
 
