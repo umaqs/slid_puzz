@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:slide_puzzle/audio/audio.dart';
+import 'package:slide_puzzle/screens/home/home.notifier.dart';
 import 'package:slide_puzzle/screens/home/home.screen.dart';
 import 'package:slide_puzzle/screens/numbers/numbers.hex.screen.dart';
 import 'package:slide_puzzle/screens/numbers/numbers.square.screen.dart';
@@ -51,6 +52,7 @@ class _PuzzleApp extends StatelessWidget {
         return MultiProvider(
           providers: providers,
           child: MaterialApp.router(
+            title: HomeNotifier.appName,
             theme: theme,
             darkTheme: darkTheme,
             themeMode: themeNotifier.themeMode,

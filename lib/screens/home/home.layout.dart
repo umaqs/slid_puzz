@@ -15,9 +15,9 @@ class HomeLayout implements PageLayoutDelegate<HomeNotifier> {
 
   @override
   Widget startSection(BuildContext context, BoxConstraints constraints) {
-    return MenuHeader(
-      title: notifier.appName,
-      subtitle: const AppLogo(),
+    return const MenuHeader(
+      title: HomeNotifier.appName,
+      subtitle: AppLogo(),
     );
   }
 

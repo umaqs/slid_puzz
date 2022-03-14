@@ -85,7 +85,7 @@ class HomeNotifier extends BaseNotifier {
           ),
         ];
 
-  String get appName => 'SlidPuzz';
+  static const appName = 'SlidPuzz';
 
   List<HexMenuItem> get menuItems => _menuItems;
   final List<HexMenuItem> _menuItems;
