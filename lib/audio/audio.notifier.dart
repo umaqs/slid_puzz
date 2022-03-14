@@ -20,7 +20,7 @@ class AudioNotifier extends BaseNotifier {
     AudioAssets.sandwich: 'assets/audio/sandwich.mp3',
     AudioAssets.skateboard: 'assets/audio/skateboard.mp3',
     AudioAssets.success: 'assets/audio/success.mp3',
-    AudioAssets.tileMove: 'assets/audio/slide.ogg',
+    AudioAssets.tileMove: 'assets/audio/tile_move.mp3',
   };
 
   final _audioPlayers = <String, List<AudioPlayer>>{};

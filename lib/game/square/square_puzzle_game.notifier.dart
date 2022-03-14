@@ -121,7 +121,7 @@ class SquarePuzzleNotifier extends BaseNotifier implements PuzzleGameNotifier<Sq
     }
 
     if (startGame) {
-      await _audio.play(AudioAssets.shuffle);
+      _audio.play(AudioAssets.shuffle);
       _countdown.start(onComplete: start);
     } else {
       _gameState = GameState.ready;
@@ -145,7 +145,7 @@ class SquarePuzzleNotifier extends BaseNotifier implements PuzzleGameNotifier<Sq
   Future<void> moveTile(SquareTile tile) async {
     if (_gameState.inProgress) {
       if (_puzzle.isTileMovable(tile)) {
-        await _audio.play(AudioAssets.tileMove);
+        _audio.play(AudioAssets.tileMove);
         final mutablePuzzle = SquareGridPuzzle(tiles: [..._puzzle.tiles]);
         _puzzle = mutablePuzzle.moveTiles(tile, []).sort();
         if (isCompleted) {
